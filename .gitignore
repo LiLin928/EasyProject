@@ -27,8 +27,10 @@ node_modules/
 # Playwright CLI
 .playwright-cli/
 
-# SQL files
+# SQL files (except init-scripts for Docker)
 *.sql
+!EasyWechatWeb/init-scripts/
+!EasyWechatWeb/init-scripts/*.sql
 
 # Markdown files (except CLAUDE.md and README.md)
 *.md

@@ -1,0 +1,50 @@
+# .dockerignore - 排除不需要复制到 Docker 镜像的文件
+
+# Git 相关
+.git
+.gitignore
+
+# IDE 和编辑器
+.vs
+.vscode
+.idea
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# 构建输出
+**/bin/
+**/obj/
+**/out/
+
+# NuGet 包
+**/packages/
+*.nupkg
+
+# 日志文件
+logs/
+*.log
+
+# 上传文件目录
+uploads/
+
+# Docker 相关（避免递归）
+Dockerfile*
+docker-compose*
+.docker/
+.dockerignore
+
+# 配置文件中的敏感信息（使用环境变量替代）
+**/appsettings.Development.json
+
+# 测试文件
+**/TestResults/
+*.testlog
+
+# 文档和说明
+*.md
+docs/
+
+# 初始化脚本目录（会在 docker-compose 中单独挂载）
+init-scripts/

@@ -1,0 +1,108 @@
+version: '3.8'
+
+services:
+  # ==================== MySQL 数据库 ====================
+  mysql:
+    image: mysql:8.0
+    container_name: easywechat-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: lilin1992
+      MYSQL_DATABASE: EasyProject
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    networks:
+      - easywechat-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-plilin1992"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==================== EasyWeChatWeb API ====================
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: easywechat-api
+    restart: unless-stopped
+    ports:
+      - "7600:7600"
+    volumes:
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+    environment:
+      # 数据库连接（连接 MySQL 服务）
+      - ConnectionStrings__0__ConnectionString=Server=mysql;Port=3306;Database=EasyProject;User Id=root;Password=lilin1992;CharSet=utf8mb4;SslMode=None;AllowPublicKeyRetrieval=True;
+      - ConnectionStrings__0__DbType=0
+      - ConnectionStrings__0__IsAutoCloseConnection=true
+      - ConnectionStrings__0__InitKeyType=1
+
+      # JWT 配置
+      - JWTTokenOptions__Audience=http://localhost:7600
+      - JWTTokenOptions__Issuer=http://localhost:7600
+      - JWTTokenOptions__SecurityKey=EasyWeChat_SecretKey_2026_MinLength32Chars!
+      - JWTTokenOptions__AccessTokenExpiration=60
+      - JWTTokenOptions__RefreshTokenExpiration=10080
+
+      # 本地文件存储配置
+      - LocalStorageOption__StorageType=local
+      - LocalStorageOption__RootPath=uploads
+      - LocalStorageOption__PublicUrlPrefix=/uploads
+      - LocalStorageOption__MaxFileSize=52428800
+      - LocalStorageOption__BaseUrl=http://localhost:7600
+
+      # 禁用 Redis
+      - IsUseRedis=false
+
+      # 禁用 Elasticsearch
+      - Serilog__Elasticsearch__Enabled=false
+      - OperateLogElasticsearch__Enabled=false
+
+      # 禁用 Cap
+      - Cap__Enabled=false
+
+      # Swagger 开启（生产环境可关闭）
+      - IsUseSwagger=true
+
+      # 操作日志配置
+      - OperateLog__Enabled=true
+      - OperateLog__ExcludeGet=true
+
+      # CORS 配置
+      - CorsOrigins__0=http://localhost:3000
+      - CorsOrigins__1=http://localhost:8080
+
+      # 微信配置（生产环境需替换真实值）
+      - WeChat__AppId=
+      - WeChat__AppSecret=
+      - WeChat__UseMock=false
+
+      # 微信支付配置（生产环境需替换真实值）
+      - WeChatPay__AppId=
+      - WeChatPay__MchId=
+      - WeChatPay__NotifyUrl=http://localhost:7600/api/wechat/payment/notify
+      - WeChatPay__UseMock=false
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - easywechat-network
+
+# ==================== 网络配置 ====================
+networks:
+  easywechat-network:
+    driver: bridge
+
+# ==================== 数据卷 ====================
+volumes:
+  mysql_data:
+    driver: local
