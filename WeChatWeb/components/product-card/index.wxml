@@ -1,0 +1,27 @@
+<!-- components/product-card/index.wxml -->
+<view class="product-card" bindtap="onTap">
+  <image class="product-image" src="{{product.image}}" mode="aspectFill" lazy-load />
+
+  <view class="product-info">
+    <text class="product-name">{{product.name}}</text>
+
+    <view class="product-price" wx:if="{{showPrice}}">
+      <text class="current-price">
+        <text class="price-symbol">¥</text>
+        {{product.price / 100}}
+      </text>
+      <text class="original-price" wx:if="{{product.originalPrice}}">
+        ¥{{product.originalPrice / 100}}
+      </text>
+    </view>
+
+    <text class="product-sales" wx:if="{{showSales}}">
+      已售 {{product.sales || 0}} 件
+    </text>
+  </view>
+
+  <view class="product-tags" wx:if="{{product.isHot || product.isNew}}">
+    <text class="tag hot" wx:if="{{product.isHot}}">热销</text>
+    <text class="tag new" wx:if="{{product.isNew}}">新品</text>
+  </view>
+</view>

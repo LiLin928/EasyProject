@@ -1,0 +1,145 @@
+/* pages/search/search.wxss */
+
+.page-search {
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.search-input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background: #f7f8fa;
+  border-radius: 36rpx;
+  padding: 0 24rpx;
+  height: 72rpx;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  margin-right: 12rpx;
+}
+
+.search-input {
+  flex: 1;
+  font-size: 28rpx;
+}
+
+.clear-btn {
+  font-size: 28rpx;
+  color: #969799;
+  padding: 8rpx;
+}
+
+.search-btn {
+  font-size: 30rpx;
+  color: #1989fa;
+  margin-left: 20rpx;
+}
+
+/* 搜索结果 */
+.search-results {
+  padding: 20rpx;
+}
+
+.result-count {
+  font-size: 26rpx;
+  color: #969799;
+  margin-bottom: 20rpx;
+}
+
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+}
+
+.product-item {
+  width: calc(50% - 10rpx);
+}
+
+/* 空结果 */
+.empty-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 200rpx 0;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+  margin-bottom: 30rpx;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #969799;
+}
+
+/* 加载状态 */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.loading-text {
+  font-size: 28rpx;
+  color: #969799;
+}
+
+/* 搜索建议 */
+.search-suggest {
+  padding: 20rpx;
+}
+
+.history-section,
+.hot-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #323233;
+}
+
+.clear-history {
+  font-size: 26rpx;
+  color: #969799;
+}
+
+.keyword-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+
+.keyword-item {
+  font-size: 26rpx;
+  color: #646566;
+  background: #f7f8fa;
+  padding: 12rpx 24rpx;
+  border-radius: 24rpx;
+}

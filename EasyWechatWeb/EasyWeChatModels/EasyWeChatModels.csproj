@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ORM 实体注解 -->
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
+
+    <!-- 对象映射 -->
+    <PackageReference Include="Mapster" Version="10.0.0" />
+  </ItemGroup>
+
+</Project>

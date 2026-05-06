@@ -1,0 +1,385 @@
+// 大屏模块 - 渐变紫蓝玻璃态样式
+
+// ========================================
+// 主题变量
+// ========================================
+$screen-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+$screen-gradient-dark: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+$screen-card-bg: rgba(255, 255, 255, 0.15);
+$screen-card-bg-hover: rgba(255, 255, 255, 0.2);
+$screen-card-border: rgba(255, 255, 255, 0.3);
+$screen-card-border-hover: rgba(255, 255, 255, 0.4);
+$screen-text: #ffffff;
+$screen-text-secondary: rgba(255, 255, 255, 0.7);
+$screen-text-muted: rgba(255, 255, 255, 0.5);
+$screen-primary: #409eff;
+$screen-success: #67c23a;
+$screen-warning: #e6a23c;
+$screen-danger: #f56c6c;
+
+// ========================================
+// 大屏页面容器
+// ========================================
+.screen-container {
+  min-height: 100vh;
+  padding: 20px;
+  background: #f5f7fa;
+  box-sizing: border-box;
+}
+
+// ========================================
+// 玻璃态卡片
+// ========================================
+.screen-card {
+  background: $screen-card-bg;
+  border: 1px solid $screen-card-border;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: $screen-card-bg-hover;
+    border-color: $screen-card-border-hover;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+// ========================================
+// 大屏卡片内容
+// ========================================
+.screen-card-content {
+  color: $screen-text;
+  padding: 16px;
+
+  .screen-name {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .screen-description {
+    font-size: 14px;
+    color: $screen-text-secondary;
+    margin-bottom: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .screen-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: $screen-text-secondary;
+  }
+}
+
+// ========================================
+// 大屏卡片操作按钮
+// ========================================
+.screen-card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid $screen-card-border;
+
+  .el-button {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: $screen-text;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    &--primary {
+      background: rgba(64, 158, 255, 0.3);
+      border-color: rgba(64, 158, 255, 0.6);
+
+      &:hover {
+        background: rgba(64, 158, 255, 0.4);
+      }
+    }
+
+    &--danger {
+      background: rgba(245, 108, 108, 0.3);
+      border-color: rgba(245, 108, 108, 0.6);
+
+      &:hover {
+        background: rgba(245, 108, 108, 0.4);
+      }
+    }
+  }
+}
+
+// ========================================
+// 大屏状态标签
+// ========================================
+.screen-status-tag {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+
+  &--public {
+    background: rgba(103, 194, 58, 0.3);
+    border: 1px solid rgba(103, 194, 58, 0.6);
+    color: $screen-text;
+  }
+
+  &--private {
+    background: rgba(230, 162, 60, 0.3);
+    border: 1px solid rgba(230, 162, 60, 0.6);
+    color: $screen-text;
+  }
+}
+
+// ========================================
+// 大屏搜索栏
+// ========================================
+.screen-search-bar {
+  margin-bottom: 20px;
+
+  .el-form {
+    background: $screen-card-bg;
+    border-radius: 12px;
+    padding: 16px;
+    backdrop-filter: blur(10px);
+  }
+
+  .el-input,
+  .el-select {
+    --el-input-bg-color: transparent;
+    --el-input-border-color: #{$screen-card-border};
+    --el-input-text-color: #{$screen-text};
+    --el-input-placeholder-color: #{$screen-text-secondary};
+
+    .el-input__wrapper {
+      background: transparent;
+      box-shadow: 0 0 0 1px $screen-card-border;
+
+      &:hover {
+        box-shadow: 0 0 0 1px $screen-card-border-hover;
+      }
+    }
+
+    .el-input__inner {
+      color: $screen-text;
+
+      &::placeholder {
+        color: $screen-text-secondary;
+      }
+    }
+  }
+
+  .el-button {
+    --el-button-bg-color: rgba(64, 158, 255, 0.3);
+    --el-button-border-color: rgba(64, 158, 255, 0.6);
+    --el-button-text-color: #{$screen-text};
+
+    background: rgba(64, 158, 255, 0.3);
+    border-color: rgba(64, 158, 255, 0.6);
+    color: $screen-text;
+
+    &:hover {
+      background: rgba(64, 158, 255, 0.4);
+    }
+  }
+}
+
+// ========================================
+// 大屏列表网格布局
+// ========================================
+.screen-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+// ========================================
+// 大屏预览页面
+// ========================================
+.screen-preview {
+  width: 100%;
+  height: 100vh;
+  overflow: auto;
+  position: relative;
+
+  &--fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+  }
+}
+
+.screen-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+// ========================================
+// 大屏预览组件
+// ========================================
+.screen-preview-component {
+  position: absolute;
+  box-sizing: border-box;
+
+  .chart-container {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// ========================================
+// 大屏标题组件
+// ========================================
+.screen-title-component {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $screen-text;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+// ========================================
+// 大屏数字卡片组件
+// ========================================
+.screen-number-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: $screen-card-bg;
+  border: 1px solid $screen-card-border;
+  border-radius: 8px;
+  backdrop-filter: blur(5px);
+
+  .card-value {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+
+  .card-label {
+    font-size: 14px;
+    color: $screen-text-secondary;
+  }
+}
+
+// ========================================
+// 大屏工具栏
+// ========================================
+.screen-toolbar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  gap: 8px;
+
+  .el-button {
+    background: $screen-card-bg;
+    border-color: $screen-card-border;
+    color: $screen-text;
+    backdrop-filter: blur(10px);
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+  }
+}
+
+// ========================================
+// 添加大屏卡片
+// ========================================
+.screen-add-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  cursor: pointer;
+  border: 2px dashed $screen-card-border;
+  background: transparent;
+
+  &:hover {
+    border-color: $screen-primary;
+    background: rgba(64, 158, 255, 0.1);
+  }
+
+  .add-icon {
+    font-size: 48px;
+    color: $screen-text-secondary;
+    margin-bottom: 12px;
+  }
+
+  .add-text {
+    font-size: 14px;
+    color: $screen-text-secondary;
+  }
+}
+
+// ========================================
+// 空状态
+// ========================================
+.screen-empty-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  color: $screen-text-muted;
+  grid-column: 1 / -1;
+}
+
+// ========================================
+// 分页
+// ========================================
+.screen-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding: 20px;
+
+  .el-pagination {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 20px;
+
+    --el-pagination-bg-color: transparent;
+    --el-pagination-button-bg-color: transparent;
+    --el-pagination-hover-color: #{$screen-primary};
+  }
+}
+
+// ========================================
+// 弹窗样式覆盖
+// ========================================
+.screen-dialog {
+  .el-dialog {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+  }
+
+  .el-dialog__header {
+    border-bottom: 1px solid #eee;
+    padding: 16px 20px;
+  }
+
+  .el-dialog__body {
+    padding: 20px;
+  }
+}

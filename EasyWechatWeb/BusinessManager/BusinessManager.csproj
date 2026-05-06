@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- ORM -->
+    <PackageReference Include="Jint" Version="4.0.0" />
+    <PackageReference Include="SqlSugarCore" Version="5.1.4.170" />
+
+    <!-- 日志接口 -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.0" />
+
+    <!-- Autofac DI -->
+    <PackageReference Include="Autofac" Version="8.0.0" />
+
+    <!-- Quartz 任务调度 -->
+    <PackageReference Include="Quartz" Version="3.14.0" />
+
+    <!-- CAP 事件总线 -->
+    <PackageReference Include="DotNetCore.CAP" Version="10.0.1" />
+
+    <!-- 多数据库驱动支持 -->
+    <PackageReference Include="MySqlConnector" Version="2.5.0" />
+    <PackageReference Include="Npgsql" Version="8.0.3" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.2" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.6.0" />
+    <PackageReference Include="ClickHouse.Client" Version="7.4.0" />
+  </ItemGroup>
+
+  <!-- 引用 EasyWeChatModels -->
+  <ItemGroup>
+    <ProjectReference Include="..\EasyWeChatModels\EasyWeChatModels.csproj" />
+    <ProjectReference Include="..\CommonManager\CommonManager.csproj" />
+    <ProjectReference Include="..\InfrastructureManager\InfrastructureManager.csproj" />
+  </ItemGroup>
+
+</Project>

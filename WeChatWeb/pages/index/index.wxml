@@ -1,0 +1,78 @@
+<!-- pages/index/index.wxml -->
+<view class="page-index">
+  <!-- 搜索栏 -->
+  <view class="search-bar" bindtap="onSearch">
+    <view class="search-input">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索鲜花</text>
+    </view>
+  </view>
+
+  <!-- 轮播图 -->
+  <swiper class="banner-swiper" indicator-dots autoplay circular>
+    <swiper-item wx:for="{{bannerList}}" wx:key="index">
+      <image class="banner-image" src="{{item}}" mode="aspectFill" />
+    </swiper-item>
+  </swiper>
+
+  <!-- 分类入口 -->
+  <view class="category-section">
+    <view class="section-header">
+      <text class="section-title">鲜花分类</text>
+    </view>
+    <view class="category-grid">
+      <view
+        class="category-item"
+        wx:for="{{categories}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onCategoryTap"
+      >
+        <image class="category-icon" src="{{item.icon}}" mode="aspectFit" />
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 热销推荐 -->
+  <view class="product-section" wx:if="{{hotProducts.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">🔥 热销推荐</text>
+      <text class="section-more" bindtap="onViewMoreHot">查看更多 ></text>
+    </view>
+    <view class="product-grid">
+      <view
+        class="product-item"
+        wx:for="{{hotProducts}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onProductTap"
+      >
+        <product-card product="{{item}}" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 新品上架 -->
+  <view class="product-section" wx:if="{{newProducts.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">✨ 新品上架</text>
+    </view>
+    <view class="product-grid">
+      <view
+        class="product-item"
+        wx:for="{{newProducts}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onProductTap"
+      >
+        <product-card product="{{item}}" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view class="loading-container" wx:if="{{loading}}">
+    <text class="loading-text">加载中...</text>
+  </view>
+</view>

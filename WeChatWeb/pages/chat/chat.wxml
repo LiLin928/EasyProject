@@ -1,0 +1,133 @@
+<!-- pages/chat/chat.wxml -->
+<wxs src="../../utils/time.wxs" module="time" />
+<view class="chat-page">
+  <!-- 连接状态提示 -->
+  <view class="connection-status" wx:if="{{connectionState !== 'connected'}}">
+    <text class="status-text" wx:if="{{connectionState === 'connecting'}}">正在连接...</text>
+    <text class="status-text error" wx:if="{{connectionState === 'disconnected'}}">连接已断开，正在重连...</text>
+    <text class="status-text error" wx:if="{{connectionState === 'failed'}}">连接失败，请检查网络</text>
+  </view>
+
+  <!-- 消息列表 -->
+  <scroll-view
+    class="message-list"
+    scroll-y
+    scroll-top="{{scrollTop}}"
+    enhanced
+    show-scrollbar="{{false}}"
+    bindscrolltoupper="onReachTop"
+  >
+    <!-- 加载更多提示 -->
+    <view class="load-more" wx:if="{{loading}}">
+      <text>加载中...</text>
+    </view>
+    <view class="load-more" wx:if="{{!hasMore && messages.length > 0}}">
+      <text>没有更多消息了</text>
+    </view>
+
+    <!-- 消息项 -->
+    <view wx:for="{{messages}}" wx:key="messageId" class="message-item {{item.senderType === 0 ? 'customer' : 'staff'}}">
+      <!-- 客服消息（左侧） -->
+      <view class="message-avatar" wx:if="{{item.senderType === 1}}">
+        <image src="/static/images/default-avatar.png" class="avatar-img" />
+      </view>
+
+      <!-- 消息气泡 -->
+      <view class="message-bubble">
+        <!-- 文字消息 -->
+        <text wx:if="{{item.messageType === 0}}" class="message-text">{{item.content}}</text>
+
+        <!-- 图片消息 -->
+        <image
+          wx:if="{{item.messageType === 1}}"
+          src="{{item.content}}"
+          class="message-image"
+          mode="widthFix"
+          data-url="{{item.content}}"
+          bindtap="previewImage"
+        />
+
+        <!-- 语音消息 -->
+        <view
+          wx:if="{{item.messageType === 2}}"
+          class="message-voice"
+          data-url="{{item.content}}"
+          bindtap="playVoice"
+        >
+          <text class="voice-icon">🎤</text>
+          <text class="voice-duration">{{item.duration}}秒</text>
+        </view>
+
+        <!-- 时间 -->
+        <text class="message-time">{{time.formatTime(item.createTime)}}</text>
+      </view>
+
+      <!-- 客户头像（右侧） -->
+      <view class="message-avatar" wx:if="{{item.senderType === 0}}">
+        <image src="{{userInfo.avatarUrl || '/static/images/default-avatar.png'}}" class="avatar-img" />
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 输入区域 -->
+  <view class="input-area">
+    <!-- 消息类型切换 -->
+    <view class="type-tabs">
+      <view
+        class="type-tab {{currentMessageType === 0 ? 'active' : ''}}"
+        data-type="{{0}}"
+        bindtap="switchMessageType"
+      >
+        <text class="tab-icon">📝</text>
+        <text class="tab-text">文字</text>
+      </view>
+      <view
+        class="type-tab {{currentMessageType === 1 ? 'active' : ''}}"
+        data-type="{{1}}"
+        bindtap="switchMessageType"
+      >
+        <text class="tab-icon">📷</text>
+        <text class="tab-text">图片</text>
+      </view>
+      <view
+        class="type-tab {{currentMessageType === 2 ? 'active' : ''}}"
+        data-type="{{2}}"
+        bindtap="switchMessageType"
+      >
+        <text class="tab-icon">🎤</text>
+        <text class="tab-text">语音</text>
+      </view>
+    </view>
+
+    <!-- 文字输入 -->
+    <view class="text-input-wrapper" wx:if="{{currentMessageType === 0}}">
+      <input
+        class="text-input"
+        type="text"
+        placeholder="请输入消息..."
+        value="{{inputText}}"
+        bindinput="onInput"
+        confirm-type="send"
+        bindconfirm="sendTextMessage"
+      />
+      <button class="send-btn" size="mini" bindtap="sendTextMessage">发送</button>
+    </view>
+
+    <!-- 图片选择 -->
+    <view class="image-input-wrapper" wx:if="{{currentMessageType === 1}}">
+      <button class="choose-image-btn" bindtap="sendImageMessage">选择图片</button>
+    </view>
+
+    <!-- 语音录音 -->
+    <view class="voice-input-wrapper" wx:if="{{currentMessageType === 2}}">
+      <view
+        class="record-btn {{isRecording ? 'recording' : ''}}"
+        bindtouchstart="startRecording"
+        bindtouchend="stopRecording"
+      >
+        <text wx:if="{{!isRecording}}">长按录音</text>
+        <text wx:else>{{recordDuration}}秒 松手发送</text>
+      </view>
+    </view>
+  </view>
+</view>

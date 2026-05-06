@@ -1,0 +1,85 @@
+/* components/product-card/index.wxss */
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  position: relative;
+}
+
+.product-image {
+  width: 100%;
+  height: 320rpx;
+  background: #f5f5f5;
+}
+
+.product-info {
+  padding: 20rpx;
+}
+
+.product-name {
+  font-size: 28rpx;
+  color: #323233;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: 78rpx;
+}
+
+.product-price {
+  margin-top: 16rpx;
+  display: flex;
+  align-items: baseline;
+}
+
+.current-price {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ee0a24;
+}
+
+.price-symbol {
+  font-size: 24rpx;
+  margin-right: 4rpx;
+}
+
+.original-price {
+  font-size: 24rpx;
+  color: #969799;
+  text-decoration: line-through;
+  margin-left: 12rpx;
+}
+
+.product-sales {
+  font-size: 24rpx;
+  color: #969799;
+  margin-top: 8rpx;
+}
+
+.product-tags {
+  position: absolute;
+  top: 16rpx;
+  left: 16rpx;
+  display: flex;
+  gap: 8rpx;
+}
+
+.tag {
+  font-size: 20rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 4rpx;
+  color: #fff;
+}
+
+.tag.hot {
+  background: linear-gradient(135deg, #ff6034 0%, #ee0a24 100%);
+}
+
+.tag.new {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+}

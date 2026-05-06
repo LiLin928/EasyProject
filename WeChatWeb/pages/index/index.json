@@ -1,0 +1,7 @@
+{
+  "usingComponents": {
+    "product-card": "/components/product-card"
+  },
+  "navigationBarTitleText": "鲜花商城",
+  "enablePullDownRefresh": true
+}

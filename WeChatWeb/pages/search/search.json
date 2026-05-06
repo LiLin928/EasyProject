@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "product-card": "/components/product-card"
+  },
+  "navigationBarTitleText": "搜索"
+}

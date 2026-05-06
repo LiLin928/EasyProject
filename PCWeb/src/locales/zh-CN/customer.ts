@@ -1,0 +1,211 @@
+// src/locales/zh-CN/customer.ts
+
+export default {
+  // 客户管理基础
+  title: '客户管理',
+  list: '客户列表',
+  addCustomer: '新增客户',
+  editCustomer: '编辑客户',
+  deleteCustomer: '删除客户',
+  customerDetail: '客户详情',
+
+  // 基本信息
+  phone: '手机号',
+  nickname: '昵称',
+  username: '用户名',
+  email: '邮箱',
+  avatar: '头像',
+  password: '密码',
+  status: '状态',
+  enabled: '启用',
+  disabled: '禁用',
+
+  // 会员相关
+  level: '会员等级',
+  points: '积分',
+  totalSpent: '累计消费',
+  balance: '余额',
+  registerTime: '注册时间',
+  createTime: '创建时间',
+  updateTime: '更新时间',
+  lastLoginTime: '最后登录',
+
+  // 搜索相关
+  search: '搜索',
+  reset: '重置',
+  phonePlaceholder: '请输入手机号',
+  nicknamePlaceholder: '请输入昵称',
+  usernamePlaceholder: '请输入用户名（可选）',
+  levelPlaceholder: '请选择会员等级',
+  statusPlaceholder: '请选择状态',
+
+  // 操作相关
+  detail: '详情',
+  adjustPoints: '调整积分',
+  adjustLevel: '调整等级',
+  batchDelete: '批量删除',
+  export: '导出',
+  noSelection: '请先选择客户',
+
+  // Tab 标签
+  basicInfo: '基本信息',
+  addressTab: '收货地址',
+  cartTab: '购物车',
+  favoriteTab: '收藏夹',
+
+  // 收货地址相关
+  address: '收货地址',
+  addressName: '收货人',
+  addressPhone: '联系电话',
+  province: '省份',
+  city: '城市',
+  district: '区县',
+  detailAddress: '详细地址',
+  defaultAddress: '默认地址',
+  setDefault: '设为默认',
+  addAddress: '新增地址',
+  editAddress: '编辑地址',
+  deleteAddress: '删除地址',
+  noAddress: '暂无收货地址',
+  addressNamePlaceholder: '请输入收货人姓名',
+  addressPhonePlaceholder: '请输入联系电话',
+  provincePlaceholder: '请选择省份',
+  cityPlaceholder: '请选择城市',
+  districtPlaceholder: '请选择区县',
+  detailAddressPlaceholder: '请输入详细地址',
+
+  // 购物车相关
+  cart: '购物车',
+  cartEmpty: '购物车是空的',
+  cartTotal: '共 {count} 件商品',
+  quantity: '数量',
+  price: '价格',
+  productName: '商品名称',
+  productImage: '商品图片',
+  addToCartTime: '加入时间',
+
+  // 收藏相关
+  favorite: '收藏夹',
+  favoriteGroup: '收藏分组',
+  allGroup: '全部分组',
+  favoriteTime: '收藏时间',
+  favoriteEmpty: '暂无收藏商品',
+  addToFavoriteTime: '收藏时间',
+
+  // 积分调整
+  pointsAdjustTitle: '积分调整',
+  currentPoints: '当前积分',
+  adjustType: '调整类型',
+  pointsAdd: '增加积分',
+  pointsSubtract: '扣减积分',
+  adjustAmount: '调整数量',
+  adjustReason: '调整原因',
+  adjustAmountPlaceholder: '请输入调整数量',
+  adjustReasonPlaceholder: '请输入调整原因',
+  adjustSuccess: '调整成功',
+  adjustAmountRequired: '请输入调整数量',
+  adjustReasonRequired: '请输入调整原因',
+  adjustAmountPositive: '调整数量必须大于0',
+
+  // 等级调整
+  levelAdjustTitle: '等级调整',
+  currentLevel: '当前等级',
+  selectLevel: '选择等级',
+  levelThreshold: '升级门槛',
+  levelAdjustSuccess: '等级调整成功',
+  selectLevelRequired: '请选择会员等级',
+
+  // 确认提示
+  deleteCustomerConfirm: '确定要删除该客户吗？',
+  deleteAddressConfirm: '确定要删除该收货地址吗？',
+  batchDeleteConfirm: '确定要删除选中的 {count} 个客户吗？',
+  deleteSuccess: '删除成功',
+
+  // 成功提示
+  createCustomerSuccess: '创建客户成功',
+  updateCustomerSuccess: '更新客户成功',
+  createAddressSuccess: '添加地址成功',
+  updateAddressSuccess: '更新地址成功',
+  deleteAddressSuccess: '删除地址成功',
+  setDefaultAddressSuccess: '设置默认地址成功',
+  exportSuccess: '导出成功',
+
+  // 验证提示
+  phoneRequired: '手机号不能为空',
+  phoneFormat: '请输入正确的手机号',
+  nicknameRequired: '昵称不能为空',
+  usernameLength: '用户名长度在3-20个字符之间',
+  emailFormat: '请输入正确的邮箱格式',
+  passwordMinLength: '密码长度不能少于6位',
+  addressNameRequired: '收货人不能为空',
+  addressPhoneRequired: '联系电话不能为空',
+  addressPhoneFormat: '请输入正确的手机号',
+  provinceRequired: '请选择省份',
+  cityRequired: '请选择城市',
+  districtRequired: '请选择区县',
+  detailAddressRequired: '详细地址不能为空',
+
+  // 会员等级管理
+  levelManage: '等级管理',
+  levelList: '等级列表',
+  addLevel: '新增等级',
+  editLevel: '编辑等级',
+  deleteLevel: '删除等级',
+  levelName: '等级名称',
+  minSpent: '升级门槛（消费金额）',
+  discount: '折扣（%）',
+  pointsRate: '积分倍率',
+  levelSort: '排序',
+  levelNamePlaceholder: '请输入等级名称',
+  minSpentPlaceholder: '请输入升级门槛',
+  discountPlaceholder: '请输入折扣比例',
+  pointsRatePlaceholder: '请输入积分倍率',
+  levelSortPlaceholder: '请输入排序',
+  deleteLevelConfirm: '确定要删除该会员等级吗？',
+  createLevelSuccess: '创建等级成功',
+  updateLevelSuccess: '更新等级成功',
+  deleteLevelSuccess: '删除等级成功',
+  levelNameRequired: '等级名称不能为空',
+  minSpentRequired: '升级门槛不能为空',
+  discountRange: '折扣比例应在0-100之间',
+  pointsRatePositive: '积分倍率必须大于0',
+  hasCustomerError: '该等级下存在客户，无法删除',
+
+  // 积分记录
+  pointsLog: '积分记录',
+  changeType: '变动类型',
+  changeTypePlaceholder: '请选择变动类型',
+  changeAmount: '变动数量',
+  afterPoints: '变动后积分',
+  changeTime: '变动时间',
+  changeTimeRange: '变动时间范围',
+  changeReason: '变动原因',
+  operator: '操作人',
+  noPointsLog: '暂无积分记录',
+
+  // 积分变动类型
+  changeTypeAll: '全部类型',
+  changeTypeReview: '评价奖励',
+  changeTypeOrder: '订单奖励',
+  changeTypeExchange: '积分兑换',
+  changeTypeRefund: '退款扣除',
+  changeTypeSystem: '系统调整',
+  consumeGain: '消费获得',
+  exchangeUse: '兑换使用',
+  manualAdjust: '手动调整',
+  expireClear: '过期清零',
+
+  // 客户状态
+  statusAll: '全部状态',
+  statusActive: '正常',
+  statusInactive: '禁用',
+
+  // 统计信息
+  totalCustomers: '客户总数',
+  activeCustomers: '活跃客户',
+  newCustomers: '新增客户',
+  vipCustomers: 'VIP客户',
+  todayNew: '今日新增',
+  weekNew: '本周新增',
+  monthNew: '本月新增',
+}

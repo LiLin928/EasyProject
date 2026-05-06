@@ -1,0 +1,143 @@
+/* pages/my/my.wxss */
+
+.page-my {
+  min-height: 100vh;
+  background: #f7f8fa;
+}
+
+/* 用户区域 */
+.user-section {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  padding: 60rpx 30rpx;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 4rpx solid #fff;
+  background: #fff;
+}
+
+.nickname {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-left: 30rpx;
+}
+
+/* 订单入口 */
+.order-section {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 16rpx;
+  padding: 30rpx;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #323233;
+}
+
+.section-more {
+  font-size: 24rpx;
+  color: #969799;
+}
+
+.order-entry {
+  display: flex;
+  justify-content: space-around;
+}
+
+.entry-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.entry-icon {
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.entry-text {
+  font-size: 26rpx;
+  color: #646566;
+}
+
+.entry-badge {
+  position: absolute;
+  top: -10rpx;
+  right: -20rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  background: #ee0a24;
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8rpx;
+}
+
+/* 功能菜单 */
+.menu-section {
+  background: #fff;
+  margin: 20rpx;
+  border-radius: 16rpx;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f7f8fa;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-icon {
+  font-size: 36rpx;
+  margin-right: 20rpx;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 30rpx;
+  color: #323233;
+}
+
+.menu-arrow {
+  font-size: 28rpx;
+  color: #969799;
+}
+
+/* 退出登录 */
+.logout-btn {
+  margin: 60rpx 40rpx;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  color: #ee0a24;
+}

@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Quartz 任务调度 -->
+    <PackageReference Include="Quartz" Version="3.14.0" />
+
+    <!-- Autofac DI -->
+    <PackageReference Include="Autofac" Version="8.0.0" />
+
+    <!-- CAP 事件总线 -->
+    <PackageReference Include="DotNetCore.CAP" Version="10.0.1" />
+    <PackageReference Include="DotNetCore.CAP.MySql" Version="10.0.1" />
+    <PackageReference Include="DotNetCore.CAP.Kafka" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CommonManager\CommonManager.csproj" />
+    <ProjectReference Include="..\EasyWeChatModels\EasyWeChatModels.csproj" />
+  </ItemGroup>
+</Project>

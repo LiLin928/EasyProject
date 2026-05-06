@@ -1,0 +1,41 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.development
+.env.production
+appsetting.json
+appsettings.Development.json
+
+# Claude Code
+.claude/
+
+# Documentation
+docs/
+
+# Build outputs
+bin/
+obj/
+dist/
+
+# IDE and tools
+.vs/
+.vscode/
+.superpowers/
+node_modules/
+
+# Playwright CLI
+.playwright-cli/
+
+# SQL files
+*.sql
+
+# Markdown files (except CLAUDE.md and README.md)
+*.md
+!CLAUDE.md
+!README.md
+!*/CLAUDE.md
+!*/README.md
+
+# Logs
+EasyWeChatWeb/EasyWeChatWeb/logs/

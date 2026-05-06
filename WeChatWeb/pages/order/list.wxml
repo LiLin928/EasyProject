@@ -1,0 +1,79 @@
+<!-- pages/order/list.wxml -->
+<view class="page-order-list">
+  <!-- Tabs -->
+  <view class="tabs">
+    <view
+      wx:for="{{tabs}}"
+      wx:key="key"
+      class="tab-item {{currentTab === index ? 'active' : ''}}"
+      data-index="{{index}}"
+      bindtap="onTabChange"
+    >
+      {{item.name}}
+    </view>
+  </view>
+
+  <!-- 加载状态 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 订单列表 -->
+  <view wx:elif="{{orders.length > 0}}" class="order-list">
+    <view
+      wx:for="{{orders}}"
+      wx:key="id"
+      class="order-card"
+      data-id="{{item.id}}"
+      bindtap="onViewDetail"
+    >
+      <!-- 订单头部 -->
+      <view class="order-header">
+        <text class="order-no">订单号: {{item.orderNo}}</text>
+        <text class="order-status status-{{item.status}}">{{item.statusText}}</text>
+      </view>
+
+      <!-- 订单商品列表 -->
+      <view class="order-goods">
+        <view wx:for="{{item.items}}" wx:key="id" class="goods-item">
+          <image src="{{item.productImage}}" mode="aspectFill" class="goods-image" />
+          <view class="goods-info">
+            <text class="goods-name">{{item.productName}}</text>
+            <view class="goods-bottom">
+              <text class="goods-price">¥{{item.price}}</text>
+              <text class="goods-count">x{{item.quantity || item.count}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 订单金额 -->
+      <view class="order-footer">
+        <text class="order-total">共{{item.items.length}}件商品 合计: </text>
+        <text class="order-amount">¥{{item.totalAmount}}</text>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="order-actions" catchtap="true">
+        <view
+          wx:if="{{item.status === 0}}"
+          class="action-btn cancel"
+          data-id="{{item.id}}"
+          catchtap="onCancelOrder"
+        >取消订单</view>
+        <view
+          wx:if="{{item.status === 0}}"
+          class="action-btn primary"
+          data-id="{{item.id}}"
+          catchtap="onPayOrder"
+        >去支付</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:else class="empty-state">
+    <text class="empty-icon">📦</text>
+    <text class="empty-text">暂无订单</text>
+  </view>
+</view>

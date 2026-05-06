@@ -1,0 +1,88 @@
+<!-- pages/search/search.wxml -->
+<view class="page-search">
+  <!-- 搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        placeholder="搜索鲜花"
+        value="{{keyword}}"
+        bindinput="onInput"
+        bindconfirm="onSearch"
+        confirm-type="search"
+        focus
+      />
+      <text class="clear-btn" wx:if="{{keyword}}" bindtap="onClearInput">✕</text>
+    </view>
+    <text class="search-btn" bindtap="onSearch">搜索</text>
+  </view>
+
+  <!-- 搜索结果 -->
+  <view class="search-results" wx:if="{{searched}}">
+    <view class="result-count" wx:if="{{!loading && searchResults.length > 0}}">
+      找到 {{searchResults.length}} 个商品
+    </view>
+
+    <view class="product-grid" wx:if="{{searchResults.length > 0}}">
+      <view
+        class="product-item"
+        wx:for="{{searchResults}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onProductTap"
+      >
+        <product-card product="{{item}}" />
+      </view>
+    </view>
+
+    <view class="empty-result" wx:if="{{!loading && searchResults.length === 0}}">
+      <text class="empty-icon">🔍</text>
+      <text class="empty-text">未找到相关商品</text>
+    </view>
+
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">搜索中...</text>
+    </view>
+  </view>
+
+  <!-- 搜索建议 -->
+  <view class="search-suggest" wx:else>
+    <!-- 搜索历史 -->
+    <view class="history-section" wx:if="{{searchHistory.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">搜索历史</text>
+        <text class="clear-history" bindtap="clearHistory">清空</text>
+      </view>
+      <view class="keyword-list">
+        <view
+          class="keyword-item"
+          wx:for="{{searchHistory}}"
+          wx:key="*this"
+          data-keyword="{{item}}"
+          bindtap="onHistoryTap"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+
+    <!-- 热门搜索 -->
+    <view class="hot-section">
+      <view class="section-header">
+        <text class="section-title">🔥 热门搜索</text>
+      </view>
+      <view class="keyword-list">
+        <view
+          class="keyword-item"
+          wx:for="{{hotKeywords}}"
+          wx:key="*this"
+          data-keyword="{{item}}"
+          bindtap="onHotKeywordTap"
+        >
+          {{item}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,38 @@
+<!-- pages/classify/classify.wxml -->
+<view class="page-classify">
+  <!-- 左侧分类 -->
+  <scroll-view class="category-nav" scroll-y>
+    <view
+      class="category-item {{currentCategoryId === item.id ? 'active' : ''}}"
+      wx:for="{{categories}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="onCategorySelect"
+    >
+      <text class="category-name">{{item.name}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 右侧商品 -->
+  <scroll-view class="product-content" scroll-y>
+    <view class="product-grid" wx:if="{{products.length > 0}}">
+      <view
+        class="product-item"
+        wx:for="{{products}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="onProductTap"
+      >
+        <product-card product="{{item}}" />
+      </view>
+    </view>
+
+    <view class="empty-state" wx:if="{{!loading && products.length === 0}}">
+      <text class="empty-text">该分类暂无商品</text>
+    </view>
+
+    <view class="loading-state" wx:if="{{loading}}">
+      <text class="loading-text">加载中...</text>
+    </view>
+  </scroll-view>
+</view>

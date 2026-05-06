@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EasyProject 管理后台</title>
+    <script>
+      // 纠正 URL 格式：将不带 hash 的路径重定向到 hash 格式
+      // 例如：/login -> /#/login，/desktop -> /#/desktop
+      (function() {
+        var path = window.location.pathname;
+        var hash = window.location.hash;
+
+        // 如果没有 hash 且路径不为空（且不是根路径 "/"）
+        if (!hash && path && path !== '/' && !path.startsWith('/src') && !path.startsWith('/@') && !path.includes('.')) {
+          // 重定向到正确的 hash 格式
+          window.location.replace('/#' + path + window.location.search);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

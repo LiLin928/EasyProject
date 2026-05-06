@@ -1,0 +1,108 @@
+@use './variables.scss' as *;
+
+// 重置样式
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', '微软雅黑', Arial, sans-serif;
+  font-size: 14px;
+  color: $text-primary;
+  background-color: $bg-page;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+input,
+button,
+textarea,
+select {
+  font-family: inherit;
+  font-size: inherit;
+  outline: none;
+}
+
+// NProgress 进度条样式（底部显示）
+#nprogress {
+  .bar {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    z-index: 1031;
+    width: 100%;
+    height: 2px;
+    background: $primary-color;
+  }
+
+  .peg {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: block;
+    width: 100px;
+    height: 100%;
+    box-shadow: 0 0 10px $primary-color, 0 0 5px $primary-color;
+    opacity: 1;
+    transform: rotate(0deg) translateY(0);
+  }
+}
+
+// ==================== X6 工作流连线样式 ====================
+
+// X6 连线 hover 效果
+.x6-edge {
+  transition: all 0.2s ease;
+
+  &:hover {
+    .x6-edge-path {
+      filter: drop-shadow(0 2px 4px rgba(24, 144, 255, 0.3));
+    }
+  }
+}
+
+// 连线箭头阴影
+.x6-edge-arrow {
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.15));
+}
+
+// ==================== 工作流设计器样式 ====================
+
+// 隐藏 X6 画布滚动条
+.x6-graph {
+  overflow: hidden !important;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}
+
+// 隐藏工作流设计器所有滚动条
+.dag-designer,
+.dag-canvas,
+.graph-container {
+  overflow: hidden !important;
+
+  &::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+}

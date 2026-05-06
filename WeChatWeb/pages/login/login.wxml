@@ -1,0 +1,90 @@
+<!-- pages/login/login.wxml -->
+<view class="page-login">
+  <!-- Logo -->
+  <view class="logo-section">
+    <text class="logo-icon">🌸</text>
+    <text class="logo-text">鲜花商城</text>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="login-tabs">
+    <view
+      class="tab-item {{activeTab === 'quick' ? 'active' : ''}}"
+      data-tab="quick"
+      bindtap="onTabChange"
+    >
+      <text class="tab-text">快捷登录</text>
+    </view>
+    <view
+      class="tab-item {{activeTab === 'password' ? 'active' : ''}}"
+      data-tab="password"
+      bindtap="onTabChange"
+    >
+      <text class="tab-text">密码登录</text>
+    </view>
+  </view>
+
+  <!-- 快捷登录内容 -->
+  <view class="login-content" wx:if="{{activeTab === 'quick'}}">
+    <view class="login-tip">
+      <text class="tip-text">使用微信一键登录，快速便捷</text>
+    </view>
+    <view class="login-buttons">
+      <button
+        class="btn btn-wx"
+        open-type="getPhoneNumber"
+        bindgetphonenumber="onGetPhoneNumber"
+        loading="{{loading}}"
+        disabled="{{loading}}"
+      >
+        <text class="btn-icon">📱</text>
+        <text class="btn-text">微信快捷登录</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 密码登录内容 -->
+  <view class="login-content" wx:if="{{activeTab === 'password'}}">
+    <view class="login-form">
+      <view class="form-item">
+        <input
+          class="form-input"
+          type="number"
+          placeholder="请输入手机号"
+          maxlength="11"
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+        />
+      </view>
+      <view class="form-item">
+        <input
+          class="form-input"
+          type="password"
+          placeholder="请输入密码"
+          maxlength="20"
+          value="{{password}}"
+          bindinput="onPasswordInput"
+        />
+      </view>
+      <button
+        class="btn btn-primary"
+        bindtap="onPasswordLogin"
+        loading="{{loading}}"
+        disabled="{{loading}}"
+      >
+        <text class="btn-text">登录</text>
+      </button>
+    </view>
+    <view class="login-tip">
+      <text class="tip-text">未设置密码？请先使用快捷登录</text>
+    </view>
+  </view>
+
+  <!-- 协议 -->
+  <view class="agreement">
+    <text class="agreement-text">登录即表示同意</text>
+    <text class="agreement-link">《用户协议》</text>
+    <text class="agreement-text">和</text>
+    <text class="agreement-link">《隐私政策》</text>
+  </view>
+</view>

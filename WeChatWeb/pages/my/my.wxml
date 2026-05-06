@@ -1,0 +1,64 @@
+<!-- pages/my/my.wxml -->
+<view class="page-my">
+  <!-- 用户信息 -->
+  <view class="user-section">
+    <view class="user-info" wx:if="{{isLoggedIn && userInfo}}">
+      <image class="avatar" src="{{userInfo.avatarUrl || '/static/images/default-avatar.png'}}" />
+      <text class="nickname">{{userInfo.nickname || '微信用户'}}</text>
+    </view>
+    <view class="user-info" wx:else bindtap="onLogin">
+      <image class="avatar" src="/static/images/default-avatar.png" />
+      <text class="nickname">点击登录</text>
+    </view>
+  </view>
+
+  <!-- 订单入口 -->
+  <view class="order-section">
+    <view class="section-header">
+      <text class="section-title">我的订单</text>
+      <text class="section-more" bindtap="onViewOrder">查看全部 ></text>
+    </view>
+    <view class="order-entry">
+      <view class="entry-item" data-status="pending" bindtap="onViewOrder">
+        <text class="entry-icon">⏳</text>
+        <text class="entry-text">待支付</text>
+        <text class="entry-badge" wx:if="{{orderCounts.pending > 0}}">{{orderCounts.pending}}</text>
+      </view>
+      <view class="entry-item" data-status="paid" bindtap="onViewOrder">
+        <text class="entry-icon">📦</text>
+        <text class="entry-text">已支付</text>
+        <text class="entry-badge" wx:if="{{orderCounts.paid > 0}}">{{orderCounts.paid}}</text>
+      </view>
+      <view class="entry-item" data-status="completed" bindtap="onViewOrder">
+        <text class="entry-icon">✅</text>
+        <text class="entry-text">已完成</text>
+        <text class="entry-badge" wx:if="{{orderCounts.completed > 0}}">{{orderCounts.completed}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 功能列表 -->
+  <view class="menu-section">
+    <view class="menu-item" bindtap="onAddressManage">
+      <text class="menu-icon">📍</text>
+      <text class="menu-text">地址管理</text>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="goToChat">
+      <text class="menu-icon">💬</text>
+      <text class="menu-text">联系客服</text>
+      <view class="entry-badge" wx:if="{{chatUnread > 0}}">{{chatUnread}}</view>
+      <text class="menu-arrow">></text>
+    </view>
+    <view class="menu-item" bindtap="onContact">
+      <text class="menu-icon">📞</text>
+      <text class="menu-text">客服电话</text>
+      <text class="menu-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-btn" wx:if="{{isLoggedIn}}" bindtap="onLogout">
+    退出登录
+  </view>
+</view>

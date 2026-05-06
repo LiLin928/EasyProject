@@ -1,0 +1,22 @@
+{
+  "name": "wechat-mall",
+  "version": "1.0.0",
+  "description": "微信小程序鲜花商城",
+  "main": "app.js",
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "miniprogram",
+    "wechat",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/wechat-miniprogram": "^3.4.10",
+    "miniprogram-api-typings": "^3.12.3",
+    "typescript": "^5.9.3"
+  }
+}

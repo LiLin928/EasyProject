@@ -1,0 +1,73 @@
+{
+    "appid": "wx43c8ca3b3066a4c8",
+    "projectname": "WeChatWeb",
+    "miniprogramRoot": "./",
+    "setting": {
+        "es6": false,
+        "minified": true,
+        "postcss": true,
+        "uglifyFileName": false,
+        "enhance": true,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
+        },
+        "useCompilerPlugins": [],
+        "compileWorklet": false,
+        "uploadWithSourceMap": true,
+        "packNpmManually": true,
+        "packNpmRelationList": [],
+        "minifyWXSS": true,
+        "minifyWXML": true,
+        "localPlugins": false,
+        "disableUseStrict": false,
+        "condition": false,
+        "swc": false,
+        "disableSWC": true
+    },
+    "compileType": "miniprogram",
+    "libVersion": "3.15.1",
+    "packOptions": {
+        "ignore": [
+            {
+                "value": ".eslintrc.js",
+                "type": "file"
+            },
+            {
+                "value": "tsconfig.json",
+                "type": "file"
+            },
+            {
+                "value": "node_modules",
+                "type": "folder"
+            },
+            {
+                "value": "package.json",
+                "type": "file"
+            },
+            {
+                "value": "package-lock.json",
+                "type": "file"
+            }
+        ],
+        "include": []
+    },
+    "isGameTourist": false,
+    "condition": {
+        "search": {
+            "list": []
+        },
+        "conversation": {
+            "list": []
+        },
+        "game": {
+            "list": []
+        },
+        "miniprogram": {
+            "list": []
+        }
+    },
+    "simulatorPluginLibVersion": {},
+    "editorSetting": {}
+}

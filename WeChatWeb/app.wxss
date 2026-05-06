@@ -1,0 +1,98 @@
+/* app.wxss - 全局样式 */
+
+/* 颜色变量 */
+page {
+  --primary-color: #1989fa;
+  --success-color: #07c160;
+  --warning-color: #ff976a;
+  --danger-color: #ee0a24;
+  --text-color: #323233;
+  --text-secondary: #646566;
+  --text-placeholder: #c8c9cc;
+  --border-color: #ebedf0;
+  --background-color: #f7f8fa;
+  --white: #ffffff;
+}
+
+/* 全局样式 */
+page {
+  background-color: var(--background-color);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB', 'Microsoft Yahei', sans-serif;
+  font-size: 14px;
+  color: var(--text-color);
+  line-height: 1.5;
+}
+
+/* 通用容器 */
+.container {
+  padding: 20rpx;
+  background-color: var(--white);
+}
+
+/* 安全区域底部 */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* 文本样式 */
+.text-primary { color: var(--primary-color); }
+.text-success { color: var(--success-color); }
+.text-warning { color: var(--warning-color); }
+.text-danger { color: var(--danger-color); }
+.text-secondary { color: var(--text-secondary); }
+
+/* 价格样式 */
+.price {
+  color: var(--danger-color);
+  font-weight: bold;
+}
+
+.price-symbol {
+  font-size: 12px;
+}
+
+/* 按钮样式 */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  text-align: center;
+}
+
+.btn-danger {
+  background-color: var(--danger-color);
+  color: var(--white);
+  border-radius: 8rpx;
+  padding: 20rpx 40rpx;
+  text-align: center;
+}
+
+/* 卡片样式 */
+.card {
+  background-color: var(--white);
+  border-radius: 12rpx;
+  padding: 20rpx;
+  margin: 20rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+/* Flex 布局 */
+.flex { display: flex; }
+.flex-center { justify-content: center; align-items: center; }
+.flex-between { justify-content: space-between; }
+.flex-around { justify-content: space-around; }
+.flex-column { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+
+/* 间距 */
+.mt-10 { margin-top: 10rpx; }
+.mt-20 { margin-top: 20rpx; }
+.mb-10 { margin-bottom: 10rpx; }
+.mb-20 { margin-bottom: 20rpx; }
+.ml-10 { margin-left: 10rpx; }
+.ml-20 { margin-left: 20rpx; }
+.mr-10 { margin-right: 10rpx; }
+.mr-20 { margin-right: 20rpx; }
+.p-10 { padding: 10rpx; }
+.p-20 { padding: 20rpx; }

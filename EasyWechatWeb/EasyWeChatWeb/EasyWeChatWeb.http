@@ -1,0 +1,6 @@
+@EasyWeChatWeb_HostAddress = http://localhost:5084
+
+GET {{EasyWeChatWeb_HostAddress}}/swagger/
+Accept: application/json
+
+###

@@ -1,0 +1,111 @@
+/* pages/pay/result.wxss */
+
+.page-result {
+  min-height: 100vh;
+  background: #f7f8fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 60rpx;
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 60rpx;
+  width: 100%;
+}
+
+.result-icon {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  margin-bottom: 30rpx;
+}
+
+.result-icon.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.result-icon.success {
+  background: #d4edda;
+  color: #07c160;
+}
+
+.result-icon.failed {
+  background: #f8d7da;
+  color: #ee0a24;
+}
+
+.result-title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 16rpx;
+}
+
+.result-desc {
+  font-size: 28rpx;
+  color: #646566;
+  text-align: center;
+  margin-bottom: 40rpx;
+}
+
+.order-info {
+  width: 100%;
+  padding: 30rpx;
+  background: #f7f8fa;
+  border-radius: 12rpx;
+  margin-bottom: 40rpx;
+}
+
+.order-no,
+.order-amount {
+  display: block;
+  font-size: 28rpx;
+  color: #323233;
+  line-height: 1.8;
+}
+
+.order-amount {
+  font-weight: bold;
+  color: #ee0a24;
+  margin-top: 10rpx;
+}
+
+.action-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.btn {
+  width: 100%;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #1989fa 0%, #07c160 100%);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: #fff;
+  color: #323233;
+  border: 2rpx solid #ebedf0;
+}

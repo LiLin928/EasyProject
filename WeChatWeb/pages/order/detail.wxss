@@ -1,0 +1,206 @@
+/* pages/order/detail.wxss */
+
+.page-order-detail {
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding-bottom: 140rpx;
+}
+
+/* 订单状态 */
+.status-section {
+  padding: 40rpx 30rpx;
+}
+
+.status-text {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* 通用 section */
+.address-section,
+.goods-section,
+.info-section,
+.amount-section {
+  background: #fff;
+  margin-bottom: 20rpx;
+  padding: 30rpx;
+}
+
+.section-title {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-bottom: 20rpx;
+}
+
+/* 地址信息 */
+.address-info {
+  padding-top: 10rpx;
+}
+
+.address-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+
+.address-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #323233;
+  margin-right: 20rpx;
+}
+
+.address-phone {
+  font-size: 28rpx;
+  color: #646566;
+}
+
+.address-detail {
+  font-size: 28rpx;
+  color: #646566;
+  line-height: 1.5;
+}
+
+/* 商品列表 */
+.goods-item {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #f7f8fa;
+}
+
+.goods-item:last-child {
+  border-bottom: none;
+}
+
+.goods-image {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 12rpx;
+  background: #f7f8fa;
+}
+
+.goods-info {
+  flex: 1;
+  margin-left: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.goods-name {
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.goods-bottom {
+  display: flex;
+  justify-content: space-between;
+}
+
+.goods-price {
+  font-size: 28rpx;
+  color: #ee0a24;
+}
+
+.goods-count {
+  font-size: 24rpx;
+  color: #969799;
+}
+
+/* 订单信息 */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+}
+
+.info-label {
+  font-size: 28rpx;
+  color: #646566;
+}
+
+.info-value {
+  font-size: 28rpx;
+  color: #323233;
+  display: flex;
+  align-items: center;
+}
+
+.copy-btn {
+  font-size: 24rpx;
+  color: #1989fa;
+  margin-left: 16rpx;
+  padding: 4rpx 16rpx;
+  border: 1rpx solid #1989fa;
+  border-radius: 8rpx;
+}
+
+/* 金额信息 */
+.amount-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12rpx 0;
+}
+
+.amount-label {
+  font-size: 28rpx;
+  color: #646566;
+}
+
+.amount-value {
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.amount-value.free {
+  color: #07c160;
+}
+
+.amount-row.total {
+  border-top: 1rpx solid #ebedf0;
+  padding-top: 20rpx;
+  margin-top: 10rpx;
+}
+
+.amount-row.total .amount-value {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #ee0a24;
+}
+
+/* 底部操作 */
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  display: flex;
+  justify-content: flex-end;
+  gap: 20rpx;
+  padding: 20rpx 30rpx;
+  box-shadow: 0 -2rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.action-btn {
+  padding: 20rpx 50rpx;
+  font-size: 28rpx;
+  border-radius: 40rpx;
+}
+
+.action-btn.cancel {
+  border: 1rpx solid #ebedf0;
+  color: #646566;
+}
+
+.action-btn.primary {
+  background: #1989fa;
+  color: #fff;
+}
+
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}

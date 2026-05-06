@@ -1,0 +1,43 @@
+// utils/time.wxs
+
+/** 格式化时间戳为友好显示 */
+function formatTime(timestamp) {
+  if (!timestamp) return '';
+
+  var now = Date.now();
+  var diff = now - timestamp;
+
+  var minute = 60 * 1000;
+  var hour = 60 * minute;
+  var day = 24 * hour;
+
+  // 格式化日期
+  function formatDate(ts, fmt) {
+    var d = getDate(ts);
+    var year = d.getFullYear();
+    var month = d.getMonth() + 1;
+    var day = d.getDate();
+    var h = d.getHours();
+    var m = d.getMinutes();
+
+    if (month < 10) month = '0' + month;
+    if (day < 10) day = '0' + day;
+    if (h < 10) h = '0' + h;
+    if (m < 10) m = '0' + m;
+
+    if (fmt === 'time') {
+      return h + ':' + m;
+    }
+    return year + '-' + month + '-' + day + ' ' + h + ':' + m;
+  }
+
+  if (diff < minute) return '刚刚';
+  if (diff < hour) return Math.floor(diff / minute) + '分钟前';
+  if (diff < day) return formatDate(timestamp, 'time');
+
+  return formatDate(timestamp, 'full');
+}
+
+module.exports = {
+  formatTime: formatTime
+};

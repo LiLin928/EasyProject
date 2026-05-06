@@ -1,0 +1,42 @@
+<!-- pages/pay/result.wxml -->
+<view class="page-result">
+  <!-- 待支付状态 -->
+  <view class="result-content" wx:if="{{status === 'pending'}}">
+    <view class="result-icon pending">⏳</view>
+    <text class="result-title">待支付</text>
+    <text class="result-desc">订单创建成功，请尽快完成支付</text>
+
+    <view class="order-info" wx:if="{{order}}">
+      <text class="order-no">订单编号: {{order.orderNo}}</text>
+      <text class="order-amount">支付金额: ¥{{order.totalAmount / 100}}</text>
+    </view>
+
+    <view class="action-buttons">
+      <view class="btn btn-primary" bindtap="onPayNow">立即支付</view>
+      <view class="btn btn-secondary" bindtap="onViewOrder">查看订单</view>
+    </view>
+  </view>
+
+  <!-- 支付成功 -->
+  <view class="result-content" wx:if="{{status === 'success'}}">
+    <view class="result-icon success">✓</view>
+    <text class="result-title">支付成功</text>
+    <text class="result-desc">感谢您的购买，商品将尽快送达</text>
+
+    <view class="action-buttons">
+      <view class="btn btn-primary" bindtap="onViewOrder">查看订单</view>
+      <view class="btn btn-secondary" bindtap="onBackHome">返回首页</view>
+    </view>
+  </view>
+
+  <!-- 支付失败 -->
+  <view class="result-content" wx:if="{{status === 'failed'}}">
+    <view class="result-icon failed">✗</view>
+    <text class="result-title">支付失败</text>
+    <text class="result-desc">订单创建失败，请重试</text>
+
+    <view class="action-buttons">
+      <view class="btn btn-primary" bindtap="onBackHome">返回首页</view>
+    </view>
+  </view>
+</view>

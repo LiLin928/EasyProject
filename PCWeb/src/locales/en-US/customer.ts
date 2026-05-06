@@ -1,0 +1,211 @@
+// src/locales/en-US/customer.ts
+
+export default {
+  // Customer Management Basic
+  title: 'Customer Management',
+  list: 'Customer List',
+  addCustomer: 'Add Customer',
+  editCustomer: 'Edit Customer',
+  deleteCustomer: 'Delete Customer',
+  customerDetail: 'Customer Detail',
+
+  // Basic Information
+  phone: 'Phone',
+  nickname: 'Nickname',
+  username: 'Username',
+  email: 'Email',
+  avatar: 'Avatar',
+  password: 'Password',
+  status: 'Status',
+  enabled: 'Enabled',
+  disabled: 'Disabled',
+
+  // Membership Related
+  level: 'Member Level',
+  points: 'Points',
+  totalSpent: 'Total Spent',
+  balance: 'Balance',
+  registerTime: 'Register Time',
+  createTime: 'Create Time',
+  updateTime: 'Update Time',
+  lastLoginTime: 'Last Login',
+
+  // Search Related
+  search: 'Search',
+  reset: 'Reset',
+  phonePlaceholder: 'Enter phone number',
+  nicknamePlaceholder: 'Enter nickname',
+  usernamePlaceholder: 'Enter username (optional)',
+  levelPlaceholder: 'Select member level',
+  statusPlaceholder: 'Select status',
+
+  // Operations
+  detail: 'Detail',
+  adjustPoints: 'Adjust Points',
+  adjustLevel: 'Adjust Level',
+  batchDelete: 'Batch Delete',
+  export: 'Export',
+  noSelection: 'Please select customers first',
+
+  // Tab Labels
+  basicInfo: 'Basic Info',
+  addressTab: 'Addresses',
+  cartTab: 'Cart',
+  favoriteTab: 'Favorites',
+
+  // Address Related
+  address: 'Address',
+  addressName: 'Recipient',
+  addressPhone: 'Contact Phone',
+  province: 'Province',
+  city: 'City',
+  district: 'District',
+  detailAddress: 'Detail Address',
+  defaultAddress: 'Default Address',
+  setDefault: 'Set as Default',
+  addAddress: 'Add Address',
+  editAddress: 'Edit Address',
+  deleteAddress: 'Delete Address',
+  noAddress: 'No address',
+  addressNamePlaceholder: 'Enter recipient name',
+  addressPhonePlaceholder: 'Enter contact phone',
+  provincePlaceholder: 'Select province',
+  cityPlaceholder: 'Select city',
+  districtPlaceholder: 'Select district',
+  detailAddressPlaceholder: 'Enter detail address',
+
+  // Cart Related
+  cart: 'Cart',
+  cartEmpty: 'Cart is empty',
+  cartTotal: '{count} items in cart',
+  quantity: 'Quantity',
+  price: 'Price',
+  productName: 'Product Name',
+  productImage: 'Product Image',
+  addToCartTime: 'Added Time',
+
+  // Favorite Related
+  favorite: 'Favorites',
+  favoriteGroup: 'Favorite Group',
+  allGroup: 'All Groups',
+  favoriteTime: 'Favorite Time',
+  favoriteEmpty: 'No favorite products',
+  addToFavoriteTime: 'Favorite Time',
+
+  // Points Adjustment
+  pointsAdjustTitle: 'Points Adjustment',
+  currentPoints: 'Current Points',
+  adjustType: 'Adjust Type',
+  pointsAdd: 'Add Points',
+  pointsSubtract: 'Subtract Points',
+  adjustAmount: 'Adjust Amount',
+  adjustReason: 'Adjust Reason',
+  adjustAmountPlaceholder: 'Enter adjust amount',
+  adjustReasonPlaceholder: 'Enter adjust reason',
+  adjustSuccess: 'Adjusted successfully',
+  adjustAmountRequired: 'Please enter adjust amount',
+  adjustReasonRequired: 'Please enter adjust reason',
+  adjustAmountPositive: 'Adjust amount must be greater than 0',
+
+  // Level Adjustment
+  levelAdjustTitle: 'Level Adjustment',
+  currentLevel: 'Current Level',
+  selectLevel: 'Select Level',
+  levelThreshold: 'Level Threshold',
+  levelAdjustSuccess: 'Level adjusted successfully',
+  selectLevelRequired: 'Please select member level',
+
+  // Confirmation
+  deleteCustomerConfirm: 'Are you sure to delete this customer?',
+  deleteAddressConfirm: 'Are you sure to delete this address?',
+  batchDeleteConfirm: 'Are you sure to delete {count} selected customers?',
+  deleteSuccess: 'Deleted successfully',
+
+  // Success Messages
+  createCustomerSuccess: 'Customer created successfully',
+  updateCustomerSuccess: 'Customer updated successfully',
+  createAddressSuccess: 'Address added successfully',
+  updateAddressSuccess: 'Address updated successfully',
+  deleteAddressSuccess: 'Address deleted successfully',
+  setDefaultAddressSuccess: 'Default address set successfully',
+  exportSuccess: 'Exported successfully',
+
+  // Validation
+  phoneRequired: 'Phone number is required',
+  phoneFormat: 'Please enter a valid phone number',
+  nicknameRequired: 'Nickname is required',
+  usernameLength: 'Username must be between 3-20 characters',
+  emailFormat: 'Please enter a valid email address',
+  passwordMinLength: 'Password must be at least 6 characters',
+  addressNameRequired: 'Recipient name is required',
+  addressPhoneRequired: 'Contact phone is required',
+  addressPhoneFormat: 'Please enter a valid phone number',
+  provinceRequired: 'Please select province',
+  cityRequired: 'Please select city',
+  districtRequired: 'Please select district',
+  detailAddressRequired: 'Detail address is required',
+
+  // Member Level Management
+  levelManage: 'Level Management',
+  levelList: 'Level List',
+  addLevel: 'Add Level',
+  editLevel: 'Edit Level',
+  deleteLevel: 'Delete Level',
+  levelName: 'Level Name',
+  minSpent: 'Min Spent (Upgrade Threshold)',
+  discount: 'Discount (%)',
+  pointsRate: 'Points Rate',
+  levelSort: 'Sort',
+  levelNamePlaceholder: 'Enter level name',
+  minSpentPlaceholder: 'Enter min spent',
+  discountPlaceholder: 'Enter discount rate',
+  pointsRatePlaceholder: 'Enter points rate',
+  levelSortPlaceholder: 'Enter sort order',
+  deleteLevelConfirm: 'Are you sure to delete this member level?',
+  createLevelSuccess: 'Level created successfully',
+  updateLevelSuccess: 'Level updated successfully',
+  deleteLevelSuccess: 'Level deleted successfully',
+  levelNameRequired: 'Level name is required',
+  minSpentRequired: 'Min spent is required',
+  discountRange: 'Discount should be between 0-100',
+  pointsRatePositive: 'Points rate must be greater than 0',
+  hasCustomerError: 'Cannot delete level with customers',
+
+  // Points Log
+  pointsLog: 'Points Log',
+  changeType: 'Change Type',
+  changeTypePlaceholder: 'Select change type',
+  changeAmount: 'Change Amount',
+  afterPoints: 'After Points',
+  changeTime: 'Change Time',
+  changeTimeRange: 'Change Time Range',
+  changeReason: 'Change Reason',
+  operator: 'Operator',
+  noPointsLog: 'No points log',
+
+  // Points Change Type
+  changeTypeAll: 'All Types',
+  changeTypeReview: 'Review Reward',
+  changeTypeOrder: 'Order Reward',
+  changeTypeExchange: 'Points Exchange',
+  changeTypeRefund: 'Refund Deduction',
+  changeTypeSystem: 'System Adjustment',
+  consumeGain: 'Consume Gain',
+  exchangeUse: 'Exchange Use',
+  manualAdjust: 'Manual Adjust',
+  expireClear: 'Expire Clear',
+
+  // Customer Status
+  statusAll: 'All Status',
+  statusActive: 'Active',
+  statusInactive: 'Disabled',
+
+  // Statistics
+  totalCustomers: 'Total Customers',
+  activeCustomers: 'Active Customers',
+  newCustomers: 'New Customers',
+  vipCustomers: 'VIP Customers',
+  todayNew: 'Today New',
+  weekNew: 'This Week',
+  monthNew: 'This Month',
+}

@@ -1,0 +1,95 @@
+/* pages/address/edit.wxss */
+
+.page-address-edit {
+  min-height: 100vh;
+  background: #f7f8fa;
+  padding-bottom: 120rpx;
+}
+
+.form-section {
+  background: #fff;
+  padding: 0 30rpx;
+}
+
+.form-item {
+  display: flex;
+  align-items: center;
+  padding: 30rpx 0;
+  border-bottom: 1rpx solid #f7f8fa;
+}
+
+.form-item:last-child {
+  border-bottom: none;
+  align-items: flex-start;
+}
+
+.form-label {
+  width: 160rpx;
+  font-size: 28rpx;
+  color: #323233;
+  flex-shrink: 0;
+}
+
+.form-input {
+  flex: 1;
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.form-picker {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.picker-value {
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.picker-placeholder {
+  font-size: 28rpx;
+  color: #c8c9cc;
+}
+
+.picker-arrow {
+  font-size: 28rpx;
+  color: #969799;
+}
+
+.form-textarea {
+  flex: 1;
+  height: 150rpx;
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.default-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 30rpx;
+  margin-top: 20rpx;
+}
+
+.default-label {
+  font-size: 28rpx;
+  color: #323233;
+}
+
+.save-btn {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background: #1989fa;
+  color: #fff;
+  font-size: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: env(safe-area-inset-bottom);
+}
