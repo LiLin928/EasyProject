@@ -26,6 +26,9 @@ import {
 import {
   TaskNodeType
 } from '@/types/etl/taskNode'
+import {
+  WidgetType, DataSourceType
+} from '@/types/desktopWidget'
 
 /**
  * 枚举标签映射表
@@ -145,6 +148,20 @@ export const enumLabelMap: Record<string, Record<string | number, { zh: string; 
     'parallel': { zh: '并行执行', en: 'Parallel' },
     'notification': { zh: '通知', en: 'Notification' },
     'subflow': { zh: '子流程', en: 'Subflow' }
+  },
+
+  // ========== 桌面组件相关 ==========
+  WidgetType: {
+    [WidgetType.Card]: { zh: '统计卡片', en: 'Card' },
+    [WidgetType.List]: { zh: '数据列表', en: 'List' },
+    [WidgetType.Image]: { zh: '图片展示', en: 'Image' },
+    [WidgetType.Chart]: { zh: '图表统计', en: 'Chart' }
+  },
+
+  DataSourceType: {
+    [DataSourceType.Api]: { zh: 'API接口', en: 'API' },
+    [DataSourceType.Static]: { zh: '静态配置', en: 'Static' },
+    [DataSourceType.Statistics]: { zh: '实时统计', en: 'Statistics' }
   }
 }
 
