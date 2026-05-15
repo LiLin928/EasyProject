@@ -1,3 +1,5 @@
+<!-- 文件: PCWeb/src/views/desktop/index.vue -->
+
 <template>
   <div class="desktop-container">
     <!-- 欢迎卡片 -->
@@ -11,115 +13,69 @@
           <p class="user-name">{{ userInfo?.nickname || userInfo?.username || '用户' }}</p>
           <p class="welcome-text">欢迎使用 EasyProject 管理系统</p>
         </div>
-      </div>
-    </el-card>
-
-    <!-- 快捷入口 -->
-    <div class="section-title">快捷入口</div>
-    <el-row :gutter="20" class="quick-entry">
-      <el-col :xs="24" :sm="12" :md="8" :lg="6">
-        <el-card shadow="hover" class="entry-card" @click="handleQuickEntry('/system/user')">
-          <div class="entry-content">
-            <el-icon class="entry-icon" :size="40"><User /></el-icon>
-            <span class="entry-title">用户管理</span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="12" :md="8" :lg="6">
-        <el-card shadow="hover" class="entry-card" @click="handleQuickEntry('/system/role')">
-          <div class="entry-content">
-            <el-icon class="entry-icon" :size="40"><Key /></el-icon>
-            <span class="entry-title">角色管理</span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="12" :md="8" :lg="6">
-        <el-card shadow="hover" class="entry-card" @click="handleQuickEntry('/system/menu')">
-          <div class="entry-content">
-            <el-icon class="entry-icon" :size="40"><Menu /></el-icon>
-            <span class="entry-title">菜单管理</span>
-          </div>
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="12" :md="8" :lg="6">
-        <el-card shadow="hover" class="entry-card" @click="handleQuickEntry('/system/config')">
-          <div class="entry-content">
-            <el-icon class="entry-icon" :size="40"><Setting /></el-icon>
-            <span class="entry-title">系统设置</span>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-
-    <!-- 待办事项 -->
-    <div class="section-title">待办事项</div>
-    <el-card shadow="never" class="pending-card">
-      <div v-if="pendingItems.length > 0" class="pending-list">
-        <div v-for="item in pendingItems" :key="item.id" class="pending-item">
-          <div class="pending-left">
-            <el-tag :type="getPendingTagType(item.type)" size="small">{{ item.typeName }}</el-tag>
-            <span class="pending-title">{{ item.title }}</span>
-          </div>
-          <div class="pending-right">
-            <span class="pending-time">{{ item.time }}</span>
-            <el-button link type="primary" @click="handlePending(item)">处理</el-button>
-          </div>
+        <div class="welcome-actions">
+          <el-button type="primary" @click="handleOpenLayoutSetting">
+            <el-icon><Setting /></el-icon>
+            布局设置
+          </el-button>
+          <el-button @click="handleRefresh">
+            <el-icon><Refresh /></el-icon>
+            刷新
+          </el-button>
         </div>
       </div>
-      <el-empty v-else description="暂无待办事项" :image-size="80" />
     </el-card>
 
-    <!-- 公告通知 -->
-    <div class="section-title">公告通知</div>
-    <el-card shadow="never" class="announcement-card" v-loading="loading">
-      <div v-if="announcements.length > 0" class="announcement-list">
-        <div
-          v-for="item in announcements"
-          :key="item.id"
-          class="announcement-item"
-          @click="handleAnnouncementClick(item)"
-        >
-          <div class="announcement-header">
-            <el-tag type="danger" v-if="item.isTop" size="small">置顶</el-tag>
-            <el-tag
-              :type="item.level === 3 ? 'danger' : item.level === 2 ? 'warning' : 'info'"
-              size="small"
-            >
-              {{ item.level === 3 ? '紧急' : item.level === 2 ? '重要' : '普通' }}
-            </el-tag>
-            <span class="announcement-title">{{ item.title }}</span>
-          </div>
-          <div class="announcement-content">{{ item.content }}</div>
-          <div class="announcement-footer">
-            <span class="announcement-author">{{ item.creatorName || '管理员' }}</span>
-            <span class="announcement-time">{{ item.publishTime || item.createTime }}</span>
-          </div>
-        </div>
+    <!-- 组件网格区域 -->
+    <div v-if="enabledWidgets.length > 0" class="widgets-grid" v-loading="loading">
+      <div
+        v-for="widget in enabledWidgets"
+        :key="widget.id"
+        class="widget-item"
+        :style="{ width: `${(widget.width / 12) * 100}%` }"
+      >
+        <WidgetContainer :widget="widget" />
       </div>
-      <el-empty v-else description="暂无公告通知" :image-size="80" />
-    </el-card>
+    </div>
 
-    <!-- 公告详情弹窗 -->
-    <AnnouncementDetailDialog
-      v-model="detailDialogVisible"
-      :id="currentAnnouncement?.id || ''"
+    <!-- 空状态 -->
+    <el-empty
+      v-else-if="!loading"
+      description="暂无桌面组件，请配置布局"
+      :image-size="120"
+    >
+      <el-button type="primary" @click="handleOpenLayoutSetting">
+        配置布局
+      </el-button>
+    </el-empty>
+
+    <!-- 布局设置弹窗 -->
+    <LayoutSettingDialog
+      v-model="layoutDialogVisible"
+      @success="handleLayoutSuccess"
     />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { User, Key, Menu, Setting } from '@element-plus/icons-vue'
+import { User, Setting, Refresh } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
-import { getUnreadAnnouncementList } from '@/api/announcement/announcementApi'
-import { markReadAnnouncement } from '@/api/announcement/announcementApi'
-import AnnouncementDetailDialog from '@/views/basic/announcement/components/AnnouncementDetailDialog.vue'
-import type { Announcement } from '@/types'
+import { useDesktopStore } from '@/stores/desktopStore'
+import WidgetContainer from './components/WidgetContainer.vue'
+import LayoutSettingDialog from './components/LayoutSettingDialog.vue'
 
-const router = useRouter()
+// 用户状态
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
+
+// 桌面状态
+const desktopStore = useDesktopStore()
+const loading = computed(() => desktopStore.loading)
+const enabledWidgets = computed(() => desktopStore.enabledWidgets)
+
+// 布局设置弹窗
+const layoutDialogVisible = ref(false)
 
 // 用户头像
 const userAvatar = computed(() => {
@@ -139,73 +95,25 @@ const greeting = computed(() => {
   return '夜深了'
 })
 
-// 待办事项（模拟数据）
-const pendingItems = ref([
-  { id: 1, title: '张三申请加入项目组', type: 'approval', typeName: '审批', time: '10分钟前' },
-  { id: 2, title: '李四提交了日报待审核', type: 'review', typeName: '审核', time: '30分钟前' },
-  { id: 3, title: '系统升级通知需确认', type: 'notice', typeName: '通知', time: '1小时前' },
-])
-
-// 公告通知（从API获取）
-const announcements = ref<Announcement[]>([])
-const loading = ref(false)
-
-// 公告详情弹窗
-const detailDialogVisible = ref(false)
-const currentAnnouncement = ref<Announcement | null>(null)
-
-// 获取待办标签类型
-function getPendingTagType(type: string) {
-  const typeMap: Record<string, string> = {
-    approval: 'warning',
-    review: 'success',
-    notice: 'info',
-  }
-  return typeMap[type] || 'info'
+// 打开布局设置
+function handleOpenLayoutSetting() {
+  layoutDialogVisible.value = true
 }
 
-// 快捷入口点击
-function handleQuickEntry(path: string) {
-  router.push(path)
+// 刷新桌面
+async function handleRefresh() {
+  await desktopStore.fetchDesktop()
 }
 
-// 处理待办事项
-function handlePending(item: any) {
-  console.log('处理待办:', item)
-}
-
-// 加载未读公告
-async function loadUnreadAnnouncements() {
-  loading.value = true
-  try {
-    const data = await getUnreadAnnouncementList()
-    announcements.value = data
-  } catch (error) {
-    console.error('加载未读公告失败:', error)
-  } finally {
-    loading.value = false
-  }
-}
-
-// 点击公告查看详情
-async function handleAnnouncementClick(item: Announcement) {
-  currentAnnouncement.value = item
-  detailDialogVisible.value = true
-
-  // 标记已读
-  if (!item.isRead) {
-    try {
-      await markReadAnnouncement(item.id)
-      item.isRead = true
-    } catch (error) {
-      console.error('标记已读失败:', error)
-    }
-  }
+// 布局设置成功回调
+function handleLayoutSuccess() {
+  // 刷新桌面配置
+  desktopStore.fetchDesktop()
 }
 
 // 生命周期
 onMounted(() => {
-  loadUnreadAnnouncements()
+  desktopStore.fetchDesktop()
 })
 </script>
 
@@ -214,171 +122,64 @@ onMounted(() => {
   padding: 20px;
   background-color: #f5f7fa;
   min-height: calc(100vh - 60px);
-}
 
-.welcome-card {
-  margin-bottom: 20px;
+  .welcome-card {
+    margin-bottom: 20px;
 
-  .welcome-content {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-
-    .avatar {
-      flex-shrink: 0;
-      background-color: #409eff;
-    }
-
-    .welcome-info {
-      .greeting {
-        margin: 0;
-        font-size: 20px;
-        font-weight: 600;
-        color: #303133;
-      }
-
-      .user-name {
-        margin: 8px 0;
-        font-size: 14px;
-        color: #606266;
-      }
-
-      .welcome-text {
-        margin: 0;
-        font-size: 14px;
-        color: #909399;
-      }
-    }
-  }
-}
-
-.section-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #303133;
-  margin-bottom: 12px;
-  padding-left: 10px;
-  border-left: 3px solid #409eff;
-}
-
-.quick-entry {
-  margin-bottom: 20px;
-
-  .entry-card {
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: all 0.3s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-
-    .entry-content {
+    .welcome-content {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      padding: 20px 0;
+      gap: 20px;
 
-      .entry-icon {
-        color: #409eff;
-        margin-bottom: 12px;
+      .avatar {
+        flex-shrink: 0;
+        background-color: #409eff;
       }
 
-      .entry-title {
-        font-size: 14px;
-        color: #606266;
-      }
-    }
-  }
-}
+      .welcome-info {
+        flex: 1;
 
-.pending-card {
-  margin-bottom: 20px;
-
-  .pending-list {
-    .pending-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 12px 0;
-      border-bottom: 1px solid #ebeef5;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .pending-left {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        .pending-title {
-          font-size: 14px;
+        .greeting {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 600;
           color: #303133;
         }
-      }
 
-      .pending-right {
-        display: flex;
-        align-items: center;
-        gap: 12px;
+        .user-name {
+          margin: 8px 0;
+          font-size: 14px;
+          color: #606266;
+        }
 
-        .pending-time {
-          font-size: 12px;
+        .welcome-text {
+          margin: 0;
+          font-size: 14px;
           color: #909399;
         }
       }
-    }
-  }
-}
 
-.announcement-card {
-  .announcement-list {
-    .announcement-item {
-      padding: 16px 0;
-      border-bottom: 1px solid #ebeef5;
-      cursor: pointer;
-      transition: background-color 0.2s;
-
-      &:hover {
-        background-color: #f5f7fa;
-      }
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .announcement-header {
+      .welcome-actions {
         display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-bottom: 8px;
+        gap: 12px;
 
-        .announcement-title {
-          font-size: 16px;
-          font-weight: 500;
-          color: #303133;
+        .el-button {
+          .el-icon {
+            margin-right: 4px;
+          }
         }
       }
+    }
+  }
 
-      .announcement-content {
-        font-size: 14px;
-        color: #606266;
-        line-height: 1.6;
-        margin-bottom: 8px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-      }
+  .widgets-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
 
-      .announcement-footer {
-        display: flex;
-        gap: 16px;
-        font-size: 12px;
-        color: #909399;
-      }
+    .widget-item {
+      flex-shrink: 0;
+      min-height: 200px;
     }
   }
 }
