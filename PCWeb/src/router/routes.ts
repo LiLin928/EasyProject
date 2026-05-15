@@ -194,6 +194,30 @@ export const baseRoute: RouteRecordRaw = {
       component: () => import('@/views/basic/department/index.vue'),
       meta: { title: '部门管理', icon: 'OfficeBuilding' },
     },
+    // 桌面配置路由（静态路由）
+    {
+      path: 'basic/desktop',
+      name: 'DesktopConfig',
+      redirect: '/basic/desktop/widget',
+      meta: {
+        title: '桌面配置',
+        icon: 'Monitor',
+      },
+      children: [
+        {
+          path: 'widget',
+          name: 'DesktopWidget',
+          component: () => import('@/views/basic/desktop/widget/index.vue'),
+          meta: { title: '组件管理', icon: 'Grid' }
+        },
+        {
+          path: 'role-config',
+          name: 'DesktopRoleConfig',
+          component: () => import('@/views/basic/desktop/role-config/index.vue'),
+          meta: { title: '角色分配', icon: 'UserFilled' }
+        },
+      ]
+    },
   ], // 动态路由将添加到这里
 }
 
