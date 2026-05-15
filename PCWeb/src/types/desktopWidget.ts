@@ -157,3 +157,96 @@ export interface AvailableWidget {
   defaultHeight: number
   isUserEnabled: boolean
 }
+
+/**
+ * 用户组件配置项
+ */
+export interface UserWidgetConfigItem {
+  widgetId: string
+  width: number
+  isEnabled: boolean
+  sortOrder: number
+}
+
+/**
+ * 用户组件配置DTO（完整配置，包含组件详情）
+ */
+export interface UserWidgetConfigDto {
+  id: string
+  widgetId: string
+  widgetName: string
+  widgetType: WidgetType
+  icon?: string
+  width: number
+  height: number
+  sortOrder: number
+  isEnabled: boolean
+  dataSourceType: DataSourceType
+  dataSourceConfig?: string
+}
+
+/**
+ * 保存用户配置参数
+ */
+export interface SaveUserWidgetConfigParams {
+  widgets: UserWidgetConfigItem[]
+}
+
+/**
+ * 用户桌面DTO
+ */
+export interface UserDesktopDto {
+  widgets: UserWidgetConfigDto[]
+  availableWidgets: AvailableWidget[]
+}
+
+/**
+ * 组件数据响应（用于不同类型组件的数据）
+ */
+export interface WidgetDataResponse {
+  /** 卡片类型：显示的数值 */
+  value?: number
+  /** 卡片类型：显示的标签 */
+  label?: string
+  /** 列表类型：列表数据 */
+  list?: WidgetListItem[]
+  /** 图表类型：图表数据 */
+  chartData?: ChartDataConfig
+  /** 图片类型：图片列表 */
+  images?: string[]
+}
+
+/**
+ * 组件列表项
+ */
+export interface WidgetListItem {
+  id: string
+  name: string
+  status?: number
+  statusLabel?: string
+  time?: string
+}
+
+/**
+ * 图表数据配置
+ */
+export interface ChartDataConfig {
+  /** 图表类型：bar/line/pie */
+  type: 'bar' | 'line' | 'pie'
+  /** 图表标题 */
+  title?: string
+  /** X轴数据（柱状图、折线图） */
+  xAxis?: string[]
+  /** Y轴数据（柱状图、折线图） */
+  yAxis?: number[]
+  /** 饼图数据 */
+  pieData?: PieDataItem[]
+}
+
+/**
+ * 饼图数据项
+ */
+export interface PieDataItem {
+  name: string
+  value: number
+}
