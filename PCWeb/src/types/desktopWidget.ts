@@ -112,3 +112,48 @@ export const refreshIntervalOptions = [
   { value: 300, label: '5分钟' },
   { value: 600, label: '10分钟' },
 ]
+
+/**
+ * 角色组件配置项
+ */
+export interface RoleWidgetConfigItem {
+  widgetId: string
+  sortOrder: number
+  isEnabled: boolean
+}
+
+/**
+ * 角色组件配置
+ */
+export interface RoleWidgetConfig {
+  id: string
+  roleId: string
+  widgetId: string
+  widgetName: string
+  widgetType: WidgetType
+  defaultWidth: number
+  defaultHeight: number
+  sortOrder: number
+  isEnabled: boolean
+}
+
+/**
+ * 保存角色配置参数
+ */
+export interface SaveRoleWidgetConfigParams {
+  roleId: string
+  widgets: RoleWidgetConfigItem[]
+}
+
+/**
+ * 可用组件DTO
+ */
+export interface AvailableWidget {
+  id: string
+  name: string
+  type: number
+  icon?: string
+  defaultWidth: number
+  defaultHeight: number
+  isUserEnabled: boolean
+}
