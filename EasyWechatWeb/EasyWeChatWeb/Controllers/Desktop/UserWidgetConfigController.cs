@@ -74,4 +74,25 @@ public class UserWidgetConfigController : BaseController
             return Error<bool>("重置用户桌面失败");
         }
     }
+
+    /// <summary>
+    /// 获取组件数据（数据代理接口）
+    /// </summary>
+    /// <param name="widgetId">组件ID</param>
+    [HttpGet("data/{widgetId}")]
+    [ProducesResponseType(typeof(ApiResponse<object>), 200)]
+    public async Task<ApiResponse<object>> GetWidgetData(Guid widgetId)
+    {
+        try
+        {
+            var userId = GetCurrentUserId();
+            var data = await _userConfigService.GetWidgetDataAsync(widgetId, userId);
+            return Success(data);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "获取组件数据失败: WidgetId={WidgetId}", widgetId);
+            return Error<object>(ex.Message);
+        }
+    }
 }

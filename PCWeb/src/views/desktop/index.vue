@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { User, Setting, Refresh } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import { useDesktopStore } from '@/stores/desktopStore'
@@ -114,6 +114,11 @@ function handleLayoutSuccess() {
 // 生命周期
 onMounted(() => {
   desktopStore.fetchDesktop()
+})
+
+onUnmounted(() => {
+  // 停止自动刷新
+  desktopStore.stopAutoRefresh()
 })
 </script>
 

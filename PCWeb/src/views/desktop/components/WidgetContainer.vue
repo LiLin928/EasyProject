@@ -6,33 +6,65 @@
     <template #header>
       <div class="widget-header">
         <span class="widget-title">{{ widget.widgetName }}</span>
-        <el-icon v-if="widget.icon" class="widget-icon">
-          <component :is="widget.icon" />
-        </el-icon>
+        <div class="header-actions">
+          <!-- 刷新按钮 -->
+          <el-button
+            link
+            type="primary"
+            :loading="refreshState?.loading"
+            @click="handleRefresh"
+          >
+            <el-icon><Refresh /></el-icon>
+          </el-button>
+          <el-icon v-if="widget.icon" class="widget-icon">
+            <component :is="widget.icon" />
+          </el-icon>
+        </div>
       </div>
     </template>
+
+    <!-- 刷新错误提示 -->
+    <el-alert
+      v-if="refreshState?.error"
+      type="error"
+      :title="refreshState.error"
+      show-icon
+      closable
+      class="error-alert"
+    />
 
     <!-- 动态加载组件 -->
     <component
       :is="rendererComponent"
       :widget="widget"
-      :data="mockData"
+      :data="widgetData"
+      :loading="refreshState?.loading"
       v-if="rendererComponent"
     />
     <EmptyWidget v-else :widget="widget" />
+
+    <!-- 刷新时间显示 -->
+    <div v-if="refreshState?.lastRefreshTime" class="refresh-time">
+      <span>更新于 {{ formatTime(refreshState.lastRefreshTime) }}</span>
+    </div>
   </el-card>
 </template>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
-import type { UserWidgetConfigDto, WidgetDataResponse } from '@/types/desktopWidget'
+import { Refresh } from '@element-plus/icons-vue'
+import type { UserWidgetConfigDto, WidgetDataResponse, RefreshState } from '@/types/desktopWidget'
 import { WidgetType } from '@/types/desktopWidget'
+import { useDesktopStore } from '@/stores/desktopStore'
 import EmptyWidget from './renderers/EmptyWidget.vue'
 
 // Props
 const props = defineProps<{
   widget: UserWidgetConfigDto
 }>()
+
+// 桌面状态管理
+const desktopStore = useDesktopStore()
 
 // 组件渲染器映射
 const rendererMap: Record<WidgetType, any> = {
@@ -47,8 +79,41 @@ const rendererComponent = computed(() => {
   return rendererMap[props.widget.widgetType] || null
 })
 
+// 获取刷新状态
+const refreshState = computed<RefreshState | undefined>(() => {
+  return desktopStore.getRefreshState(props.widget.widgetId)
+})
+
+// 获取组件数据（优先使用从后端获取的数据）
+const widgetData = computed<WidgetDataResponse>(() => {
+  // 从 store 获取实际数据
+  const fetchedData = desktopStore.getWidgetDataById(props.widget.widgetId)
+  if (fetchedData) {
+    return fetchedData
+  }
+
+  // 否则使用 Mock 数据（用于预览）
+  return generateMockData()
+})
+
+// 刷新处理
+function handleRefresh() {
+  desktopStore.manualRefresh(props.widget.widgetId)
+}
+
+// 格式化时间
+function formatTime(date: Date): string {
+  const now = new Date()
+  const diff = Math.floor((now.getTime() - date.getTime()) / 1000)
+
+  if (diff < 60) return '刚刚'
+  if (diff < 3600) return `${Math.floor(diff / 60)}分钟前`
+  if (diff < 86400) return `${Math.floor(diff / 3600)}小时前`
+  return date.toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit' })
+}
+
 // Mock 数据生成（用于预览）
-const mockData = computed<WidgetDataResponse>(() => {
+function generateMockData(): WidgetDataResponse {
   const type = props.widget.widgetType
 
   switch (type) {
@@ -106,7 +171,7 @@ const mockData = computed<WidgetDataResponse>(() => {
     default:
       return {}
   }
-})
+}
 </script>
 
 <style scoped lang="scss">
@@ -125,10 +190,27 @@ const mockData = computed<WidgetDataResponse>(() => {
       color: #303133;
     }
 
-    .widget-icon {
-      font-size: 18px;
-      color: #409eff;
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      .widget-icon {
+        font-size: 18px;
+        color: #409eff;
+      }
     }
+  }
+
+  .error-alert {
+    margin-bottom: 12px;
+  }
+
+  .refresh-time {
+    margin-top: 8px;
+    text-align: right;
+    font-size: 12px;
+    color: #909399;
   }
 }
 </style>

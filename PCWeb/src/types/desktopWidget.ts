@@ -250,3 +250,41 @@ export interface PieDataItem {
   name: string
   value: number
 }
+
+/**
+ * 组件刷新状态
+ */
+export interface RefreshState {
+  /** 组件ID */
+  widgetId: string
+  /** 是否正在刷新 */
+  loading: boolean
+  /** 上次刷新时间 */
+  lastRefreshTime?: Date
+  /** 刷新错误信息 */
+  error?: string
+}
+
+/**
+ * 扩展的组件数据响应（包含趋势数据）
+ */
+export interface ExtendedWidgetDataResponse extends WidgetDataResponse {
+  /** 趋势方向：up/down/flat */
+  trend?: 'up' | 'down' | 'flat'
+  /** 趋势值 */
+  trendValue?: number
+  /** 图表系列数据格式 */
+  seriesData?: ChartSeriesItem[]
+}
+
+/**
+ * 图表系列数据项
+ */
+export interface ChartSeriesItem {
+  /** 系列名称 */
+  name: string
+  /** 数据值列表 */
+  data: number[]
+  /** 系列类型 */
+  type?: 'bar' | 'line'
+}

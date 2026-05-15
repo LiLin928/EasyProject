@@ -23,4 +23,9 @@ public interface IUserWidgetConfigService
     /// 初始化用户桌面(从角色模板复制)
     /// </summary>
     Task<bool> InitFromRoleAsync(Guid userId, Guid roleId);
+
+    /// <summary>
+    /// 获取组件数据（代理接口）
+    /// </summary>
+    Task<object> GetWidgetDataAsync(Guid widgetId, Guid userId);
 }
