@@ -146,11 +146,11 @@
     </view>
 
     <!-- 字典类型编辑弹窗 -->
-    <view v-if="showTypeModal" class="modal-mask" @click="showTypeModal = false">
+    <view v-if="showTypeModal" class="modal-mask" @click="closeTypeModal">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
           <text class="modal-title">{{ editingType ? '编辑字典类型' : '新增字典类型' }}</text>
-          <view class="modal-close" @click="showTypeModal = false">
+          <view class="modal-close" @click="closeTypeModal">
             <text>×</text>
           </view>
         </view>
@@ -201,7 +201,7 @@
           </view>
         </view>
         <view class="modal-footer">
-          <view class="btn-cancel" @click="showTypeModal = false">
+          <view class="btn-cancel" @click="closeTypeModal">
             <text>取消</text>
           </view>
           <view class="btn-confirm" @click="handleSaveType">
@@ -212,11 +212,11 @@
     </view>
 
     <!-- 字典数据编辑弹窗 -->
-    <view v-if="showDataModal" class="modal-mask" @click="showDataModal = false">
+    <view v-if="showDataModal" class="modal-mask" @click="closeDataModal">
       <view class="modal-content" @click.stop>
         <view class="modal-header">
           <text class="modal-title">{{ editingData ? '编辑字典数据' : '新增字典数据' }}</text>
-          <view class="modal-close" @click="showDataModal = false">
+          <view class="modal-close" @click="closeDataModal">
             <text>×</text>
           </view>
         </view>
@@ -267,7 +267,7 @@
           </view>
         </view>
         <view class="modal-footer">
-          <view class="btn-cancel" @click="showDataModal = false">
+          <view class="btn-cancel" @click="closeDataModal">
             <text>取消</text>
           </view>
           <view class="btn-confirm" @click="handleSaveData">
@@ -298,7 +298,7 @@ import { DictStatus } from '@/types/basic'
 const searchKeyword = ref('')
 
 // 搜索防抖定时器
-let searchTimer: number | null = null
+let searchTimer: ReturnType<typeof setTimeout> | null = null
 
 // 字典类型列表
 const dictTypeList = ref<DictType[]>([])
@@ -390,7 +390,7 @@ const handleSearch = () => {
   if (searchTimer) clearTimeout(searchTimer)
   searchTimer = setTimeout(() => {
     loadDictTypes()
-  }, 300) as unknown as number
+  }, 300)
 }
 
 // 选择字典类型
@@ -426,13 +426,31 @@ const handleEditType = (item: DictType) => {
 
 // 保存字典类型
 const handleSaveType = async () => {
-  // 表单验证
+  // 名称验证
   if (!typeForm.value.name.trim()) {
-    uni.showToast({ title: '请输入名称', icon: 'none' })
+    uni.showToast({ title: '请输入字典类型名称', icon: 'none' })
     return
   }
+
+  // 编码验证
   if (!typeForm.value.code.trim()) {
-    uni.showToast({ title: '请输入编码', icon: 'none' })
+    uni.showToast({ title: '请输入字典类型编码', icon: 'none' })
+    return
+  }
+
+  // 编码格式验证（只允许字母、数字、下划线、横线，必须以字母开头）
+  const codeRegex = /^[a-zA-Z][a-zA-Z0-9_-]*$/
+  if (!codeRegex.test(typeForm.value.code.trim())) {
+    uni.showToast({ title: '编码格式错误，需以字母开头', icon: 'none' })
+    return
+  }
+
+  // 编码唯一性检查
+  const existingCode = dictTypeList.value.find(
+    item => item.code === typeForm.value.code.trim() && item.id !== editingType.value?.id
+  )
+  if (existingCode) {
+    uni.showToast({ title: '编码已存在', icon: 'none' })
     return
   }
 
@@ -460,7 +478,7 @@ const handleSaveType = async () => {
 
     uni.hideLoading()
     uni.showToast({ title: '保存成功', icon: 'success' })
-    showTypeModal.value = false
+    closeTypeModal()
     loadDictTypes()
   } catch (error: unknown) {
     uni.hideLoading()
@@ -546,6 +564,13 @@ const handleSaveData = async () => {
     return
   }
 
+  // 排序范围验证
+  const sortValue = Number(dataForm.value.sort) || 0
+  if (sortValue < 0 || sortValue > 999) {
+    uni.showToast({ title: '排序值范围 0-999', icon: 'none' })
+    return
+  }
+
   try {
     uni.showLoading({ title: '保存中...' })
 
@@ -572,7 +597,7 @@ const handleSaveData = async () => {
 
     uni.hideLoading()
     uni.showToast({ title: '保存成功', icon: 'success' })
-    showDataModal.value = false
+    closeDataModal()
     loadDictData()
   } catch (error: unknown) {
     uni.hideLoading()
@@ -606,6 +631,30 @@ const handleDeleteData = async (item: DictData) => {
       || (error as { message?: string })?.message
       || '删除失败'
     uni.showToast({ title: message, icon: 'none' })
+  }
+}
+
+// 关闭字典类型弹窗并重置表单
+const closeTypeModal = () => {
+  showTypeModal.value = false
+  editingType.value = null
+  typeForm.value = {
+    name: '',
+    code: '',
+    description: '',
+    status: DictStatus.Enabled,
+  }
+}
+
+// 关闭字典数据弹窗并重置表单
+const closeDataModal = () => {
+  showDataModal.value = false
+  editingData.value = null
+  dataForm.value = {
+    label: '',
+    value: '',
+    sort: 0,
+    status: DictStatus.Enabled,
   }
 }
 
