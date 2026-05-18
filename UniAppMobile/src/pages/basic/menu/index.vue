@@ -445,10 +445,31 @@ const handleToggleExpand = (id: string) => {
 
 // 表单验证
 const validateForm = (): boolean => {
+  // 菜单名称验证
   if (!formData.value.name.trim()) {
     uni.showToast({ title: '请输入菜单名称', icon: 'none' })
     return false
   }
+
+  // 菜单类型必须验证路由路径
+  if (formData.value.type === MenuType.Menu) {
+    if (!formData.value.path?.trim()) {
+      uni.showToast({ title: '菜单类型必须填写路由路径', icon: 'none' })
+      return false
+    }
+    if (!formData.value.path.startsWith('/')) {
+      uni.showToast({ title: '路由路径必须以 / 开头', icon: 'none' })
+      return false
+    }
+  }
+
+  // 验证排序值范围
+  const sortValue = Number(formData.value.sort) || 0
+  if (sortValue < 0 || sortValue > 999) {
+    uni.showToast({ title: '排序值范围 0-999', icon: 'none' })
+    return false
+  }
+
   return true
 }
 
@@ -539,8 +560,17 @@ onMounted(() => {
 // 监听搜索关键词变化（防抖实时搜索）
 watch(searchKeyword, (newVal) => {
   if (searchTimer) clearTimeout(searchTimer)
+  const capturedKeyword = newVal.trim() // 捕获当前值，避免竞态条件
   searchTimer = setTimeout(() => {
-    handleSearch()
+    // 直接使用捕获的值执行搜索逻辑
+    if (capturedKeyword) {
+      const newSet = new Set<string>()
+      expandMatchingNodes(filterMenus(menuList.value, capturedKeyword), newSet)
+      expandedKeys.value = newSet
+    } else {
+      // 关键词为空时展开所有
+      expandAllNodes(menuList.value)
+    }
   }, 300) as unknown as ReturnType<typeof setTimeout>
 })
 
