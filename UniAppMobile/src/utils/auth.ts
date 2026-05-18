@@ -1,20 +1,11 @@
 // utils/auth.ts
 
+import type { UserInfo } from '@/types'
 import { getStorage, setStorage, removeStorage } from './storage'
 
 const ACCESS_TOKEN_KEY = 'accessToken'
 const REFRESH_TOKEN_KEY = 'refreshToken'
 const USER_KEY = 'user'
-
-/** 用户信息类型（临时定义，待 types/user.ts 创建后替换） */
-interface UserInfo {
-  id: string
-  username: string
-  nickname?: string
-  avatar?: string
-  phone?: string
-  email?: string
-}
 
 /** 获取 Access Token */
 export function getToken(): string | null {
