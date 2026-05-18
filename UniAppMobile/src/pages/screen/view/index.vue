@@ -9,6 +9,12 @@
         <text class="progress-text">{{ loadingProgress }}%</text>
       </view>
 
+      <!-- 预加载提示 -->
+      <view v-if="isPreloading && !screenUrl" class="preload-state">
+        <text class="preload-icon">⏳</text>
+        <text class="preload-text">正在预加载大屏资源...</text>
+      </view>
+
       <!-- WebView -->
       <web-view
         v-if="screenUrl"
@@ -19,7 +25,7 @@
 
       <!-- 加载失败提示 -->
       <view v-if="loadError" class="error-state">
-        <text class="error-icon">❌</text>
+        <text class="error-icon">!</text>
         <text class="error-text">大屏加载失败</text>
         <view class="retry-btn" @click="handleRefresh">
           <text>重新加载</text>
@@ -78,8 +84,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { getScreenDetail } from '@/api/screen/screenApi'
+import { setCache, getCache, removeCache } from '@/utils/storage'
 import type { Screen } from '@/types/screen'
 
 // 缩放选项
@@ -89,6 +96,9 @@ const scaleOptions = [
   { label: '100%', value: 1 },
   { label: '125%', value: 1.25 },
 ]
+
+// 预加载缓存过期时间（5分钟）
+const PRELOAD_CACHE_EXPIRE = 300
 
 // 大屏ID
 const screenId = ref('')
@@ -114,6 +124,9 @@ const currentScale = ref(1)
 // 显示缩放选择器
 const showScalePicker = ref(false)
 
+// 预加载状态
+const isPreloading = ref(false)
+
 // 缩放文本
 const scaleText = computed(() => {
   const opt = scaleOptions.find(o => o.value === currentScale.value)
@@ -125,12 +138,65 @@ const scaleValue = computed(() => {
   return currentScale.value
 })
 
-// 加载大屏详情
+/** 预加载大屏资源 */
+const preloadScreen = async (id: string) => {
+  isPreloading.value = true
+  loadingProgress.value = 10
+
+  // 尝试从缓存获取
+  const cachedUrl = getCache<string>(`screen_url_${id}`)
+  if (cachedUrl) {
+    screenUrl.value = cachedUrl
+    loadingProgress.value = 80
+    isPreloading.value = false
+    // 后台更新缓存
+    updateScreenCache(id)
+    return
+  }
+
+  // 预加载大屏详情
+  try {
+    const detail = await getScreenDetail(id)
+    loadingProgress.value = 50
+
+    if (detail.publishUrl) {
+      // 缓存 URL
+      setCache(`screen_url_${id}`, detail.publishUrl, PRELOAD_CACHE_EXPIRE)
+      screenUrl.value = detail.publishUrl
+      screenDetail.value = detail
+      loadingProgress.value = 80
+    } else {
+      loadError.value = true
+      loadingProgress.value = 0
+    }
+  } catch (error) {
+    console.error('预加载失败:', error)
+    // 预加载失败不显示错误，等待用户手动刷新
+  } finally {
+    isPreloading.value = false
+  }
+}
+
+/** 后台更新缓存 */
+const updateScreenCache = async (id: string) => {
+  try {
+    const detail = await getScreenDetail(id)
+    if (detail.publishUrl) {
+      setCache(`screen_url_${id}`, detail.publishUrl, PRELOAD_CACHE_EXPIRE)
+      screenDetail.value = detail
+    }
+  } catch (error) {
+    console.error('更新缓存失败:', error)
+  }
+}
+
+/** 加载大屏详情 */
 const loadScreen = async () => {
   if (!screenId.value) return
 
   loadingProgress.value = 10
   loadError.value = false
+  isPreloading.value = true
 
   try {
     // 加载大屏详情
@@ -140,6 +206,8 @@ const loadScreen = async () => {
     // 获取发布URL
     if (screenDetail.value.publishUrl) {
       screenUrl.value = screenDetail.value.publishUrl
+      // 缓存 URL
+      setCache(`screen_url_${screenId.value}`, screenUrl.value, PRELOAD_CACHE_EXPIRE)
       loadingProgress.value = 80
     } else {
       // 如果没有发布URL，显示错误
@@ -152,10 +220,12 @@ const loadScreen = async () => {
     loadError.value = true
     loadingProgress.value = 0
     uni.showToast({ title: '加载失败', icon: 'none' })
+  } finally {
+    isPreloading.value = false
   }
 }
 
-// WebView 消息回调
+/** WebView 消息回调 */
 const onWebViewMessage = (e: any) => {
   // WebView 加载完成
   if (e.detail?.data?.loaded) {
@@ -163,33 +233,42 @@ const onWebViewMessage = (e: any) => {
   }
 }
 
-// 刷新大屏
+/** 刷新大屏 */
 const handleRefresh = () => {
+  // 清除缓存
+  removeCache(`screen_url_${screenId.value}`)
   loadError.value = false
   loadingProgress.value = 0
   screenUrl.value = ''
   loadScreen()
 }
 
-// 全屏显示
+/** 全屏显示 */
 const handleFullscreen = () => {
   isFullscreen.value = true
   // 隐藏导航栏（如果可能）
   // uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#000000' })
 }
 
-// 退出全屏
+/** 退出全屏 */
 const exitFullscreen = () => {
   isFullscreen.value = false
   // 恢复导航栏
   // uni.setNavigationBarColor({ frontColor: '#000000', backgroundColor: '#F8FAFC' })
 }
 
-// 选择缩放比例
+/** 选择缩放比例 */
 const selectScale = (scale: number) => {
   currentScale.value = scale
   showScalePicker.value = false
 }
+
+/** 监听 screenId 变化 */
+watch(screenId, (newId) => {
+  if (newId) {
+    preloadScreen(newId)
+  }
+})
 
 onMounted(() => {
   // 从路由参数获取大屏ID
@@ -197,9 +276,7 @@ onMounted(() => {
   const currentPage = pages[pages.length - 1] as any
   screenId.value = currentPage.options?.id || ''
 
-  if (screenId.value) {
-    loadScreen()
-  } else {
+  if (!screenId.value) {
     uni.showToast({ title: '缺少大屏ID参数', icon: 'none' })
   }
 
@@ -261,6 +338,36 @@ onMounted(() => {
   }
 }
 
+.preload-state {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .preload-icon {
+    font-size: 60rpx;
+    animation: spin 1s linear infinite;
+  }
+
+  .preload-text {
+    font-size: 28rpx;
+    color: rgba(255, 255, 255, 0.7);
+    margin-top: 20rpx;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .error-state {
   position: absolute;
   top: 50%;
@@ -272,6 +379,8 @@ onMounted(() => {
 
   .error-icon {
     font-size: 60rpx;
+    font-weight: bold;
+    color: #ff4d4f;
   }
 
   .error-text {
