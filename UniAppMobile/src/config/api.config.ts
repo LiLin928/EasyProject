@@ -39,4 +39,6 @@ export const API_PATHS = {
 
   // 日志
   LOG_LIST: '/api/log/list',
+  LOG_DETAIL: '/api/log/detail',
+  LOG_CLEAR: '/api/log/clear',
 } as const
