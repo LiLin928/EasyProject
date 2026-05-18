@@ -148,6 +148,13 @@
           >
             <text>表格</text>
           </view>
+          <view
+            class="picker-item"
+            :class="{ active: queryParams.chartType === ChartType.Mixed }"
+            @click="selectChartType(ChartType.Mixed)"
+          >
+            <text>混合图表</text>
+          </view>
         </view>
       </view>
     </view>
@@ -157,16 +164,8 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { getReportList, getReportCategories } from '@/api/report/reportApi'
-import type { Report, ReportCategory, ReportQueryParams, ChartType } from '@/types/report'
-
-// 导入枚举
-const ChartTypeEnum = {
-  Line: 1,
-  Bar: 2,
-  Pie: 3,
-  Table: 4,
-  Mixed: 5,
-}
+import { ChartType } from '@/types/report'
+import type { Report, ReportCategory, ReportQueryParams } from '@/types/report'
 
 // 搜索关键字
 const searchKeyword = ref('')
