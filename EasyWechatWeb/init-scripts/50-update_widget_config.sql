@@ -89,6 +89,12 @@ WHERE `Id` = 'd0000004-0000-0000-0000-000000000002';
 
 SELECT Id, Name, Type, DataSourceType, Status, LEFT(DataSourceConfig, 100) AS DataSourceConfigPreview
 FROM DesktopWidget
-ORDER BY Type, Id;
+ORDER BY Id;
+
+-- 测试 SQL 执行（验证数据库数据）
+SELECT 'User 表状态为 1 的数量：' AS Info, COUNT(*) AS Count FROM User WHERE Status = 1;
+SELECT 'Product 表状态为 1 的数量：' AS Info, COUNT(*) AS Count FROM Product WHERE Status = 1;
+SELECT 'Order 表总数量：' AS Info, COUNT(*) AS Count FROM `Order`;
+SELECT 'AntWorkflowTask 表状态为 0 的数量：' AS Info, COUNT(*) AS Count FROM AntWorkflowTask WHERE Status = 0;
 
 SELECT '组件配置更新完成！' AS Message;
