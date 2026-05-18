@@ -90,6 +90,12 @@
       "style": {
         "navigationBarTitleText": "菜单管理"
       }
+    },
+    {
+      "path": "pages/basic/dict/index",
+      "style": {
+        "navigationBarTitleText": "字典管理"
+      }
     }
   ],
   "globalStyle": {
