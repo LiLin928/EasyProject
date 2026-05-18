@@ -70,7 +70,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void
-  (e: 'success'): void
+  (e: 'success', selectedWidgets: AvailableWidget[]): void
 }>()
 
 const visible = computed({
@@ -122,9 +122,13 @@ const handleConfirm = async () => {
     return
   }
 
-  emit('success')
+  // 从 availableWidgets 中筛选选中的组件
+  const selectedWidgets = availableWidgets.value.filter(
+    widget => selectedWidgetIds.value.includes(widget.id)
+  )
+
+  emit('success', selectedWidgets)
   handleClose()
-  ElMessage.success(`已添加 ${selectedWidgetIds.value.length} 个组件`)
 }
 </script>
 

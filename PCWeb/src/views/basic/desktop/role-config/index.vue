@@ -123,7 +123,7 @@ import { getRoleWidgetConfigList, saveRoleWidgetConfig } from '@/api/basic/roleW
 import WidgetAssignDialog from './components/WidgetAssignDialog.vue'
 import LayoutPreview from './components/LayoutPreview.vue'
 import type { RoleInfo } from '@/types/role'
-import type { RoleWidgetConfig, RoleWidgetConfigItem } from '@/types'
+import type { RoleWidgetConfig, AvailableWidget } from '@/types'
 import { WidgetType, widgetTypeLabels } from '@/types/desktopWidget'
 
 const loading = ref(false)
@@ -184,9 +184,31 @@ const handleAddWidget = () => {
   dialogVisible.value = true
 }
 
-// 弹窗成功回调
-const handleDialogSuccess = () => {
-  handleRoleChange(selectedRoleId.value)
+// 弹窗成功回调 - 添加选中的组件到列表
+const handleDialogSuccess = (selectedWidgets: AvailableWidget[]) => {
+  // 将选中的组件转换为配置项并添加到列表
+  selectedWidgets.forEach(widget => {
+    // 检查是否已经存在
+    if (widgetConfigList.value.some(item => item.widgetId === widget.id)) {
+      return
+    }
+
+    // 创建新的配置项
+    const newConfig: RoleWidgetConfig = {
+      id: '',
+      roleId: selectedRoleId.value,
+      widgetId: widget.id,
+      widgetName: widget.name,
+      widgetType: widget.type as WidgetType,
+      defaultWidth: widget.defaultWidth,
+      defaultHeight: widget.defaultHeight,
+      sortOrder: widgetConfigList.value.length + 1,
+      isEnabled: true,
+    }
+    widgetConfigList.value.push(newConfig)
+  })
+
+  ElMessage.success(`已添加 ${selectedWidgets.length} 个组件`)
 }
 
 // 移除组件
