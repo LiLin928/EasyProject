@@ -12,6 +12,12 @@
       "style": {
         "navigationBarTitleText": "工作台"
       }
+    },
+    {
+      "path": "pages/workflow/todo/index",
+      "style": {
+        "navigationBarTitleText": "待办任务"
+      }
     }
   ],
   "globalStyle": {
@@ -31,6 +37,12 @@
         "iconPath": "static/icons/tab-home.png",
         "selectedIconPath": "static/icons/tab-home-active.png",
         "text": "工作台"
+      },
+      {
+        "pagePath": "pages/workflow/todo/index",
+        "iconPath": "static/icons/tab-workflow.png",
+        "selectedIconPath": "static/icons/tab-workflow-active.png",
+        "text": "工作流"
       }
     ]
   }
