@@ -72,6 +72,12 @@
       "style": {
         "navigationBarTitleText": "用户管理"
       }
+    },
+    {
+      "path": "pages/basic/role/index",
+      "style": {
+        "navigationBarTitleText": "角色管理"
+      }
     }
   ],
   "globalStyle": {

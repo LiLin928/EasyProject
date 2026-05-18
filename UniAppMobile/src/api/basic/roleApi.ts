@@ -43,3 +43,13 @@ export function assignPermissions(id: string, permissionIds: string[]): Promise<
 export function getRoleUsers(id: string): Promise<{ id: string; userName: string; realName: string }[]> {
   return get<{ id: string; userName: string; realName: string }[]>(`/api/role/users/${id}`)
 }
+
+/** 启用角色 */
+export function enableRole(id: string): Promise<number> {
+  return post<number>(`/api/role/enable/${id}`)
+}
+
+/** 禁用角色 */
+export function disableRole(id: string): Promise<number> {
+  return post<number>(`/api/role/disable/${id}`)
+}
