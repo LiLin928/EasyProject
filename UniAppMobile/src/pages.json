@@ -66,6 +66,12 @@
       "style": {
         "navigationBarTitleText": "库存记录"
       }
+    },
+    {
+      "path": "pages/basic/user/index",
+      "style": {
+        "navigationBarTitleText": "用户管理"
+      }
     }
   ],
   "globalStyle": {
