@@ -67,7 +67,7 @@ import { Refresh } from '@element-plus/icons-vue'
 import type { UserWidgetConfigDto, WidgetDataResponse, RefreshState } from '@/types/desktopWidget'
 import { WidgetType } from '@/types/desktopWidget'
 import { useDesktopStore } from '@/stores/desktopStore'
-import { useMenuStore } from '@/stores/permission'
+import { usePermissionStore } from '@/stores/permission'
 import EmptyWidget from './renderers/EmptyWidget.vue'
 
 // Props
@@ -78,7 +78,7 @@ const props = defineProps<{
 // 桌面状态管理
 const desktopStore = useDesktopStore()
 const router = useRouter()
-const menuStore = useMenuStore()
+const permissionStore = usePermissionStore()
 
 // 组件渲染器映射
 const rendererMap: Record<WidgetType, any> = {
@@ -141,7 +141,7 @@ function handleCardClick() {
     router.push(config.path)
   } else if (config.menuId) {
     // 从菜单列表查找对应的 path
-    const menu = findMenuById(config.menuId, menuStore.menuList)
+    const menu = findMenuById(config.menuId, permissionStore.menus)
     if (menu?.path) {
       router.push(menu.path)
     }
