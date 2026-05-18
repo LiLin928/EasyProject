@@ -131,13 +131,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { getUserList, enableUser, disableUser } from '@/api/basic/userApi'
 import type { User, UserQueryParams } from '@/types/basic'
 import { UserStatus } from '@/types/basic'
 
 // 搜索关键字
 const searchKeyword = ref('')
+
+// 搜索防抖定时器
+let searchTimer: number | null = null
 
 // 查询参数
 const queryParams = ref<UserQueryParams>({
@@ -185,18 +188,24 @@ const loadUsers = async (reset = false) => {
 
     hasMore.value = userList.value.length < response.total
     queryParams.value.pageIndex++
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('加载用户列表失败:', error)
-    uni.showToast({ title: '加载失败', icon: 'none' })
+    const message = (error as { errMsg?: string; message?: string })?.errMsg
+      || (error as { message?: string })?.message
+      || '加载失败'
+    uni.showToast({ title: message, icon: 'none' })
   } finally {
     loading.value = false
   }
 }
 
-// 搜索
+// 搜索（防抖处理）
 const handleSearch = () => {
-  queryParams.value.keyword = searchKeyword.value || undefined
-  loadUsers(true)
+  if (searchTimer) clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    queryParams.value.keyword = searchKeyword.value || undefined
+    loadUsers(true)
+  }, 300) as unknown as number
 }
 
 // 加载更多
@@ -228,6 +237,15 @@ const handleDetail = (item: User) => {
 // 切换启用/禁用状态
 const handleToggleStatus = async (item: User) => {
   const action = item.status === UserStatus.Enabled ? '禁用' : '启用'
+
+  // 添加确认对话框
+  const res = await uni.showModal({
+    title: '确认操作',
+    content: `确定要${action}用户 "${item.userName}" 吗？`,
+  })
+
+  if (!res.confirm) return
+
   try {
     uni.showLoading({ title: `${action}中...` })
     if (item.status === UserStatus.Enabled) {
@@ -238,14 +256,22 @@ const handleToggleStatus = async (item: User) => {
     uni.hideLoading()
     uni.showToast({ title: `${action}成功`, icon: 'success' })
     loadUsers(true)
-  } catch (error) {
+  } catch (error: unknown) {
     uni.hideLoading()
-    uni.showToast({ title: `${action}失败`, icon: 'none' })
+    console.error(`${action}用户失败:`, error)
+    const message = (error as { errMsg?: string; message?: string })?.errMsg
+      || (error as { message?: string })?.message
+      || `${action}失败`
+    uni.showToast({ title: message, icon: 'none' })
   }
 }
 
 onMounted(() => {
   loadUsers(true)
+})
+
+onUnmounted(() => {
+  if (searchTimer) clearTimeout(searchTimer)
 })
 </script>
 
