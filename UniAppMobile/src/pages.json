@@ -30,6 +30,12 @@
       "style": {
         "navigationBarTitleText": "抄送任务"
       }
+    },
+    {
+      "path": "pages/workflow/detail/index",
+      "style": {
+        "navigationBarTitleText": "任务详情"
+      }
     }
   ],
   "globalStyle": {
