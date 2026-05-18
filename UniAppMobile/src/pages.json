@@ -84,6 +84,12 @@
       "style": {
         "navigationBarTitleText": "部门管理"
       }
+    },
+    {
+      "path": "pages/basic/menu/index",
+      "style": {
+        "navigationBarTitleText": "菜单管理"
+      }
     }
   ],
   "globalStyle": {
