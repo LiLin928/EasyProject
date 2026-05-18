@@ -18,6 +18,12 @@
       "style": {
         "navigationBarTitleText": "待办任务"
       }
+    },
+    {
+      "path": "pages/workflow/done/index",
+      "style": {
+        "navigationBarTitleText": "已办任务"
+      }
     }
   ],
   "globalStyle": {
