@@ -120,6 +120,18 @@
       "style": {
         "navigationBarTitleText": "大屏查看"
       }
+    },
+    {
+      "path": "pages/log/list/index",
+      "style": {
+        "navigationBarTitleText": "操作日志"
+      }
+    },
+    {
+      "path": "pages/log/detail/index",
+      "style": {
+        "navigationBarTitleText": "日志详情"
+      }
     }
   ],
   "globalStyle": {
