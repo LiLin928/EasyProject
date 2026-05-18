@@ -39,6 +39,9 @@ public class UserWidgetConfigService : BaseService<UserWidgetConfig>, IUserWidge
             })
             .ToListAsync();
 
+        // 获取用户已配置的组件ID列表（用于后续内存匹配）
+        var userWidgetIds = userConfigs.Select(uc => uc.WidgetId).ToList();
+
         // 获取用户角色
         var userRole = await _db.Queryable<UserRole>()
             .Where(x => x.UserId == userId)
@@ -47,21 +50,32 @@ public class UserWidgetConfigService : BaseService<UserWidgetConfig>, IUserWidge
         var availableWidgets = new List<AvailableWidgetDto>();
         if (userRole != null)
         {
-            // 获取角色可用的组件
-            availableWidgets = await _db.Queryable<RoleWidgetConfig, DesktopWidget>(
+            // 获取角色可用的组件（在内存中计算 IsUserEnabled，避免 CAST 字符集冲突）
+            var roleWidgetConfigs = await _db.Queryable<RoleWidgetConfig, DesktopWidget>(
                 (rc, w) => new JoinQueryInfos(JoinType.Left, rc.WidgetId == w.Id))
                 .Where((rc, w) => rc.RoleId == userRole.RoleId && rc.IsEnabled && w.Status == 1)
-                .Select((rc, w) => new AvailableWidgetDto
+                .Select((rc, w) => new
                 {
                     Id = w.Id,
                     Name = w.Name,
                     Type = (int)w.Type,
                     Icon = w.Icon,
                     DefaultWidth = w.DefaultWidth,
-                    DefaultHeight = w.DefaultHeight,
-                    IsUserEnabled = userConfigs.Any(uc => uc.WidgetId == w.Id)
+                    DefaultHeight = w.DefaultHeight
                 })
                 .ToListAsync();
+
+            // 在内存中计算 IsUserEnabled
+            availableWidgets = roleWidgetConfigs.Select(w => new AvailableWidgetDto
+            {
+                Id = w.Id,
+                Name = w.Name,
+                Type = w.Type,
+                Icon = w.Icon,
+                DefaultWidth = w.DefaultWidth,
+                DefaultHeight = w.DefaultHeight,
+                IsUserEnabled = userWidgetIds.Contains(w.Id)
+            }).ToList();
         }
 
         return new UserDesktopDto
