@@ -9,6 +9,11 @@ export function login(params: LoginParams): Promise<LoginResponse> {
   return post<LoginResponse>(API_PATHS.AUTH_LOGIN, params)
 }
 
+/** 刷新Token */
+export function refreshToken(refreshToken: string): Promise<LoginResponse> {
+  return post<LoginResponse>(API_PATHS.AUTH_REFRESH, refreshToken)
+}
+
 /** 退出登录 */
 export function logout(): Promise<void> {
   return post<void>(API_PATHS.AUTH_LOGOUT)

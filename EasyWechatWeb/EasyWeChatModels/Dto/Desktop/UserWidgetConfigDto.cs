@@ -43,6 +43,11 @@ public class UserWidgetConfigDto
     public string? Icon { get; set; }
 
     /// <summary>
+    /// 数据源类型
+    /// </summary>
+    public DataSourceType DataSourceType { get; set; }
+
+    /// <summary>
     /// 数据源配置
     /// </summary>
     public string? DataSourceConfig { get; set; }

@@ -78,7 +78,7 @@ public class BusinessAuditPointService : BaseService<BusinessAuditPoint>, IBusin
     }
 
     /// <inheritdoc/>
-    public async Task<BusinessAuditPointDto?> GetByIdAsync(Guid id)
+    public new async Task<BusinessAuditPointDto?> GetByIdAsync(Guid id)
     {
         var rawResult = await _db.Queryable<BusinessAuditPoint, AntWorkflowEntity>(
             (bp, wf) => new JoinQueryInfos(
@@ -364,7 +364,7 @@ public class BusinessAuditPointService : BaseService<BusinessAuditPoint>, IBusin
     }
 
     /// <inheritdoc/>
-    public async Task<int> DeleteAsync(Guid id)
+    public new async Task<int> DeleteAsync(Guid id)
     {
         return await _db.Deleteable<BusinessAuditPoint>()
             .Where(bp => bp.Id == id)

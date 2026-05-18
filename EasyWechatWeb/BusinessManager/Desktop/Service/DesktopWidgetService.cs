@@ -11,7 +11,7 @@ namespace BusinessManager.Desktop.Service;
 public class DesktopWidgetService : BaseService<DesktopWidget>, IDesktopWidgetService
 {
     public ILogger<DesktopWidgetService> _logger { get; set; } = null!;
-    public ISqlSugarClient _db { get; set; } = null!;
+    public new ISqlSugarClient _db { get; set; } = null!;
 
     public async Task<(List<DesktopWidgetDto> list, int total)> GetListAsync(QueryDesktopWidgetDto query)
     {
@@ -28,7 +28,7 @@ public class DesktopWidgetService : BaseService<DesktopWidget>, IDesktopWidgetSe
         return (list.Adapt<List<DesktopWidgetDto>>(), total);
     }
 
-    public async Task<DesktopWidgetDto?> GetByIdAsync(Guid id)
+    public new async Task<DesktopWidgetDto?> GetByIdAsync(Guid id)
     {
         var entity = await _db.Queryable<DesktopWidget>()
             .Where(x => x.Id == id)
@@ -58,7 +58,7 @@ public class DesktopWidgetService : BaseService<DesktopWidget>, IDesktopWidgetSe
         return true;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public new async Task<bool> DeleteAsync(Guid id)
     {
         var result = await _db.Deleteable<DesktopWidget>()
             .Where(x => x.Id == id)

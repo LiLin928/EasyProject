@@ -17,7 +17,7 @@ namespace BusinessManager.Buz.AntWorkflow.Service;
 public class ApproverResolverService : BaseService<User>, IApproverResolverService
 {
     /// <summary>数据库客户端（Autofac 属性注入）</summary>
-    public ISqlSugarClient _db { get; set; } = null!;
+    public new ISqlSugarClient _db { get; set; } = null!;
 
     /// <summary>日志服务（Autofac 属性注入）</summary>
     public ILogger<ApproverResolverService> _logger { get; set; } = null!;

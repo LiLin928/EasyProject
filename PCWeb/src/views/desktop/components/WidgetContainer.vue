@@ -102,11 +102,13 @@ const refreshState = computed<RefreshState | undefined>(() => {
 const widgetData = computed<WidgetDataResponse>(() => {
   // 从 store 获取实际数据
   const fetchedData = desktopStore.getWidgetDataById(props.widget.widgetId)
+  console.log(`[WidgetContainer] widgetId=${props.widget.widgetId}, fetchedData=`, fetchedData)
   if (fetchedData) {
     return fetchedData
   }
 
   // 否则使用 Mock 数据（用于预览）
+  console.log(`[WidgetContainer] widgetId=${props.widget.widgetId}, 使用Mock数据`)
   return generateMockData()
 })
 

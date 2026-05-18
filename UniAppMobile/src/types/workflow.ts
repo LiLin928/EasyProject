@@ -54,10 +54,27 @@ export interface ApprovalNode {
 /** 审批参数 */
 export interface ApproveParams {
   taskId: string
-  approved: boolean      // true=通过, false=拒绝
   comment?: string
-  transferTo?: string    // 转办目标用户ID
-  ccTo?: string[]        // 抄送用户ID列表
+}
+
+/** 驳回参数 */
+export interface RejectParams {
+  taskId: string
+  comment?: string
+}
+
+/** 转办参数 */
+export interface TransferParams {
+  taskId: string
+  transferTo: string    // 转办目标用户ID
+  comment?: string
+}
+
+/** 加签参数 */
+export interface AddSignerParams {
+  taskId: string
+  userIds: string[]     // 加签用户ID列表
+  comment?: string
 }
 
 /** 任务列表查询参数 */

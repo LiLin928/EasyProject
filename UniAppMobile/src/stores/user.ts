@@ -46,16 +46,10 @@ export const useUserStore = defineStore('user', () => {
     setToken(data.accessToken)
     setRefreshToken(data.refreshToken)
 
-    // 保存用户信息
-    if (data.user) {
-      userInfo.value = data.user
-      setUserInfo(data.user)
-    } else {
-      // 如果登录响应中没有用户信息，则单独获取
-      const info = await fetchUserInfo()
-      userInfo.value = info
-      setUserInfo(info)
-    }
+    // 登录成功后单独获取用户信息
+    const info = await fetchUserInfo()
+    userInfo.value = info
+    setUserInfo(info)
 
     return data
   }

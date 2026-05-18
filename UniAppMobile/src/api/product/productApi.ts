@@ -1,12 +1,12 @@
 // api/product/productApi.ts
 
-import { get, post, del } from '@/utils/request'
+import { get, post, put } from '@/utils/request'
 import { API_PATHS } from '@/config/api.config'
 import type { Product, ProductQueryParams, ProductFormParams, PageResponse } from '@/types'
 
 /** 获取商品列表 */
 export function getProductList(params: ProductQueryParams): Promise<PageResponse<Product>> {
-  return get<PageResponse<Product>>(API_PATHS.PRODUCT_LIST, params)
+  return post<PageResponse<Product>>(API_PATHS.PRODUCT_LIST, params)
 }
 
 /** 获取商品详情 */
@@ -21,20 +21,25 @@ export function createProduct(data: ProductFormParams): Promise<{ id: string }> 
 
 /** 更新商品 */
 export function updateProduct(data: ProductFormParams): Promise<number> {
-  return post<number>(API_PATHS.PRODUCT_UPDATE, data)
+  return put<number>(API_PATHS.PRODUCT_UPDATE, data)
 }
 
 /** 删除商品 */
 export function deleteProduct(id: string): Promise<number> {
-  return del<number>(`${API_PATHS.PRODUCT_DELETE}/${id}`)
+  return post<number>(API_PATHS.PRODUCT_DELETE, id)
+}
+
+/** 批量删除商品 */
+export function deleteProductBatch(ids: string[]): Promise<number> {
+  return post<number>(`${API_PATHS.PRODUCT_DELETE}-batch`, ids)
 }
 
 /** 上架商品 */
 export function onShelfProduct(id: string): Promise<number> {
-  return post<number>(`${API_PATHS.PRODUCT_UPDATE}/onshelf/${id}`)
+  return post<number>('/api/product/batch-status', { ids: [id], status: 1 })
 }
 
 /** 下架商品 */
 export function offShelfProduct(id: string): Promise<number> {
-  return post<number>(`${API_PATHS.PRODUCT_UPDATE}/offshelf/${id}`)
+  return post<number>('/api/product/batch-status', { ids: [id], status: 0 })
 }

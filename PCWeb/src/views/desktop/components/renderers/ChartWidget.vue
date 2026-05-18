@@ -25,7 +25,7 @@ let chartInstance: echarts.ECharts | null = null
 
 // 图表高度
 const chartHeight = computed(() => {
-  const height = props.widget.height || 200
+  const height = props.widget.defaultHeight || 200
   return `${height}px`
 })
 

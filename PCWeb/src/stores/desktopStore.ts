@@ -45,7 +45,11 @@ export const useDesktopStore = defineStore('desktop', () => {
   async function fetchDesktop() {
     loading.value = true
     try {
+      console.log('[DesktopStore] 开始获取桌面配置')
       const data: UserDesktopDto = await getUserDesktop()
+      console.log('[DesktopStore] 桌面配置返回:', data)
+      console.log('[DesktopStore] widgets:', data.widgets)
+      console.log('[DesktopStore] availableWidgets:', data.availableWidgets)
       widgets.value = data.widgets || []
       availableWidgets.value = data.availableWidgets || []
 
@@ -139,13 +143,18 @@ export const useDesktopStore = defineStore('desktop', () => {
    */
   async function refreshWidget(widgetId: string) {
     const state = refreshStates.value.get(widgetId)
-    if (!state) return
+    if (!state) {
+      console.warn(`[DesktopStore] 组件状态不存在: ${widgetId}`)
+      return
+    }
 
     state.loading = true
     state.error = undefined
 
     try {
+      console.log(`[DesktopStore] 开始获取组件数据: ${widgetId}`)
       const data = await getWidgetData(widgetId)
+      console.log(`[DesktopStore] 组件数据返回: ${widgetId}`, data)
       widgetDataMap.value.set(widgetId, data)
       state.lastRefreshTime = new Date()
       refreshStates.value.set(widgetId, state)

@@ -11,7 +11,7 @@ namespace BusinessManager.Desktop.Service;
 public class RoleWidgetConfigService : BaseService<RoleWidgetConfig>, IRoleWidgetConfigService
 {
     public ILogger<RoleWidgetConfigService> _logger { get; set; } = null!;
-    public ISqlSugarClient _db { get; set; } = null!;
+    public new ISqlSugarClient _db { get; set; } = null!;
 
     public async Task<List<RoleWidgetConfigDto>> GetByRoleIdAsync(Guid roleId)
     {

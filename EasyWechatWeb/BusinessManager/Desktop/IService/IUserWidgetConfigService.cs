@@ -27,5 +27,5 @@ public interface IUserWidgetConfigService
     /// <summary>
     /// 获取组件数据（代理接口）
     /// </summary>
-    Task<object> GetWidgetDataAsync(Guid widgetId, Guid userId);
+    Task<object> GetWidgetDataAsync(Guid widgetId, Guid userId, string? authToken = null);
 }

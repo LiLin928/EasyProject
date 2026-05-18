@@ -86,7 +86,11 @@ public class UserWidgetConfigController : BaseController
         try
         {
             var userId = GetCurrentUserId();
-            var data = await _userConfigService.GetWidgetDataAsync(widgetId, userId);
+            // 获取当前用户的认证 Token，用于内部 API 调用
+            var authHeader = HttpContext.Request.Headers.Authorization.FirstOrDefault();
+            // 提取 Token（去掉 "Bearer " 前缀）
+            var authToken = authHeader?.Replace("Bearer ", "").Trim();
+            var data = await _userConfigService.GetWidgetDataAsync(widgetId, userId, authToken);
             return Success(data);
         }
         catch (Exception ex)

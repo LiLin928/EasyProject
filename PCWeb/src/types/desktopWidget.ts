@@ -180,11 +180,12 @@ export interface UserWidgetConfigDto {
   widgetType: WidgetType
   icon?: string
   width: number
-  height: number
+  defaultHeight: number
   sortOrder: number
   isEnabled: boolean
-  dataSourceType: DataSourceType
+  dataSourceType?: DataSourceType
   dataSourceConfig?: string
+  interactionConfig?: string
 }
 
 /**

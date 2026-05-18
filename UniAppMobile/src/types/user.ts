@@ -26,7 +26,7 @@ export interface LoginResponse {
   accessToken: string
   refreshToken: string
   expiresIn: number
-  user: UserInfo
+  tokenType?: string
 }
 
 /** 修改密码参数 */
