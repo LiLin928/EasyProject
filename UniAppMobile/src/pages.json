@@ -42,6 +42,12 @@
       "style": {
         "navigationBarTitleText": "商品管理"
       }
+    },
+    {
+      "path": "pages/product/detail/index",
+      "style": {
+        "navigationBarTitleText": "商品详情"
+      }
     }
   ],
   "globalStyle": {
