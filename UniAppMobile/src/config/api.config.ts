@@ -29,10 +29,13 @@ export const API_PATHS = {
 
   // 报表
   REPORT_LIST: '/api/report/list',
-  REPORT_VIEW: '/api/report/view',
+  REPORT_CATEGORIES: '/api/report/categories',
+  REPORT_DETAIL: '/api/report/detail',
+  REPORT_DATA: '/api/report/data',
 
   // 大屏
   SCREEN_LIST: '/api/screen/list',
+  SCREEN_DETAIL: '/api/screen/detail',
 
   // 日志
   LOG_LIST: '/api/log/list',
