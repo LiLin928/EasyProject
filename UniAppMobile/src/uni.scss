@@ -1,28 +1,126 @@
 /* uni.scss - uView UI 主题定制 */
 
-/* 主色系 */
+/* ==================== 主色系 ==================== */
 $u-primary: #2563EB;
+$u-primary-light: #3B82F6;
+$u-primary-dark: #1D4ED8;
+$u-primary-disabled: #93C5FD;
+$u-primary-light-bg: #DBEAFE;
+
 $u-secondary: #3B82F6;
+$u-secondary-light: #60A5FA;
+$u-secondary-dark: #2563EB;
+
 $u-accent: #EA580C;
+$u-accent-light: #F97316;
+$u-accent-dark: #C2410C;
 
-/* 功能色 */
-$u-success: #059669;
-$u-warning: #D97706;
-$u-error: #DC2626;
-$u-info: #0891B2;
+/* ==================== 功能色 ==================== */
+$u-success: #10B981;
+$u-success-light: #34D399;
+$u-success-dark: #059669;
+$u-success-disabled: #6EE7B7;
+$u-success-light-bg: #D1FAE5;
 
-/* 中性色 */
-$u-main-color: #1E293B;
+$u-warning: #F59E0B;
+$u-warning-light: #FBBF24;
+$u-warning-dark: #D97706;
+$u-warning-disabled: #FCD34D;
+$u-warning-light-bg: #FEF3C7;
+
+$u-error: #EF4444;
+$u-error-light: #F87171;
+$u-error-dark: #DC2626;
+$u-error-disabled: #FCA5A5;
+$u-error-light-bg: #FEE2E2;
+
+$u-info: #6366F1;
+$u-info-light: #818CF8;
+$u-info-dark: #4F46E5;
+$u-info-disabled: #A5B4FC;
+$u-info-light-bg: #E0E7FF;
+
+/* ==================== 中性色 ==================== */
+$u-main-color: #1F2937;
 $u-content-color: #64748B;
 $u-tips-color: #94A3B8;
 $u-light-color: #F1F5F9;
 $u-border-color: #E2E8F0;
 $u-bg-color: #F8FAFC;
 
-/* 尺寸 */
+/* 灰度色阶 */
+$u-gray-50: #F9FAFB;
+$u-gray-100: #F3F4F6;
+$u-gray-200: #E5E7EB;
+$u-gray-300: #D1D5DB;
+$u-gray-400: #9CA3AF;
+$u-gray-500: #6B7280;
+$u-gray-600: #4B5563;
+$u-gray-700: #374151;
+$u-gray-800: #1F2937;
+$u-gray-900: #111827;
+
+/* ==================== 尺寸 ==================== */
+/* 按钮尺寸 */
 $u-button-height: 88rpx;
+$u-button-height-sm: 64rpx;
+$u-button-height-lg: 100rpx;
+$u-button-height-xl: 112rpx;
+
+/* 导航栏尺寸 */
+$u-navbar-height: 88rpx;
 $u-tabbar-height: 100rpx;
 
-/* 圆角 */
+/* 间距 */
+$u-padding: 32rpx;
+$u-padding-sm: 16rpx;
+$u-padding-lg: 48rpx;
+
+/* ==================== 圆角 ==================== */
 $u-radius: 8rpx;
+$u-radius-sm: 4rpx;
 $u-radius-lg: 16rpx;
+$u-radius-xl: 24rpx;
+$u-radius-round: 999rpx;
+
+/* ==================== 字体 ==================== */
+$u-font-size-xs: 20rpx;
+$u-font-size-sm: 24rpx;
+$u-font-size: 28rpx;
+$u-font-size-md: 30rpx;
+$u-font-size-lg: 32rpx;
+$u-font-size-xl: 36rpx;
+$u-font-size-xxl: 44rpx;
+
+/* 字重 */
+$u-font-weight-normal: 400;
+$u-font-weight-medium: 500;
+$u-font-weight-bold: 600;
+
+/* ==================== 阴影 ==================== */
+$u-shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+$u-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+$u-shadow-lg: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
+$u-shadow-xl: 0 16rpx 48rpx rgba(0, 0, 0, 0.16);
+
+/* ==================== 动画 ==================== */
+$u-transition: all 0.3s ease;
+$u-transition-fast: all 0.15s ease;
+$u-transition-slow: all 0.5s ease;
+
+/* ==================== Z-Index ==================== */
+$u-z-index-dropdown: 1000;
+$u-z-index-sticky: 1020;
+$u-z-index-fixed: 1030;
+$u-z-index-modal-backdrop: 1040;
+$u-z-index-modal: 1050;
+$u-z-index-popover: 1060;
+$u-z-index-tooltip: 1070;
+$u-z-index-toast: 1080;
+
+/* ==================== 断点 ==================== */
+$u-breakpoint-xs: 320rpx;
+$u-breakpoint-sm: 576rpx;
+$u-breakpoint-md: 768rpx;
+$u-breakpoint-lg: 992rpx;
+$u-breakpoint-xl: 1200rpx;

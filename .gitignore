@@ -12,6 +12,8 @@ appsettings.Development.json
 
 # Documentation
 docs/
+!UniAppMobile/docs/
+!UniAppMobile/docs/*.md
 
 # Build outputs
 bin/
@@ -38,6 +40,8 @@ node_modules/
 !README.md
 !*/CLAUDE.md
 !*/README.md
+!UniAppMobile/docs/*.md
+!UniAppMobile/src/static/icons/README.md
 
 # Logs
 EasyWeChatWeb/EasyWeChatWeb/logs/
