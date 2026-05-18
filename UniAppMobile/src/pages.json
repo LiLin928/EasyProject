@@ -132,6 +132,12 @@
       "style": {
         "navigationBarTitleText": "日志详情"
       }
+    },
+    {
+      "path": "pages/message/list/index",
+      "style": {
+        "navigationBarTitleText": "消息通知"
+      }
     }
   ],
   "globalStyle": {
