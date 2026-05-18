@@ -232,6 +232,15 @@ builder.Services.AddCapService(builder.Configuration);
 // HttpClient（用于 API 回调）
 builder.Services.AddHttpClient();
 
+// HttpClient（用于桌面组件数据获取）
+builder.Services.AddHttpClient("WidgetDataClient")
+    .ConfigureHttpClient(client =>
+    {
+        // 使用当前应用的 URL 作为 BaseAddress
+        var baseUrl = builder.Configuration["WidgetDataClient:BaseUrl"] ?? "http://localhost:7600";
+        client.BaseAddress = new Uri(baseUrl);
+    });
+
 // CAP 失败消息监控服务 - 定期检查重试耗尽的消息并执行补偿（只有 CAP 启用时才注册）
 builder.Services.AddCapFailedMessageMonitor(builder.Configuration);
 

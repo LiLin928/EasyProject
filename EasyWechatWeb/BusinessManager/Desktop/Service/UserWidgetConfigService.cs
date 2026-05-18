@@ -7,6 +7,7 @@ using Mapster;
 using Microsoft.Extensions.Logging;
 using SqlSugar;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace BusinessManager.Desktop.Service;
 
@@ -206,11 +207,119 @@ public class UserWidgetConfigService : BaseService<UserWidgetConfig>, IUserWidge
             case DataSourceType.Static:
                 return GetStaticData(widget.DataSourceConfig);
 
-            case DataSourceType.Statistics:
-                return await GetStatisticsDataAsync(widget.DataSourceConfig);
+            case DataSourceType.Sql:
+                return await GetSqlDataAsync(widget.DataSourceConfig);
+
+            case DataSourceType.Report:
+                return await GetReportDataAsync(widget.DataSourceConfig);
 
             default:
                 return new object();
+        }
+    }
+
+    /// <summary>
+    /// 执行SQL获取数据
+    /// </summary>
+    private async Task<object> GetSqlDataAsync(string? dataSourceConfig)
+    {
+        if (string.IsNullOrEmpty(dataSourceConfig))
+        {
+            return new Dictionary<string, object>();
+        }
+
+        try
+        {
+            var config = JsonSerializer.Deserialize<SqlConfigDto>(dataSourceConfig);
+            if (config == null || string.IsNullOrEmpty(config.Sql))
+            {
+                return new Dictionary<string, object>();
+            }
+
+            // 安全检查：只允许 SELECT 语句
+            var sql = config.Sql.Trim();
+            if (!sql.StartsWith("SELECT", StringComparison.OrdinalIgnoreCase))
+            {
+                _logger.LogWarning($"非法SQL语句，只允许SELECT: {sql}");
+                return new Dictionary<string, object> { ["value"] = 0, ["label"] = "SQL不允许" };
+            }
+
+            // 执行 SQL 查询
+            var result = await _db.Ado.GetDataTableAsync(sql);
+
+            // 对于 COUNT 查询，返回单值
+            if (result.Rows.Count > 0 && result.Columns.Count == 1)
+            {
+                var value = result.Rows[0][0];
+                return new Dictionary<string, object>
+                {
+                    ["value"] = Convert.ToInt64(value),
+                    ["label"] = config.Label ?? "数量"
+                };
+            }
+
+            // 对于多列查询，返回列表
+            var list = new List<Dictionary<string, object>>();
+            foreach (System.Data.DataRow row in result.Rows)
+            {
+                var item = new Dictionary<string, object>();
+                foreach (System.Data.DataColumn col in result.Columns)
+                {
+                    item[col.ColumnName] = row[col];
+                }
+                list.Add(item);
+            }
+
+            return new Dictionary<string, object> { ["list"] = list };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "执行SQL失败");
+            return new Dictionary<string, object> { ["value"] = 0, ["label"] = "执行失败" };
+        }
+    }
+
+    /// <summary>
+    /// 获取报表数据
+    /// </summary>
+    private async Task<object> GetReportDataAsync(string? dataSourceConfig)
+    {
+        if (string.IsNullOrEmpty(dataSourceConfig))
+        {
+            return new Dictionary<string, object>();
+        }
+
+        try
+        {
+            var config = JsonSerializer.Deserialize<ReportConfigDto>(dataSourceConfig);
+            if (config == null || config.ReportId == Guid.Empty)
+            {
+                return new Dictionary<string, object>();
+            }
+
+            // 获取报表信息（使用 ColumnTemplate 作为报表模板）
+            var report = await _db.Queryable<ColumnTemplate>()
+                .Where(x => x.Id == config.ReportId)
+                .FirstAsync();
+
+            if (report == null)
+            {
+                return new Dictionary<string, object> { ["error"] = "报表不存在" };
+            }
+
+            // 返回报表信息，前端根据此渲染
+            return new Dictionary<string, object>
+            {
+                ["reportId"] = report.Id,
+                ["reportName"] = report.Name,
+                ["reportType"] = report.Type,
+                ["config"] = report.ColumnConfigs
+            };
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "获取报表数据失败");
+            return new Dictionary<string, object> { ["error"] = "获取失败" };
         }
     }
 
@@ -283,62 +392,6 @@ public class UserWidgetConfigService : BaseService<UserWidgetConfig>, IUserWidge
     }
 
     /// <summary>
-    /// 获取统计数据（从数据库查询）
-    /// </summary>
-    private async Task<object> GetStatisticsDataAsync(string? dataSourceConfig)
-    {
-        if (string.IsNullOrEmpty(dataSourceConfig))
-        {
-            return new object();
-        }
-
-        try
-        {
-            var config = JsonSerializer.Deserialize<StatisticsConfigDto>(dataSourceConfig);
-            if (config == null)
-            {
-                return new object();
-            }
-
-            // 根据配置查询数据库
-            // 示例：查询订单数量
-            if (config.TableName == "Order")
-            {
-                var query = _db.Queryable<Order>();
-
-                // 应用条件过滤
-                if (config.Conditions != null)
-                {
-                    foreach (var condition in config.Conditions)
-                    {
-                        // 简化的条件处理
-                        if (condition.Field == "Status" && int.TryParse(condition.Value, out var status))
-                        {
-                            query = query.Where(x => x.Status == status);
-                        }
-                    }
-                }
-
-                var count = await query.CountAsync();
-
-                return new
-                {
-                    value = count,
-                    label = config.Label ?? "数量"
-                };
-            }
-
-            // 其他统计类型可以根据需要扩展
-            return new object();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "获取统计数据失败");
-            return new object();
-        }
-    }
-
-    /// <summary>
     /// 字段映射转换
     /// </summary>
     private object MapFields(object sourceData, Dictionary<string, string> fieldMapping)
@@ -391,28 +444,39 @@ public class UserWidgetConfigService : BaseService<UserWidgetConfig>, IUserWidge
 /// </summary>
 internal class DataSourceConfigDto
 {
+    [JsonPropertyName("api")]
     public string? ApiUrl { get; set; }
+
+    [JsonPropertyName("params")]
+    public Dictionary<string, object>? QueryParams { get; set; }
+
     public Dictionary<string, string>? FieldMapping { get; set; }
     public int RefreshInterval { get; set; }
-    public Dictionary<string, object>? QueryParams { get; set; }
 }
 
 /// <summary>
-/// 统计配置DTO（内部使用）
+/// SQL配置DTO（内部使用）
 /// </summary>
-internal class StatisticsConfigDto
+internal class SqlConfigDto
 {
-    public string? TableName { get; set; }
+    /// <summary>SQL语句（只允许SELECT）</summary>
+    public string? Sql { get; set; }
+
+    /// <summary>显示标签（用于统计卡片）</summary>
     public string? Label { get; set; }
-    public List<ConditionDto>? Conditions { get; set; }
+
+    /// <summary>刷新间隔（秒）</summary>
+    public int RefreshInterval { get; set; }
 }
 
 /// <summary>
-/// 条件DTO（内部使用）
+/// 报表配置DTO（内部使用）
 /// </summary>
-internal class ConditionDto
+internal class ReportConfigDto
 {
-    public string? Field { get; set; }
-    public string? Operator { get; set; }
-    public string? Value { get; set; }
+    /// <summary>报表ID</summary>
+    public Guid ReportId { get; set; }
+
+    /// <summary>刷新间隔（秒）</summary>
+    public int RefreshInterval { get; set; }
 }

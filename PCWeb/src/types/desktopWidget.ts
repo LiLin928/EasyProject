@@ -16,7 +16,8 @@ export enum WidgetType {
 export enum DataSourceType {
   Api = 1,       // API接口
   Static = 2,    // 静态配置
-  Statistics = 3 // 实时统计
+  Sql = 3,       // SQL执行
+  Report = 4     // 报表数据
 }
 
 /**
@@ -25,7 +26,7 @@ export enum DataSourceType {
 export const widgetTypeLabels: Record<WidgetType, string> = {
   [WidgetType.Card]: '统计卡片',
   [WidgetType.List]: '数据列表',
-  [WidgetType.Image]: '图片展示',
+  [WidgetType.Image]: '快捷入口',
   [WidgetType.Chart]: '图表统计',
 }
 
@@ -35,7 +36,8 @@ export const widgetTypeLabels: Record<WidgetType, string> = {
 export const dataSourceTypeLabels: Record<DataSourceType, string> = {
   [DataSourceType.Api]: 'API接口',
   [DataSourceType.Static]: '静态配置',
-  [DataSourceType.Statistics]: '实时统计',
+  [DataSourceType.Sql]: 'SQL执行',
+  [DataSourceType.Report]: '报表数据',
 }
 
 /**

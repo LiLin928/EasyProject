@@ -1,7 +1,12 @@
 <!-- 文件: PCWeb/src/views/desktop/components/WidgetContainer.vue -->
 
 <template>
-  <el-card shadow="hover" class="widget-container" :body-style="{ padding: '20px' }">
+  <el-card
+    shadow="hover"
+    class="widget-container"
+    :body-style="{ padding: '20px' }"
+    @click="handleCardClick"
+  >
     <!-- 组件标题 -->
     <template #header>
       <div class="widget-header">
@@ -12,7 +17,7 @@
             link
             type="primary"
             :loading="refreshState?.loading"
-            @click="handleRefresh"
+            @click.stop="handleRefresh"
           >
             <el-icon><Refresh /></el-icon>
           </el-button>
@@ -47,15 +52,22 @@
     <div v-if="refreshState?.lastRefreshTime" class="refresh-time">
       <span>更新于 {{ formatTime(refreshState.lastRefreshTime) }}</span>
     </div>
+
+    <!-- 点击跳转提示 -->
+    <div v-if="hasInteraction" class="click-hint">
+      <span>点击查看详情</span>
+    </div>
   </el-card>
 </template>
 
 <script setup lang="ts">
 import { computed, defineAsyncComponent } from 'vue'
+import { useRouter } from 'vue-router'
 import { Refresh } from '@element-plus/icons-vue'
 import type { UserWidgetConfigDto, WidgetDataResponse, RefreshState } from '@/types/desktopWidget'
 import { WidgetType } from '@/types/desktopWidget'
 import { useDesktopStore } from '@/stores/desktopStore'
+import { useMenuStore } from '@/stores/permission'
 import EmptyWidget from './renderers/EmptyWidget.vue'
 
 // Props
@@ -65,6 +77,8 @@ const props = defineProps<{
 
 // 桌面状态管理
 const desktopStore = useDesktopStore()
+const router = useRouter()
+const menuStore = useMenuStore()
 
 // 组件渲染器映射
 const rendererMap: Record<WidgetType, any> = {
@@ -96,9 +110,54 @@ const widgetData = computed<WidgetDataResponse>(() => {
   return generateMockData()
 })
 
+// 解析交互配置
+const interactionConfig = computed(() => {
+  if (props.widget.interactionConfig) {
+    try {
+      return JSON.parse(props.widget.interactionConfig)
+    } catch {
+      return null
+    }
+  }
+  return null
+})
+
+// 是否有交互配置
+const hasInteraction = computed(() => {
+  return interactionConfig.value?.menuId || interactionConfig.value?.path
+})
+
 // 刷新处理
 function handleRefresh() {
   desktopStore.manualRefresh(props.widget.widgetId)
+}
+
+// 点击卡片跳转
+function handleCardClick() {
+  const config = interactionConfig.value
+  if (!config) return
+
+  if (config.path) {
+    router.push(config.path)
+  } else if (config.menuId) {
+    // 从菜单列表查找对应的 path
+    const menu = findMenuById(config.menuId, menuStore.menuList)
+    if (menu?.path) {
+      router.push(menu.path)
+    }
+  }
+}
+
+// 递归查找菜单
+function findMenuById(menuId: string, menus: any[]): any {
+  for (const menu of menus) {
+    if (menu.id === menuId) return menu
+    if (menu.children?.length) {
+      const found = findMenuById(menuId, menu.children)
+      if (found) return found
+    }
+  }
+  return null
 }
 
 // 格式化时间
@@ -134,11 +193,7 @@ function generateMockData(): WidgetDataResponse {
 
     case WidgetType.Image:
       return {
-        images: [
-          'https://picsum.photos/200/150?random=1',
-          'https://picsum.photos/200/150?random=2',
-          'https://picsum.photos/200/150?random=3',
-        ],
+        menus: [],
       }
 
     case WidgetType.Chart:
@@ -178,6 +233,13 @@ function generateMockData(): WidgetDataResponse {
 .widget-container {
   height: 100%;
   min-height: 200px;
+  cursor: pointer;
+
+  &:hover {
+    .click-hint {
+      opacity: 1;
+    }
+  }
 
   .widget-header {
     display: flex;
@@ -211,6 +273,15 @@ function generateMockData(): WidgetDataResponse {
     text-align: right;
     font-size: 12px;
     color: #909399;
+  }
+
+  .click-hint {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 12px;
+    color: #409eff;
+    opacity: 0;
+    transition: opacity 0.3s ease;
   }
 }
 </style>
