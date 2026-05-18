@@ -36,6 +36,12 @@
       "style": {
         "navigationBarTitleText": "任务详情"
       }
+    },
+    {
+      "path": "pages/product/list/index",
+      "style": {
+        "navigationBarTitleText": "商品管理"
+      }
     }
   ],
   "globalStyle": {
@@ -55,6 +61,12 @@
         "iconPath": "static/icons/tab-home.png",
         "selectedIconPath": "static/icons/tab-home-active.png",
         "text": "工作台"
+      },
+      {
+        "pagePath": "pages/product/list/index",
+        "iconPath": "static/icons/tab-product.png",
+        "selectedIconPath": "static/icons/tab-product-active.png",
+        "text": "商品"
       },
       {
         "pagePath": "pages/workflow/todo/index",
