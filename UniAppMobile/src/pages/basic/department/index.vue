@@ -187,7 +187,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
 import {
   getDepartmentTree,
   createDepartment,
@@ -206,6 +206,9 @@ const loading = ref(false)
 
 // 搜索关键词
 const searchKeyword = ref('')
+
+// 搜索防抖定时器
+let searchTimer: ReturnType<typeof setTimeout> | null = null
 
 // 弹窗显示状态
 const showEditPopup = ref(false)
@@ -295,10 +298,22 @@ const loadDepartments = async () => {
 
 // 展开所有节点
 const expandAllNodes = (departments: Department[]) => {
+  const newSet = new Set<string>()
   for (const dept of departments) {
     if (dept.children && dept.children.length > 0) {
-      expandedKeys.value.add(dept.id)
-      expandAllNodes(dept.children)
+      newSet.add(dept.id)
+      expandAllNodesRecursive(dept.children, newSet)
+    }
+  }
+  expandedKeys.value = newSet
+}
+
+// 递归收集所有节点ID
+const expandAllNodesRecursive = (departments: Department[], set: Set<string>) => {
+  for (const dept of departments) {
+    if (dept.children && dept.children.length > 0) {
+      set.add(dept.id)
+      expandAllNodesRecursive(dept.children, set)
     }
   }
 }
@@ -307,17 +322,18 @@ const expandAllNodes = (departments: Department[]) => {
 const handleSearch = () => {
   // 搜索时展开所有匹配的节点
   if (searchKeyword.value.trim()) {
-    expandedKeys.value.clear()
-    expandMatchingNodes(filteredDepartmentList.value)
+    const newSet = new Set<string>()
+    expandMatchingNodes(filteredDepartmentList.value, newSet)
+    expandedKeys.value = newSet
   }
 }
 
 // 展开匹配的节点
-const expandMatchingNodes = (departments: Department[]) => {
+const expandMatchingNodes = (departments: Department[], set: Set<string>) => {
   for (const dept of departments) {
     if (dept.children && dept.children.length > 0) {
-      expandedKeys.value.add(dept.id)
-      expandMatchingNodes(dept.children)
+      set.add(dept.id)
+      expandMatchingNodes(dept.children, set)
     }
   }
 }
@@ -367,11 +383,13 @@ const selectParent = (id: string) => {
 
 // 展开/折叠节点
 const handleToggleExpand = (id: string) => {
-  if (expandedKeys.value.has(id)) {
-    expandedKeys.value.delete(id)
+  const newSet = new Set(expandedKeys.value)
+  if (newSet.has(id)) {
+    newSet.delete(id)
   } else {
-    expandedKeys.value.add(id)
+    newSet.add(id)
   }
+  expandedKeys.value = newSet  // 重新赋值触发响应式更新
 }
 
 // 表单验证
@@ -463,6 +481,19 @@ const handleDelete = async () => {
 
 onMounted(() => {
   loadDepartments()
+})
+
+// 监听搜索关键词变化（防抖实时搜索）
+watch(searchKeyword, (newVal) => {
+  if (searchTimer) clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    handleSearch()
+  }, 300) as unknown as ReturnType<typeof setTimeout>
+})
+
+// 清理定时器
+onUnmounted(() => {
+  if (searchTimer) clearTimeout(searchTimer)
 })
 </script>
 

@@ -2,7 +2,13 @@
 <template>
   <view class="department-node">
     <!-- 当前节点 -->
-    <view class="node-item" :class="`level-${level}`" @click="handleEdit">
+    <view
+      class="node-item"
+      :style="{
+        paddingLeft: `${24 + level * 24}rpx`,
+      }"
+      @click="handleEdit"
+    >
       <!-- 展开/折叠按钮 -->
       <view v-if="hasChildren" class="expand-btn" @click.stop="handleToggle">
         <text>{{ isExpanded ? '−' : '+' }}</text>
@@ -11,7 +17,7 @@
 
       <!-- 部门内容 -->
       <view class="node-content">
-        <text class="node-name">{{ department.name }}</text>
+        <text class="node-name" :style="nodeNameStyle">{{ department.name }}</text>
         <view class="node-info">
           <text v-if="department.code" class="node-code">编码: {{ department.code }}</text>
           <text class="node-sort">排序: {{ department.sort }}</text>
@@ -64,6 +70,16 @@ const emit = defineEmits<{
 const hasChildren = computed(() => props.department.children && props.department.children.length > 0)
 const isExpanded = computed(() => props.expandedKeys.has(props.department.id))
 
+// 动态层级样式
+const nodeNameStyle = computed(() => {
+  const fontSize = props.level === 0 ? 32 : props.level === 1 ? 30 : 28
+  const fontWeight = props.level === 0 ? 600 : props.level === 1 ? 500 : 400
+  return {
+    fontSize: `${fontSize}rpx`,
+    fontWeight: fontWeight,
+  }
+})
+
 // 方法
 const handleEdit = () => {
   emit('edit', props.department)
@@ -84,40 +100,6 @@ const handleToggle = () => {
   align-items: center;
   padding: 30rpx 24rpx;
   border-bottom: 1rpx solid $u-border-color;
-
-  &.level-0 {
-    .node-name {
-      font-size: 32rpx;
-      font-weight: 600;
-    }
-  }
-
-  &.level-1 {
-    padding-left: 48rpx;
-
-    .node-name {
-      font-size: 30rpx;
-      font-weight: 500;
-    }
-  }
-
-  &.level-2 {
-    padding-left: 72rpx;
-
-    .node-name {
-      font-size: 28rpx;
-    }
-  }
-
-  &.level-3,
-  &.level-4,
-  &.level-5 {
-    padding-left: 96rpx;
-
-    .node-name {
-      font-size: 28rpx;
-    }
-  }
 }
 
 .expand-btn {
