@@ -111,17 +111,21 @@ INSERT INTO `DesktopWidget` (`Id`, `Name`, `Type`, `Icon`, `DefaultWidth`, `Defa
 
 -- 添加桌面布局设置菜单到基础管理下
 INSERT INTO `Menu` (`Id`, `ParentId`, `MenuName`, `MenuCode`, `Path`, `Component`, `Icon`, `Sort`, `Type`, `Status`, `Hidden`, `Affix`, `CreateTime`) VALUES
-('b0000000-0000-0000-0000-000000000099', 'a0000000-0000-0000-0000-000000000002', '桌面布局', 'desktop_widget', '/basic/desktop', 'basic/desktop/index', 'Grid', 99, 1, 1, 0, 0, NOW());
+('b0000000-0000-0000-0000-000000000099', 'a0000000-0000-0000-0000-000000000002', '桌面布局', 'desktop_widget', '/basic/desktop', 'basic/desktop/index', 'Grid', 5, 1, 1, 0, 0, NOW());
+
+-- 组件管理子菜单
+INSERT INTO `Menu` (`Id`, `ParentId`, `MenuName`, `MenuCode`, `Path`, `Component`, `Icon`, `Sort`, `Type`, `Status`, `Hidden`, `Affix`, `CreateTime`) VALUES
+('c0000000-0000-0000-0000-000000000100', 'b0000000-0000-0000-0000-000000000099', '组件管理', 'desktop_widget_list', '/basic/desktop/widget', 'basic/desktop/widget/index', 'Component', 1, 1, 1, 0, 0, NOW());
 
 -- 角色组件配置子菜单
 INSERT INTO `Menu` (`Id`, `ParentId`, `MenuName`, `MenuCode`, `Path`, `Component`, `Icon`, `Sort`, `Type`, `Status`, `Hidden`, `Affix`, `CreateTime`) VALUES
-('c0000000-0000-0000-0000-000000000099', 'b0000000-0000-0000-0000-000000000099', '角色配置', 'role_widget_config', '/basic/desktop/role-config', 'basic/desktop/role-config/index', 'UserFilled', 1, 1, 1, 0, 0, NOW());
+('c0000000-0000-0000-0000-000000000101', 'b0000000-0000-0000-0000-000000000099', '角色配置', 'role_widget_config', '/basic/desktop/role-config', 'basic/desktop/role-config/index', 'UserFilled', 2, 1, 1, 0, 0, NOW());
 
 -- 为管理员角色分配菜单权限
 INSERT INTO `RoleMenu` (`Id`, `RoleId`, `MenuId`, `CreateTime`)
 SELECT UUID(), 'a1000000-0000-0000-0000-000000000001', `Id`, NOW()
 FROM `Menu`
-WHERE `Id` IN ('b0000000-0000-0000-0000-000000000099', 'c0000000-0000-0000-0000-000000000099');
+WHERE `Id` IN ('b0000000-0000-0000-0000-000000000099', 'c0000000-0000-0000-0000-000000000100', 'c0000000-0000-0000-0000-000000000101');
 
 -- ============================================
 -- 六、为管理员角色分配所有组件
