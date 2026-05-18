@@ -48,6 +48,12 @@
       "style": {
         "navigationBarTitleText": "商品详情"
       }
+    },
+    {
+      "path": "pages/product/edit/index",
+      "style": {
+        "navigationBarTitleText": "编辑商品"
+      }
     }
   ],
   "globalStyle": {
