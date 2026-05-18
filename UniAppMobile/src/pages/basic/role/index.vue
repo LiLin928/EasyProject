@@ -151,7 +151,7 @@ interface ExtendedRoleQueryParams extends RoleQueryParams {
 const searchKeyword = ref('')
 
 // 搜索防抖定时器
-let searchTimer: number | null = null
+let searchTimer: ReturnType<typeof setTimeout> | null = null
 
 // 查询参数
 const queryParams = ref<ExtendedRoleQueryParams>({
@@ -197,7 +197,7 @@ const loadRoles = async (reset = false) => {
       roleList.value = [...roleList.value, ...response.list]
     }
 
-    hasMore.value = roleList.value.length < response.total
+    hasMore.value = response.list.length >= queryParams.value.pageSize
     queryParams.value.pageIndex++
   } catch (error: unknown) {
     console.error('加载角色列表失败:', error)
@@ -216,7 +216,7 @@ const handleSearch = () => {
   searchTimer = setTimeout(() => {
     queryParams.value.keyword = searchKeyword.value || undefined
     loadRoles(true)
-  }, 300) as unknown as number
+  }, 300)
 }
 
 // 加载更多
