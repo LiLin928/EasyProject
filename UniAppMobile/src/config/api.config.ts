@@ -20,6 +20,7 @@ export const API_PATHS = {
   PRODUCT_ADD: '/api/product/add',
   PRODUCT_UPDATE: '/api/product/update',
   PRODUCT_DELETE: '/api/product/delete',
+  STOCK_LIST: '/api/product/stock/list',
 
   // 基础管理
   USER_LIST: '/api/user/list',

@@ -60,6 +60,12 @@
       "style": {
         "navigationBarTitleText": "分类管理"
       }
+    },
+    {
+      "path": "pages/product/stock/index",
+      "style": {
+        "navigationBarTitleText": "库存记录"
+      }
     }
   ],
   "globalStyle": {
