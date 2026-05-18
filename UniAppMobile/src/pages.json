@@ -108,6 +108,18 @@
       "style": {
         "navigationBarTitleText": "大屏列表"
       }
+    },
+    {
+      "path": "pages/report/view/index",
+      "style": {
+        "navigationBarTitleText": "报表查看"
+      }
+    },
+    {
+      "path": "pages/screen/view/index",
+      "style": {
+        "navigationBarTitleText": "大屏查看"
+      }
     }
   ],
   "globalStyle": {

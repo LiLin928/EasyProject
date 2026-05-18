@@ -241,7 +241,7 @@ const selectStatus = (status: ScreenStatus | undefined) => {
 
 // 查看大屏
 const handleView = (item: Screen) => {
-  uni.navigateTo({ url: `/pages/screen/detail/index?id=${item.id}` })
+  uni.navigateTo({ url: `/pages/screen/view/index?id=${item.id}` })
 }
 
 onMounted(() => {

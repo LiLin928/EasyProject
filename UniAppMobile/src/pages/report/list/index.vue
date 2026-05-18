@@ -320,7 +320,7 @@ const selectChartType = (chartType: ChartType | undefined) => {
 
 // 查看报表
 const handleView = (item: Report) => {
-  uni.navigateTo({ url: `/pages/report/detail/index?id=${item.id}` })
+  uni.navigateTo({ url: `/pages/report/view/index?id=${item.id}` })
 }
 
 onMounted(() => {
