@@ -1,45 +1,187 @@
 <!-- 文件: PCWeb/src/views/basic/desktop/widget/components/WidgetFormDialog.vue -->
 <template>
-  <ModalForm
-    ref="modalFormRef"
+  <el-dialog
     v-model="visible"
     :title="isEdit ? '编辑组件' : '新建组件'"
-    :items="formItems"
-    :form-data="formData"
-    :mode="isEdit ? 'edit' : 'create'"
-    :loading="loading"
-    width="700px"
-    label-width="120px"
-    @submit="handleSubmit"
+    width="800px"
+    :close-on-click-modal="false"
+    @close="handleClose"
   >
-    <!-- 数据源配置插槽 -->
-    <template #dataSourceConfig="{ formData }">
-      <el-input
-        v-model="formData.dataSourceConfig"
-        type="textarea"
-        :rows="5"
-        placeholder="请输入数据源配置（JSON格式）"
-      />
-    </template>
+    <el-form
+      ref="formRef"
+      :model="formData"
+      :rules="formRules"
+      label-width="120px"
+      v-loading="loading"
+    >
+      <!-- 基本信息 -->
+      <el-divider content-position="left">基本信息</el-divider>
 
-    <!-- 交互配置插槽 -->
-    <template #interactionConfig="{ formData }">
-      <el-input
-        v-model="formData.interactionConfig"
-        type="textarea"
-        :rows="5"
-        placeholder="请输入交互配置（JSON格式）"
-      />
+      <el-form-item label="组件名称" prop="name">
+        <el-input v-model="formData.name" maxlength="50" show-word-limit />
+      </el-form-item>
+
+      <el-form-item label="组件类型" prop="type">
+        <el-select v-model="formData.type" @change="handleTypeChange">
+          <el-option
+            v-for="(label, value) in widgetTypeLabels"
+            :key="value"
+            :label="label"
+            :value="Number(value)"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <el-form-item label="默认宽度" prop="defaultWidth">
+            <el-select v-model="formData.defaultWidth">
+              <el-option
+                v-for="opt in gridWidthOptions"
+                :key="opt.value"
+                :label="opt.label"
+                :value="opt.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="默认高度" prop="defaultHeight">
+            <el-input-number v-model="formData.defaultHeight" :min="100" :max="800" :step="50" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="状态" prop="status">
+            <el-switch
+              v-model="formData.status"
+              :active-value="1"
+              :inactive-value="0"
+              active-text="启用"
+              inactive-text="禁用"
+            />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <!-- 数据源配置 -->
+      <el-divider content-position="left">数据源配置</el-divider>
+
+      <el-form-item label="数据源类型" prop="dataSourceType">
+        <el-select v-model="formData.dataSourceType" @change="handleDataSourceTypeChange">
+          <el-option
+            v-for="(label, value) in dataSourceTypeLabels"
+            :key="value"
+            :label="label"
+            :value="Number(value)"
+          />
+        </el-select>
+      </el-form-item>
+
+      <!-- SQL类型配置 -->
+      <template v-if="formData.dataSourceType === DataSourceType.Sql">
+        <el-form-item label="SQL语句" prop="sqlStatement">
+          <el-input
+            v-model="sqlConfig.sql"
+            type="textarea"
+            :rows="3"
+            placeholder="SELECT COUNT(*) FROM User WHERE Status = 1"
+          />
+          <div class="form-tip">只允许SELECT语句，支持COUNT统计或多列查询</div>
+        </el-form-item>
+        <el-form-item label="显示标签">
+          <el-input v-model="sqlConfig.label" placeholder="如：用户总数" />
+        </el-form-item>
+      </template>
+
+      <!-- 静态类型配置（快捷入口） -->
+      <template v-if="formData.dataSourceType === DataSourceType.Static && formData.type === WidgetType.Image">
+        <el-form-item label="快捷菜单">
+          <div class="quick-menu-list">
+            <div v-for="(item, index) in quickMenus" :key="index" class="quick-menu-item">
+              <el-select
+                v-model="item.menuId"
+                placeholder="选择菜单"
+                filterable
+                @change="handleMenuSelect(index)"
+              >
+                <el-option
+                  v-for="menu in flatMenuList"
+                  :key="menu.id"
+                  :label="menu.menuName"
+                  :value="menu.id"
+                >
+                  <span>{{ menu.menuName }}</span>
+                  <span style="color: #909399; margin-left: 8px; font-size: 12px;">{{ menu.path }}</span>
+                </el-option>
+              </el-select>
+              <el-button
+                type="danger"
+                link
+                @click="removeQuickMenu(index)"
+                v-if="quickMenus.length > 1"
+              >
+                删除
+              </el-button>
+            </div>
+            <el-button type="primary" link @click="addQuickMenu">
+              <el-icon><Plus /></el-icon>
+              添加菜单
+            </el-button>
+          </div>
+        </el-form-item>
+      </template>
+
+      <!-- API类型配置 -->
+      <template v-if="formData.dataSourceType === DataSourceType.Api">
+        <el-form-item label="API路径">
+          <el-input v-model="apiConfig.api" placeholder="/api/xxx/list" />
+        </el-form-item>
+        <el-form-item label="请求方法">
+          <el-select v-model="apiConfig.method">
+            <el-option label="GET" value="GET" />
+            <el-option label="POST" value="POST" />
+          </el-select>
+        </el-form-item>
+      </template>
+
+      <!-- 交互配置 -->
+      <el-divider content-position="left">交互配置</el-divider>
+
+      <el-form-item label="点击跳转">
+        <el-select
+          v-model="interactionConfig.menuId"
+          placeholder="选择跳转菜单（可选）"
+          filterable
+          clearable
+        >
+          <el-option
+            v-for="menu in flatMenuList"
+            :key="menu.id"
+            :label="menu.menuName"
+            :value="menu.id"
+          >
+            <span>{{ menu.menuName }}</span>
+            <span style="color: #909399; margin-left: 8px; font-size: 12px;">{{ menu.path }}</span>
+          </el-option>
+        </el-select>
+        <div class="form-tip">点击组件卡片时跳转到选中的菜单页面</div>
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <el-button @click="handleClose">取消</el-button>
+      <el-button type="primary" :loading="saving" @click="handleSubmit">保存</el-button>
     </template>
-  </ModalForm>
+  </el-dialog>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import ModalForm from '@/components/ModalForm/index.vue'
-import type { ModalFormItem } from '@/components/ModalForm/types'
+import { Plus } from '@element-plus/icons-vue'
+import type { FormInstance, FormRules } from 'element-plus'
 import { getDesktopWidgetDetail, addDesktopWidget, updateDesktopWidget } from '@/api/basic/desktopWidgetApi'
+import { getMenuTree } from '@/api/menu'
 import {
   WidgetType,
   DataSourceType,
@@ -47,6 +189,7 @@ import {
   dataSourceTypeLabels,
   gridWidthOptions,
 } from '@/types'
+import type { MockMenu } from '@/types/menu'
 
 const props = defineProps<{
   modelValue: boolean
@@ -66,93 +209,80 @@ const visible = computed({
 const isEdit = computed(() => !!props.id)
 
 const loading = ref(false)
-const modalFormRef = ref<InstanceType<typeof ModalForm> | null>(null)
+const saving = ref(false)
+const formRef = ref<FormInstance | null>(null)
 
+// 菜单列表（扁平化）
+const menuList = ref<MockMenu[]>([])
+const flatMenuList = computed(() => {
+  const result: MockMenu[] = []
+  function flatten(menus: MockMenu[]) {
+    menus.forEach(menu => {
+      if (menu.path && menu.component) {
+        result.push(menu)
+      }
+      if (menu.children?.length) {
+        flatten(menu.children)
+      }
+    })
+  }
+  flatten(menuList.value)
+  return result
+})
+
+// 表单数据
 const formData = reactive({
   name: '',
   type: WidgetType.Card,
-  icon: '',
   defaultWidth: 3,
   defaultHeight: 200,
-  dataSourceType: DataSourceType.Static,
-  dataSourceConfig: '',
-  interactionConfig: '',
+  dataSourceType: DataSourceType.Sql,
   status: 1,
 })
 
-// 表单配置
-const formItems = computed<ModalFormItem[]>(() => [
-  {
-    field: 'name',
-    label: '组件名称',
-    type: 'input',
-    rules: [
-      { required: true, message: '请输入组件名称', trigger: 'blur' },
-      { min: 2, max: 50, message: '名称长度为2-50个字符', trigger: 'blur' },
-    ],
-  },
-  {
-    field: 'type',
-    label: '组件类型',
-    type: 'select',
-    rules: [{ required: true, message: '请选择组件类型', trigger: 'change' }],
-    options: Object.entries(widgetTypeLabels).map(([value, label]) => ({
-      label,
-      value: Number(value),
-    })),
-  },
-  {
-    field: 'icon',
-    label: '组件图标',
-    type: 'input',
-    props: { placeholder: '请输入图标名称（如：el-icon-data-line）' },
-  },
-  {
-    field: 'defaultWidth',
-    label: '默认宽度',
-    type: 'select',
-    rules: [{ required: true, message: '请选择默认宽度', trigger: 'change' }],
-    options: gridWidthOptions,
-  },
-  {
-    field: 'defaultHeight',
-    label: '默认高度',
-    type: 'number',
-    rules: [{ required: true, message: '请输入默认高度', trigger: 'blur' }],
-    props: { min: 100, max: 800, step: 50 },
-  },
-  {
-    field: 'dataSourceType',
-    label: '数据源类型',
-    type: 'select',
-    rules: [{ required: true, message: '请选择数据源类型', trigger: 'change' }],
-    options: Object.entries(dataSourceTypeLabels).map(([value, label]) => ({
-      label,
-      value: Number(value),
-    })),
-  },
-  {
-    field: 'dataSourceConfig',
-    label: '数据源配置',
-    type: 'slot',
-  },
-  {
-    field: 'interactionConfig',
-    label: '交互配置',
-    type: 'slot',
-  },
-  {
-    field: 'status',
-    label: '状态',
-    type: 'switch',
-    props: {
-      activeValue: 1,
-      inactiveValue: 0,
-      activeText: '启用',
-      inactiveText: '禁用',
-    },
-  },
+// SQL配置
+const sqlConfig = reactive({
+  sql: '',
+  label: '',
+})
+
+// API配置
+const apiConfig = reactive({
+  api: '',
+  method: 'GET',
+})
+
+// 快捷菜单列表
+const quickMenus = ref<{ menuId: string; name: string; icon: string; path: string }[]>([
+  { menuId: '', name: '', icon: '', path: '' }
 ])
+
+// 交互配置
+const interactionConfig = reactive({
+  menuId: '',
+})
+
+// 表单规则
+const formRules: FormRules = {
+  name: [
+    { required: true, message: '请输入组件名称', trigger: 'blur' },
+    { min: 2, max: 50, message: '名称长度为2-50个字符', trigger: 'blur' },
+  ],
+  type: [{ required: true, message: '请选择组件类型', trigger: 'change' }],
+  defaultWidth: [{ required: true, message: '请选择默认宽度', trigger: 'change' }],
+  defaultHeight: [{ required: true, message: '请输入默认高度', trigger: 'blur' }],
+  dataSourceType: [{ required: true, message: '请选择数据源类型', trigger: 'change' }],
+}
+
+// 加载菜单列表
+const loadMenuList = async () => {
+  try {
+    const data = await getMenuTree()
+    menuList.value = data
+  } catch (error) {
+    console.error('加载菜单失败', error)
+  }
+}
 
 // 加载详情
 const loadDetail = async () => {
@@ -162,18 +292,201 @@ const loadDetail = async () => {
     const data = await getDesktopWidgetDetail(props.id)
     formData.name = data.name
     formData.type = data.type
-    formData.icon = data.icon || ''
     formData.defaultWidth = data.defaultWidth
     formData.defaultHeight = data.defaultHeight
     formData.dataSourceType = data.dataSourceType
-    formData.dataSourceConfig = data.dataSourceConfig || ''
-    formData.interactionConfig = data.interactionConfig || ''
     formData.status = data.status
+
+    // 解析数据源配置
+    if (data.dataSourceConfig) {
+      const config = JSON.parse(data.dataSourceConfig)
+      if (formData.dataSourceType === DataSourceType.Sql) {
+        sqlConfig.sql = config.sql || ''
+        sqlConfig.label = config.label || ''
+      } else if (formData.dataSourceType === DataSourceType.Api) {
+        apiConfig.api = config.api || ''
+        apiConfig.method = config.method || 'GET'
+      } else if (formData.dataSourceType === DataSourceType.Static && formData.type === WidgetType.Image) {
+        if (config.menus && Array.isArray(config.menus)) {
+          quickMenus.value = config.menus.map((m: any) => ({
+            menuId: m.menuId || '',
+            name: m.name || '',
+            icon: m.icon || '',
+            path: m.path || '',
+          }))
+        }
+      }
+    }
+
+    // 解析交互配置
+    if (data.interactionConfig) {
+      const config = JSON.parse(data.interactionConfig)
+      interactionConfig.menuId = config.menuId || ''
+    }
   } catch (error) {
-    // 错误已处理
+    console.error('加载详情失败', error)
   } finally {
     loading.value = false
   }
+}
+
+// 类型变化处理
+const handleTypeChange = () => {
+  // 快捷入口默认使用静态类型
+  if (formData.type === WidgetType.Image) {
+    formData.dataSourceType = DataSourceType.Static
+  }
+}
+
+// 数据源类型变化处理
+const handleDataSourceTypeChange = () => {
+  // 重置配置
+  sqlConfig.sql = ''
+  sqlConfig.label = ''
+  apiConfig.api = ''
+  apiConfig.method = 'GET'
+  quickMenus.value = [{ menuId: '', name: '', icon: '', path: '' }]
+}
+
+// 菜单选择处理
+const handleMenuSelect = (index: number) => {
+  const menuId = quickMenus.value[index].menuId
+  const menu = flatMenuList.value.find(m => m.id === menuId)
+  if (menu) {
+    quickMenus.value[index].name = menu.menuName
+    quickMenus.value[index].icon = menu.icon || ''
+    quickMenus.value[index].path = menu.path || ''
+  }
+}
+
+// 添加快捷菜单
+const addQuickMenu = () => {
+  quickMenus.value.push({ menuId: '', name: '', icon: '', path: '' })
+}
+
+// 删除快捷菜单
+const removeQuickMenu = (index: number) => {
+  quickMenus.value.splice(index, 1)
+}
+
+// 构建数据源配置JSON
+const buildDataSourceConfig = () => {
+  switch (formData.dataSourceType) {
+    case DataSourceType.Sql:
+      return JSON.stringify({
+        sql: sqlConfig.sql,
+        label: sqlConfig.label || formData.name,
+      })
+    case DataSourceType.Api:
+      return JSON.stringify({
+        api: apiConfig.api,
+        method: apiConfig.method,
+      })
+    case DataSourceType.Static:
+      if (formData.type === WidgetType.Image) {
+        return JSON.stringify({
+          menus: quickMenus.value.filter(m => m.menuId),
+        })
+      }
+      return ''
+    default:
+      return ''
+  }
+}
+
+// 构建交互配置JSON
+const buildInteractionConfig = () => {
+  if (interactionConfig.menuId) {
+    return JSON.stringify({
+      menuId: interactionConfig.menuId,
+    })
+  }
+  return ''
+}
+
+// 提交
+const handleSubmit = async () => {
+  if (!formRef.value) return
+
+  try {
+    await formRef.value.validate()
+  } catch {
+    return
+  }
+
+  // 验证SQL配置
+  if (formData.dataSourceType === DataSourceType.Sql && !sqlConfig.sql) {
+    ElMessage.warning('请输入SQL语句')
+    return
+  }
+
+  // 验证快捷菜单配置
+  if (formData.dataSourceType === DataSourceType.Static && formData.type === WidgetType.Image) {
+    if (!quickMenus.value.some(m => m.menuId)) {
+      ElMessage.warning('请至少选择一个菜单')
+      return
+    }
+  }
+
+  saving.value = true
+  try {
+    const dataSourceConfig = buildDataSourceConfig()
+    const interactionConfigStr = buildInteractionConfig()
+
+    if (isEdit.value) {
+      await updateDesktopWidget({
+        id: props.id!,
+        name: formData.name,
+        type: formData.type,
+        defaultWidth: formData.defaultWidth,
+        defaultHeight: formData.defaultHeight,
+        dataSourceType: formData.dataSourceType,
+        dataSourceConfig: dataSourceConfig,
+        interactionConfig: interactionConfigStr,
+        status: formData.status,
+      })
+      ElMessage.success('更新成功')
+    } else {
+      await addDesktopWidget({
+        name: formData.name,
+        type: formData.type,
+        defaultWidth: formData.defaultWidth,
+        defaultHeight: formData.defaultHeight,
+        dataSourceType: formData.dataSourceType,
+        dataSourceConfig: dataSourceConfig,
+        interactionConfig: interactionConfigStr,
+        status: formData.status,
+      })
+      ElMessage.success('创建成功')
+    }
+    visible.value = false
+    emit('success')
+  } catch (error) {
+    console.error('保存失败', error)
+  } finally {
+    saving.value = false
+  }
+}
+
+// 关闭
+const handleClose = () => {
+  visible.value = false
+}
+
+// 重置表单
+const resetForm = () => {
+  formData.name = ''
+  formData.type = WidgetType.Card
+  formData.defaultWidth = 3
+  formData.defaultHeight = 200
+  formData.dataSourceType = DataSourceType.Sql
+  formData.status = 1
+  sqlConfig.sql = ''
+  sqlConfig.label = ''
+  apiConfig.api = ''
+  apiConfig.method = 'GET'
+  quickMenus.value = [{ menuId: '', name: '', icon: '', path: '' }]
+  interactionConfig.menuId = ''
 }
 
 // 监听弹窗打开
@@ -187,55 +500,32 @@ watch(visible, (val) => {
   }
 })
 
-const resetForm = () => {
-  formData.name = ''
-  formData.type = WidgetType.Card
-  formData.icon = ''
-  formData.defaultWidth = 3
-  formData.defaultHeight = 200
-  formData.dataSourceType = DataSourceType.Static
-  formData.dataSourceConfig = ''
-  formData.interactionConfig = ''
-  formData.status = 1
+onMounted(() => {
+  loadMenuList()
+})
+</script>
+
+<style scoped lang="scss">
+.form-tip {
+  font-size: 12px;
+  color: #909399;
+  margin-top: 4px;
 }
 
-const handleSubmit = async (data: Record<string, any>) => {
-  loading.value = true
-  try {
-    if (isEdit.value) {
-      await updateDesktopWidget({
-        id: props.id!,
-        name: data.name,
-        type: data.type,
-        icon: data.icon || undefined,
-        defaultWidth: data.defaultWidth,
-        defaultHeight: data.defaultHeight,
-        dataSourceType: data.dataSourceType,
-        dataSourceConfig: data.dataSourceConfig || undefined,
-        interactionConfig: data.interactionConfig || undefined,
-        status: data.status,
-      })
-      ElMessage.success('更新成功')
-    } else {
-      await addDesktopWidget({
-        name: data.name,
-        type: data.type,
-        icon: data.icon || undefined,
-        defaultWidth: data.defaultWidth,
-        defaultHeight: data.defaultHeight,
-        dataSourceType: data.dataSourceType,
-        dataSourceConfig: data.dataSourceConfig || undefined,
-        interactionConfig: data.interactionConfig || undefined,
-        status: data.status,
-      })
-      ElMessage.success('创建成功')
+.quick-menu-list {
+  .quick-menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    .el-select {
+      flex: 1;
     }
-    visible.value = false
-    emit('success')
-  } catch (error) {
-    // 错误已处理
-  } finally {
-    loading.value = false
   }
 }
-</script>
+
+.el-divider {
+  margin: 20px 0 16px;
+}
+</style>
