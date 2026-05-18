@@ -24,6 +24,12 @@
       "style": {
         "navigationBarTitleText": "已办任务"
       }
+    },
+    {
+      "path": "pages/workflow/cc/index",
+      "style": {
+        "navigationBarTitleText": "抄送任务"
+      }
     }
   ],
   "globalStyle": {
