@@ -78,6 +78,12 @@
       "style": {
         "navigationBarTitleText": "角色管理"
       }
+    },
+    {
+      "path": "pages/basic/department/index",
+      "style": {
+        "navigationBarTitleText": "部门管理"
+      }
     }
   ],
   "globalStyle": {

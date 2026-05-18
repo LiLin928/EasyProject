@@ -59,11 +59,18 @@ export interface Department {
   id: string
   name: string
   parentId?: string
-  children?: Department[]
-  level: number
+  parentName?: string
+  code?: string
   sort: number
-  leader?: string
-  phone?: string
+  status: DepartmentStatus
+  createTime?: string
+  children?: Department[]
+}
+
+/** 部门状态 */
+export enum DepartmentStatus {
+  Disabled = 0,
+  Enabled = 1,
 }
 
 /** 菜单信息 */
