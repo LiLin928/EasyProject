@@ -54,6 +54,12 @@
       "style": {
         "navigationBarTitleText": "编辑商品"
       }
+    },
+    {
+      "path": "pages/product/category/index",
+      "style": {
+        "navigationBarTitleText": "分类管理"
+      }
     }
   ],
   "globalStyle": {
