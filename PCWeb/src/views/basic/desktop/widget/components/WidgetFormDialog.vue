@@ -93,6 +93,37 @@
         </el-form-item>
       </template>
 
+      <!-- 报表类型配置 -->
+      <template v-if="formData.dataSourceType === DataSourceType.Report">
+        <el-form-item label="选择报表" prop="reportId">
+          <el-select
+            v-model="reportConfig.reportId"
+            placeholder="请选择报表"
+            filterable
+            @change="handleReportSelect"
+          >
+            <el-option
+              v-for="report in reportList"
+              :key="report.id"
+              :label="report.name"
+              :value="report.id"
+            >
+              <span>{{ report.name }}</span>
+              <span style="color: #909399; margin-left: 8px; font-size: 12px;">{{ report.category }}</span>
+            </el-option>
+          </el-select>
+          <div class="form-tip">选择报表后，组件将显示报表的图表数据</div>
+        </el-form-item>
+        <el-form-item label="刷新间隔">
+          <el-select v-model="reportConfig.refreshInterval">
+            <el-option label="手动刷新" :value="0" />
+            <el-option label="30秒" :value="30" />
+            <el-option label="1分钟" :value="60" />
+            <el-option label="5分钟" :value="300" />
+          </el-select>
+        </el-form-item>
+      </template>
+
       <!-- 静态类型配置（快捷入口） -->
       <template v-if="formData.dataSourceType === DataSourceType.Static && formData.type === WidgetType.Image">
         <el-form-item label="快捷菜单">
@@ -147,10 +178,19 @@
       <!-- 交互配置 -->
       <el-divider content-position="left">交互配置</el-divider>
 
-      <el-form-item label="点击跳转">
+      <el-form-item label="点击跳转类型">
+        <el-radio-group v-model="interactionConfig.type" @change="handleInteractionTypeChange">
+          <el-radio value="menu">跳转菜单</el-radio>
+          <el-radio value="report">跳转报表</el-radio>
+          <el-radio value="none">无跳转</el-radio>
+        </el-radio-group>
+      </el-form-item>
+
+      <!-- 菜单跳转 -->
+      <el-form-item v-if="interactionConfig.type === 'menu'" label="跳转菜单">
         <el-select
           v-model="interactionConfig.menuId"
-          placeholder="选择跳转菜单（可选）"
+          placeholder="选择跳转菜单"
           filterable
           clearable
         >
@@ -165,6 +205,27 @@
           </el-option>
         </el-select>
         <div class="form-tip">点击组件卡片时跳转到选中的菜单页面</div>
+      </el-form-item>
+
+      <!-- 报表跳转 -->
+      <el-form-item v-if="interactionConfig.type === 'report'" label="跳转报表">
+        <el-select
+          v-model="interactionConfig.reportId"
+          placeholder="选择报表"
+          filterable
+          @change="handleInteractionReportSelect"
+        >
+          <el-option
+            v-for="report in reportList"
+            :key="report.id"
+            :label="report.name"
+            :value="report.id"
+          >
+            <span>{{ report.name }}</span>
+            <span style="color: #909399; margin-left: 8px; font-size: 12px;">预览: /report/publish/{{ report.id }}</span>
+          </el-option>
+        </el-select>
+        <div class="form-tip">点击组件卡片时跳转到报表预览页面 /report/publish/:id</div>
       </el-form-item>
     </el-form>
 
@@ -182,6 +243,7 @@ import { Plus } from '@element-plus/icons-vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getDesktopWidgetDetail, addDesktopWidget, updateDesktopWidget } from '@/api/basic/desktopWidgetApi'
 import { getMenuTree } from '@/api/menu'
+import { getReportList } from '@/api/report/reportApi'
 import {
   WidgetType,
   DataSourceType,
@@ -190,6 +252,7 @@ import {
   gridWidthOptions,
 } from '@/types'
 import type { MockMenu } from '@/types/menu'
+import type { Report } from '@/types'
 
 const props = defineProps<{
   modelValue: boolean
@@ -230,6 +293,9 @@ const flatMenuList = computed(() => {
   return result
 })
 
+// 报表列表
+const reportList = ref<Report[]>([])
+
 // 表单数据
 const formData = reactive({
   name: '',
@@ -252,6 +318,13 @@ const apiConfig = reactive({
   method: 'GET',
 })
 
+// 报表配置
+const reportConfig = reactive({
+  reportId: '',
+  reportName: '',
+  refreshInterval: 0,
+})
+
 // 快捷菜单列表
 const quickMenus = ref<{ menuId: string; name: string; icon: string; path: string }[]>([
   { menuId: '', name: '', icon: '', path: '' }
@@ -259,7 +332,10 @@ const quickMenus = ref<{ menuId: string; name: string; icon: string; path: strin
 
 // 交互配置
 const interactionConfig = reactive({
+  type: 'none' as 'menu' | 'report' | 'none',
   menuId: '',
+  reportId: '',
+  reportName: '',
 })
 
 // 表单规则
@@ -281,6 +357,16 @@ const loadMenuList = async () => {
     menuList.value = data
   } catch (error) {
     console.error('加载菜单失败', error)
+  }
+}
+
+// 加载报表列表
+const loadReportList = async () => {
+  try {
+    const data = await getReportList({ pageIndex: 1, pageSize: 100 })
+    reportList.value = data.list
+  } catch (error) {
+    console.error('加载报表列表失败', error)
   }
 }
 
@@ -306,6 +392,10 @@ const loadDetail = async () => {
       } else if (formData.dataSourceType === DataSourceType.Api) {
         apiConfig.api = config.api || ''
         apiConfig.method = config.method || 'GET'
+      } else if (formData.dataSourceType === DataSourceType.Report) {
+        reportConfig.reportId = config.reportId || ''
+        reportConfig.reportName = config.reportName || ''
+        reportConfig.refreshInterval = config.refreshInterval || 0
       } else if (formData.dataSourceType === DataSourceType.Static && formData.type === WidgetType.Image) {
         if (config.menus && Array.isArray(config.menus)) {
           quickMenus.value = config.menus.map((m: any) => ({
@@ -321,7 +411,16 @@ const loadDetail = async () => {
     // 解析交互配置
     if (data.interactionConfig) {
       const config = JSON.parse(data.interactionConfig)
-      interactionConfig.menuId = config.menuId || ''
+      if (config.menuId) {
+        interactionConfig.type = 'menu'
+        interactionConfig.menuId = config.menuId
+      } else if (config.reportId) {
+        interactionConfig.type = 'report'
+        interactionConfig.reportId = config.reportId
+        interactionConfig.reportName = config.reportName || ''
+      } else {
+        interactionConfig.type = 'none'
+      }
     }
   } catch (error) {
     console.error('加载详情失败', error)
@@ -336,6 +435,10 @@ const handleTypeChange = () => {
   if (formData.type === WidgetType.Image) {
     formData.dataSourceType = DataSourceType.Static
   }
+  // 图表组件默认使用报表类型
+  if (formData.type === WidgetType.Chart) {
+    formData.dataSourceType = DataSourceType.Report
+  }
 }
 
 // 数据源类型变化处理
@@ -345,6 +448,9 @@ const handleDataSourceTypeChange = () => {
   sqlConfig.label = ''
   apiConfig.api = ''
   apiConfig.method = 'GET'
+  reportConfig.reportId = ''
+  reportConfig.reportName = ''
+  reportConfig.refreshInterval = 0
   quickMenus.value = [{ menuId: '', name: '', icon: '', path: '' }]
 }
 
@@ -357,6 +463,29 @@ const handleMenuSelect = (index: number) => {
     quickMenus.value[index].icon = menu.icon || ''
     quickMenus.value[index].path = menu.path || ''
   }
+}
+
+// 报表选择处理
+const handleReportSelect = () => {
+  const report = reportList.value.find(r => r.id === reportConfig.reportId)
+  if (report) {
+    reportConfig.reportName = report.name
+  }
+}
+
+// 交互报表选择处理
+const handleInteractionReportSelect = () => {
+  const report = reportList.value.find(r => r.id === interactionConfig.reportId)
+  if (report) {
+    interactionConfig.reportName = report.name
+  }
+}
+
+// 交互类型变化处理
+const handleInteractionTypeChange = () => {
+  interactionConfig.menuId = ''
+  interactionConfig.reportId = ''
+  interactionConfig.reportName = ''
 }
 
 // 添加快捷菜单
@@ -382,6 +511,12 @@ const buildDataSourceConfig = () => {
         api: apiConfig.api,
         method: apiConfig.method,
       })
+    case DataSourceType.Report:
+      return JSON.stringify({
+        reportId: reportConfig.reportId,
+        reportName: reportConfig.reportName,
+        refreshInterval: reportConfig.refreshInterval,
+      })
     case DataSourceType.Static:
       if (formData.type === WidgetType.Image) {
         return JSON.stringify({
@@ -396,12 +531,26 @@ const buildDataSourceConfig = () => {
 
 // 构建交互配置JSON
 const buildInteractionConfig = () => {
-  if (interactionConfig.menuId) {
-    return JSON.stringify({
-      menuId: interactionConfig.menuId,
-    })
+  switch (interactionConfig.type) {
+    case 'menu':
+      if (interactionConfig.menuId) {
+        return JSON.stringify({
+          menuId: interactionConfig.menuId,
+        })
+      }
+      return ''
+    case 'report':
+      if (interactionConfig.reportId) {
+        return JSON.stringify({
+          reportId: interactionConfig.reportId,
+          reportName: interactionConfig.reportName,
+          path: `/report/publish/${interactionConfig.reportId}`,
+        })
+      }
+      return ''
+    default:
+      return ''
   }
-  return ''
 }
 
 // 提交
@@ -417,6 +566,12 @@ const handleSubmit = async () => {
   // 验证SQL配置
   if (formData.dataSourceType === DataSourceType.Sql && !sqlConfig.sql) {
     ElMessage.warning('请输入SQL语句')
+    return
+  }
+
+  // 验证报表配置
+  if (formData.dataSourceType === DataSourceType.Report && !reportConfig.reportId) {
+    ElMessage.warning('请选择报表')
     return
   }
 
@@ -485,8 +640,14 @@ const resetForm = () => {
   sqlConfig.label = ''
   apiConfig.api = ''
   apiConfig.method = 'GET'
+  reportConfig.reportId = ''
+  reportConfig.reportName = ''
+  reportConfig.refreshInterval = 0
   quickMenus.value = [{ menuId: '', name: '', icon: '', path: '' }]
+  interactionConfig.type = 'none'
   interactionConfig.menuId = ''
+  interactionConfig.reportId = ''
+  interactionConfig.reportName = ''
 }
 
 // 监听弹窗打开
@@ -502,6 +663,7 @@ watch(visible, (val) => {
 
 onMounted(() => {
   loadMenuList()
+  loadReportList()
 })
 </script>
 

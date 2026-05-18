@@ -124,7 +124,7 @@ const interactionConfig = computed(() => {
 
 // 是否有交互配置
 const hasInteraction = computed(() => {
-  return interactionConfig.value?.menuId || interactionConfig.value?.path
+  return interactionConfig.value?.menuId || interactionConfig.value?.reportId || interactionConfig.value?.path
 })
 
 // 刷新处理
