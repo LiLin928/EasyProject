@@ -123,7 +123,7 @@
 import { ref, computed, watch } from 'vue'
 import { getExecutionDetail, getNodeExecutionDetail, getNodeExecutions } from '@/api/etl/monitorApi'
 import { useLocale } from '@/composables/useLocale'
-import type { Execution, ExecutionStatus, TriggerType } from '@/types/etl'
+import type { Execution, ExecutionStatus, TriggerType, NodeExecution } from '@/types/etl'
 import { ExecutionStatus as ES, TriggerType as TT } from '@/types/etl'
 
 const props = defineProps<{
@@ -160,7 +160,7 @@ const loadExecutionDetail = async () => {
     execution.value = data
     // 加载节点执行列表
     const nodes = await getNodeExecutions(props.executionId)
-    execution.value = { ...data, nodes }
+    execution.value = { ...data, nodes: nodes as NodeExecution[] }
   } catch (error) {
     // Error handled by interceptor
   }
@@ -177,7 +177,7 @@ const handleNodeDetail = async (node: any) => {
   }
 }
 
-const getStatusTagType = (status: ExecutionStatus) => {
+const getStatusTagType = (status: ExecutionStatus | string) => {
   switch (status) {
     case ES.RUNNING:
       return 'primary'
@@ -194,7 +194,7 @@ const getStatusTagType = (status: ExecutionStatus) => {
   }
 }
 
-const getStatusText = (status: ExecutionStatus) => {
+const getStatusText = (status: ExecutionStatus | string) => {
   switch (status) {
     case ES.RUNNING:
       return t('etl.monitor.list.statusRunning')
@@ -211,7 +211,7 @@ const getStatusText = (status: ExecutionStatus) => {
   }
 }
 
-const getTriggerTypeText = (triggerType: TriggerType) => {
+const getTriggerTypeText = (triggerType: TriggerType | string) => {
   switch (triggerType) {
     case TT.MANUAL:
       return t('etl.monitor.list.triggerManual')

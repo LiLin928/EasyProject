@@ -582,3 +582,21 @@ export const PRODUCT_TYPE_AUTO_CONFIRM: ProductTypeAutoConfirm[] = [
   { productType: 'general', autoConfirmDays: 7, description: '一般商品' },
   { productType: 'digital', autoConfirmDays: 15, description: '数码类商品' },
 ]
+
+// ==================== 订单统计相关类型 ====================
+
+/**
+ * 订单统计数据
+ */
+export interface OrderStatistics {
+  totalOrders: number           // 总订单数
+  pendingOrders: number         // 待支付订单数
+  paidOrders: number            // 已支付订单数
+  shippedOrders: number         // 已发货订单数
+  completedOrders: number       // 已完成订单数
+  cancelledOrders: number       // 已取消订单数
+  refundedOrders: number        // 已退款订单数
+  totalAmount: number           // 总金额
+  todayOrders: number           // 今日订单数
+  todayAmount: number           // 今日金额
+}

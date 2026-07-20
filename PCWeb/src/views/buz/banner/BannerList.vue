@@ -123,7 +123,7 @@ const { t } = useLocale()
 
 // 搜索表单配置
 const searchItems = computed(() => [
-  { field: 'status', label: t('banner.list.statusFilter'), type: 'select', options: [
+  { field: 'status', label: t('banner.list.statusFilter'), type: 'select' as const, options: [
     { label: t('banner.list.enabled'), value: 1 },
     { label: t('banner.list.disabled'), value: 0 },
   ]},

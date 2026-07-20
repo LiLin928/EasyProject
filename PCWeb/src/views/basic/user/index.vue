@@ -155,9 +155,9 @@ const { t } = useLocale()
 
 // 搜索表单配置
 const searchItems = computed(() => [
-  { field: 'userName', label: t('user.user.username'), type: 'input' },
-  { field: 'realName', label: t('user.user.nickname'), type: 'input' },
-  { field: 'status', label: t('user.user.status'), type: 'select', options: [
+  { field: 'userName', label: t('user.user.username'), type: 'input' as const },
+  { field: 'realName', label: t('user.user.nickname'), type: 'input' as const },
+  { field: 'status', label: t('user.user.status'), type: 'select' as const, options: [
     { label: t('user.user.enabled'), value: CommonStatus.ENABLED },
     { label: t('user.user.disabled'), value: CommonStatus.DISABLED },
   ], props: { style: { width: '120px' } } },

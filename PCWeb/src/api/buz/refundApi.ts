@@ -45,7 +45,7 @@ export function rejectRefund(data: RejectRefundParams) {
  * 确认收到退货
  */
 export function confirmReceive(id: string, remark?: string) {
-  return put<{ success: boolean }>(`/api/refund/confirm-receive/${id}`, null, { params: { remark } })
+  return put<{ success: boolean }>(`/api/refund/confirm-receive/${id}`, { remark })
 }
 
 /**

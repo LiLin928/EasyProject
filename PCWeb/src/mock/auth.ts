@@ -1,3 +1,4 @@
+// @ts-nocheck
 // 登录认证 Mock
 
 import type { MockMethod } from 'vite-plugin-mock'

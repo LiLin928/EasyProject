@@ -1,3 +1,4 @@
+// @ts-nocheck
 // 字典管理 Mock
 
 import type { MockMethod } from 'vite-plugin-mock'

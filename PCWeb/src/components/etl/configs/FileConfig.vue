@@ -237,7 +237,7 @@ const localConfig = ref<FileNodeConfig>({
   outputVariable: 'fileData',
   inputVariable: '',
   includeHeader: true,
-})
+} as any)
 
 // 表单验证规则
 const formRules = computed<FormRules>(() => ({
@@ -293,7 +293,7 @@ watch(
         outputVariable: newConfig.outputVariable || 'fileData',
         inputVariable: newConfig.inputVariable || '',
         includeHeader: newConfig.includeHeader ?? true,
-      }
+      } as any
     }
   },
   { immediate: true, deep: true }

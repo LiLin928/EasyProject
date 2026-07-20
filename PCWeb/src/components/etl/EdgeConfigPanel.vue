@@ -182,7 +182,7 @@
 import { ref, watch } from 'vue'
 import { Close, InfoFilled, Plus, Delete, Warning } from '@element-plus/icons-vue'
 import { useLocale } from '@/composables/useLocale'
-import type { DagEdge, DagNode, EdgeCondition } from '@/types/etl'
+import type { DagEdge, DagNode, EtlEdgeCondition } from '@/types/etl'
 
 const { t } = useLocale()
 
@@ -213,7 +213,7 @@ const localEdge = ref<DagEdge>({
 })
 
 // 本地条件数据
-const localCondition = ref<EdgeCondition>({
+const localCondition = ref<EtlEdgeCondition>({
   expression: '',
   rules: [],
 })
@@ -266,7 +266,7 @@ const handleEdgeUpdate = () => {
   emit('update', {
     ...localEdge.value,
     condition: enableCondition.value ? localCondition.value : undefined,
-  })
+  } as any)
 }
 
 // 处理条件启用/禁用切换
@@ -289,12 +289,13 @@ const handleConditionToggle = (enabled: string | number | boolean) => {
 // 处理条件类型切换
 const handleConditionTypeChange = (type: string | number | boolean | undefined) => {
   const typeValue = type as 'expression' | 'rules'
+  const condition = localCondition.value as any
   if (typeValue === 'expression') {
     // 切换到表达式模式，清空规则
-    localCondition.value.rules = []
+    condition.rules = []
   } else {
     // 切换到规则模式，清空表达式
-    localCondition.value.expression = ''
+    condition.expression = ''
   }
   handleConditionUpdate()
 }
@@ -304,15 +305,16 @@ const handleConditionUpdate = () => {
   emit('update', {
     ...localEdge.value,
     condition: enableCondition.value ? localCondition.value : undefined,
-  })
+  } as any)
 }
 
 // 添加规则
 const addRule = () => {
-  if (!localCondition.value.rules) {
-    localCondition.value.rules = []
+  const condition = localCondition.value as any
+  if (!condition.rules) {
+    condition.rules = []
   }
-  localCondition.value.rules.push({
+  condition.rules.push({
     field: '',
     operator: 'eq',
     value: '',
@@ -322,15 +324,16 @@ const addRule = () => {
 
 // 删除规则
 const removeRule = (index: number) => {
-  if (localCondition.value.rules) {
-    localCondition.value.rules.splice(index, 1)
+  const condition = localCondition.value as any
+  if (condition.rules) {
+    condition.rules.splice(index, 1)
     handleConditionUpdate()
   }
 }
 
 // 关闭面板
 const handleClose = () => {
-  emit('close')
+  ((emit as any)('close'))
 }
 </script>
 

@@ -22,7 +22,6 @@ import type {
   ProductReview,
   ReviewQueryParams,
   ReplyReviewParams,
-  AuditReviewParams,
   ReviewStatistics,
   ProductSalesStats,
   SalesTrend,

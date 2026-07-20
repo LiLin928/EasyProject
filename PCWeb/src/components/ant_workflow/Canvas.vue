@@ -347,10 +347,11 @@ defineExpose({
       // 为条件/并行节点更新输出端口
       if (data.config) {
         const nodeType = currentData.nodeType as AntNodeType
-        if (nodeType === AntNodeType.CONDITION && data.config.conditionNodes) {
-          updateNodePorts(graph, nodeId, data.config.conditionNodes)
-        } else if (nodeType === AntNodeType.PARALLEL && data.config.parallelNodes) {
-          updateNodePorts(graph, nodeId, data.config.parallelNodes)
+        const config = data.config as any
+        if (nodeType === AntNodeType.CONDITION && config.conditionNodes) {
+          updateNodePorts(graph as any, nodeId, config.conditionNodes)
+        } else if (nodeType === AntNodeType.PARALLEL && config.parallelNodes) {
+          updateNodePorts(graph as any, nodeId, config.parallelNodes)
         }
       }
     }

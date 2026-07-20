@@ -147,8 +147,8 @@
         :total="total"
         :page-sizes="[10, 20, 50, 100]"
         layout="total, sizes, prev, pager, next, jumper"
-        @size-change="handleSearch"
-        @current-change="handleSearch"
+        @size-change="() => handleSearch()"
+        @current-change="() => handleSearch()"
         style="margin-top: 20px; justify-content: flex-end"
       />
     </el-card>
@@ -202,13 +202,13 @@ const searchItems = computed(() => [
   {
     field: 'pipelineId',
     label: t('etl.monitor.list.pipelineName'),
-    type: 'select',
+    type: 'select' as const,
     options: pipelineOptions.value,
   },
   {
     field: 'status',
     label: t('etl.monitor.list.status'),
-    type: 'select',
+    type: 'select' as const,
     options: [
       { label: t('etl.monitor.list.statusRunning'), value: ExecutionStatus.RUNNING },
       { label: t('etl.monitor.list.statusSuccess'), value: ExecutionStatus.SUCCESS },
@@ -220,7 +220,7 @@ const searchItems = computed(() => [
   {
     field: 'dateRange',
     label: t('etl.monitor.list.dateRange'),
-    type: 'dateRange',
+    type: 'dateRange' as const,
     collapse: true,
   },
 ])

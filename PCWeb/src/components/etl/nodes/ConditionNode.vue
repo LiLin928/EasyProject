@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { TaskNodeType, type ConditionNodeConfig, type ConditionBranch } from '@/types/etl'
+import { TaskNodeType, type EtlConditionNodeConfig, type EtlConditionBranch } from '@/types/etl'
 import { nodeStyleMap } from '../utils/nodeRegistry'
 
 // Props
@@ -50,7 +50,7 @@ const props = withDefaults(defineProps<{
   /** 节点名称 */
   name: string
   /** 节点配置 */
-  config?: ConditionNodeConfig
+  config?: EtlConditionNodeConfig
   /** 是否选中 */
   selected?: boolean
   /** 运行状态 */
@@ -72,7 +72,7 @@ const nodeStyle = computed(() => ({
 }))
 
 // 分支列表
-const branches = computed<ConditionBranch[]>(() => {
+const branches = computed<EtlConditionBranch[]>(() => {
   if (!props.config?.branches) return []
   return props.config.branches
 })

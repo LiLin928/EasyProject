@@ -11,8 +11,8 @@ const DRILLDOWN_PATH_KEY = 'drilldown_path'
  * 管理报表钻取路径、参数传递和导航
  */
 export function useDrilldown() {
-  const router = useRouter()
-  const route = useRoute()
+  const _router = useRouter()
+  const _route = useRoute()
 
   // 钻取路径
   const drilldownPath = ref<DrilldownPath[]>([])
@@ -22,7 +22,7 @@ export function useDrilldown() {
    * @param reportId 报表ID
    * @param reportName 报表名称
    */
-  const initDrilldownPath = (reportId: number, reportName: string) => {
+  const initDrilldownPath = (reportId: string, reportName: string) => {
     const stored = sessionStorage.getItem(DRILLDOWN_PATH_KEY)
     if (stored) {
       try {
@@ -86,7 +86,7 @@ export function useDrilldown() {
       .map(([key, value]) => `${key}=${encodeURIComponent(String(value))}`)
       .join('&')
 
-    router.push(`/report/detail/${rule.targetReportId}${query ? '?' + query : ''}`)
+    _router.push(`/report/detail/${rule.targetReportId}${query ? '?' + query : ''}`)
   }
 
   /**
@@ -106,7 +106,7 @@ export function useDrilldown() {
     savePath()
 
     const current = drilldownPath.value[drilldownPath.value.length - 1]
-    router.push(`/report/detail/${current.reportId}`)
+    _router.push(`/report/detail/${current.reportId}`)
   }
 
   /**

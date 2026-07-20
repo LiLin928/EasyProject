@@ -107,9 +107,9 @@ const { t } = useLocale()
 
 // 搜索表单配置
 const searchItems = computed(() => [
-  { field: 'roleName', label: t('role.role.roleName'), type: 'input' },
-  { field: 'roleCode', label: t('role.role.roleCode'), type: 'input' },
-  { field: 'status', label: t('role.role.status'), type: 'select', options: [
+  { field: 'roleName', label: t('role.role.roleName'), type: 'input' as const },
+  { field: 'roleCode', label: t('role.role.roleCode'), type: 'input' as const },
+  { field: 'status', label: t('role.role.status'), type: 'select' as const, options: [
     { label: t('role.role.enabled'), value: CommonStatus.ENABLED },
     { label: t('role.role.disabled'), value: CommonStatus.DISABLED },
   ]},

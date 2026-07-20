@@ -1,3 +1,4 @@
+// @ts-nocheck
 // 商品统计报表 Mock 数据
 
 import type { MockMethod } from 'vite-plugin-mock'

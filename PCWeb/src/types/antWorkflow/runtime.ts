@@ -361,17 +361,5 @@ export interface AntExecutionLog {
 /**
  * 启动流程参数
  */
-export interface StartAntWorkflowParams {
-  /** 流程定义ID */
-  workflowId: string
-  /** 业务单据ID */
-  businessId?: string
-  /** 业务类型编码 */
-  businessType?: string
-  /** 流程标题 */
-  title?: string
-  /** 业务数据JSON */
-  businessData?: string
-  /** 表单数据JSON */
-  formData?: string
-}
+/** 发起流程参数（使用 workflow.ts 中的 StartAntWorkflowParams）*/
+export type { StartAntWorkflowParams } from './workflow'

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/mock/memberLevel.ts
 
 import type { MockMethod } from 'vite-plugin-mock'

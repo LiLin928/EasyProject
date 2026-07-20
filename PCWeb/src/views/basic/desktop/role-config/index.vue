@@ -123,7 +123,7 @@ import { getRoleWidgetConfigList, saveRoleWidgetConfig } from '@/api/basic/roleW
 import WidgetAssignDialog from './components/WidgetAssignDialog.vue'
 import LayoutPreview from './components/LayoutPreview.vue'
 import type { RoleInfo } from '@/types/role'
-import type { RoleWidgetConfig, AvailableWidget } from '@/types'
+import type { RoleWidgetConfig, AvailableWidget, SaveRoleWidgetConfigParams } from '@/types'
 import { WidgetType, widgetTypeLabels } from '@/types/desktopWidget'
 
 const loading = ref(false)

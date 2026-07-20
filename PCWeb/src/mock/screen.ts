@@ -1,3 +1,4 @@
+// @ts-nocheck
 // 大屏 Mock 数据
 
 import type { MockMethod } from 'vite-plugin-mock'

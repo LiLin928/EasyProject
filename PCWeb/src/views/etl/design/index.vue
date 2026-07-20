@@ -5,7 +5,7 @@
       ref="designerRef"
       :pipeline-id="pipelineId"
       :pipeline-name="pipeline?.name"
-      :pipeline-status="pipeline?.status"
+      :pipeline-status="pipeline?.status as PipelineStatus | undefined"
       :initial-dag-config="initialDagConfig"
       :readonly="readonly"
       @back="handleBack"
@@ -18,13 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import DagDesigner from '@/components/etl/EtlDagDesigner.vue'
 import { getPipelineDetail, updatePipeline, publishPipeline, executePipeline } from '@/api/etl/pipelineApi'
-import { PipelineStatus } from '@/types/etl'
 import type { Pipeline, DagConfig, DagNode } from '@/types/etl'
+import { PipelineStatus } from '@/types/etl'
 
 const router = useRouter()
 const route = useRoute()
@@ -88,7 +88,7 @@ const handleSave = async (dagConfig: DagConfig) => {
   try {
     await updatePipeline({
       id: pipelineId.value,
-      dagConfig,
+      dagConfig: JSON.stringify(dagConfig),
     })
     ElMessage.success('保存成功')
   } catch (error) {

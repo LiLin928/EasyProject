@@ -12,9 +12,9 @@ export enum DatasourceType {
 }
 
 /**
- * 数据源状态枚举
+ * 数据源状态枚举（ETL专用）
  */
-export enum DatasourceStatus {
+export enum EtlDatasourceStatus {
   ACTIVE = 'connected',
   INACTIVE = 'disconnected',
   ERROR = 'error',
@@ -72,10 +72,12 @@ export interface DataSource {
   port: number
   database: string
   username: string
-  status: DatasourceStatus | string
+  status: EtlDatasourceStatus | string
   lastConnectionTime?: string
   description?: string
   createTime?: string
+  updateTime?: string
+  config?: Record<string, any>
 }
 
 /**
@@ -86,7 +88,7 @@ export interface DataSourceListParams {
   pageSize?: number
   name?: string
   type?: DatasourceType | string
-  status?: DatasourceStatus | string
+  status?: EtlDatasourceStatus | string
 }
 
 /**
@@ -155,8 +157,11 @@ export interface Pipeline {
   name: string
   description?: string
   status: PipelineStatus | string
-  dagConfig?: DagConfig | string  // 支持字符串（后端返回）和对象（前端使用）
+  dagConfig?: DagConfig | string
   version?: number
+  currentVersion?: string
+  categoryCode?: string
+  categoryName?: string
   creatorId?: string
   creatorName?: string
   createTime?: string
@@ -181,6 +186,7 @@ export interface CreatePipelineParams {
   name: string
   description?: string
   dagConfig?: string
+  categoryCode?: string
 }
 
 /**
@@ -197,6 +203,7 @@ export interface UpdatePipelineParams {
  * DAG 配置
  */
 export interface DagConfig {
+  version?: string
   nodes: DagNode[]
   edges: DagEdge[]
 }
@@ -210,6 +217,11 @@ export interface DagNode {
   name?: string
   position: { x: number; y: number }
   config?: Record<string, any> | string
+  // 扩展属性
+  retryTimes?: number
+  retryInterval?: number
+  timeout?: number
+  skipOnFailure?: boolean
 }
 
 /**
@@ -217,13 +229,13 @@ export interface DagNode {
  */
 export interface DagEdge {
   id: string
-  source: string
-  target: string
+  source?: string
+  target?: string
   sourceNodeId?: string
   targetNodeId?: string
   sourcePort?: string
   targetPort?: string
-  condition?: EdgeCondition
+  condition?: EtlEdgeCondition
 }
 
 /**
@@ -240,6 +252,14 @@ export interface Schedule {
   lastExecutionTime?: string
   nextExecutionTime?: string
   description?: string
+  config?: {
+    type: ScheduleType
+    cron?: { expression: string; timezone?: string }
+    concurrency?: number
+    maxRetryTimes?: number
+    retryInterval?: number
+    timeout?: number
+  }
   createTime?: string
   updateTime?: string
 }
@@ -266,6 +286,10 @@ export interface CreateScheduleParams {
   intervalSeconds?: number
   executeParams?: string
   enabled?: boolean
+  description?: string
+  maxRetries?: number
+  retryInterval?: number
+  timeout?: number
 }
 
 /**
@@ -303,9 +327,29 @@ export interface Execution {
   errorMessage?: string
   executeParams?: string
   result?: string
+  nodes?: NodeExecution[]
   createTime?: string
 }
 
+/**
+ * 节点执行记录
+ */
+export interface NodeExecution {
+  nodeId: string
+  nodeName: string
+  nodeType: string
+  status: string
+  startTime?: string
+  endTime?: string
+  duration?: number
+  input?: any
+  output?: any
+  error?: string
+}
+
+/**
+ * 执行列表查询参数
+ */
 /**
  * 执行列表查询参数
  */
@@ -317,7 +361,24 @@ export interface ExecutionQueryParams {
   triggerType?: TriggerType | string
   startTime?: string
   endTime?: string
+  dateStart?: string
+  dateEnd?: string
 }
+
+/**
+ * 调度类型（类型别名）
+ */
+export type ScheduleType = 'cron' | 'interval' | 'once'
+
+/**
+ * 调度任务（类型别名，与 Schedule 相同）
+ */
+export type ScheduleTask = Schedule
+
+/**
+ * 执行记录（类型别名，与 Execution 相同）
+ */
+export type ExecutionRecord = Execution
 
 /**
  * 执行统计（与后端 EtlExecutionStatisticsDto 对应）
@@ -350,12 +411,19 @@ export enum TaskNodeType {
 }
 
 /**
- * 边条件
+ * 边条件（ETL专用）
  */
-export interface EdgeCondition {
-  field: string
-  operator: string
-  value: any
+export interface EtlEdgeCondition {
+  field?: string
+  operator?: string
+  value?: any
+  // 组件使用的扩展属性
+  expression?: string
+  rules?: Array<{
+    field: string
+    operator: string
+    value: any
+  }>
 }
 
 /**
@@ -379,6 +447,9 @@ export interface SqlNodeConfig {
   datasourceId: string
   sql: string
   parameters?: SqlParameter[]
+  // 组件使用的扩展属性
+  sqlType?: 'query' | 'execute' | 'script'
+  outputVariable?: string
 }
 
 /**
@@ -398,6 +469,9 @@ export interface TransformNodeConfig {
   transformType: string
   fieldMappings?: FieldMappingItem[]
   script?: string
+  // 扩展属性
+  inputVariable?: string
+  outputVariable?: string
 }
 
 /**
@@ -408,6 +482,8 @@ export interface OutputNodeConfig {
   datasourceId?: string
   tableName?: string
   fieldMappings?: FieldMappingItem[]
+  // 组件使用的扩展属性
+  inputVariable?: string
 }
 
 /**
@@ -419,6 +495,20 @@ export interface ApiNodeConfig {
   headers?: Record<string, string>
   body?: any
   fieldMappings?: FieldMappingItem[]
+  // 组件使用的别名属性
+  apiUrl?: string
+  apiMethod?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+  apiHeaders?: Record<string, string>
+  apiBody?: string
+  apiBodyType?: 'json' | 'form-data' | 'x-www-form-urlencoded'
+  timeout?: number
+  retryOnFailure?: boolean
+  outputVariable?: string
+  responseMapping?: {
+    fieldPath?: string
+    variableName?: string
+    fields?: { sourceField: string; targetField: string }[]
+  }
 }
 
 /**
@@ -430,46 +520,65 @@ export interface FileNodeConfig {
   encoding?: string
   delimiter?: string
   fieldMappings?: FieldMappingItem[]
+  // 组件使用的扩展属性
+  fileOperation?: 'read' | 'write' | 'move' | 'copy' | 'delete'
+  outputVariable?: string
+  inputVariable?: string
+  includeHeader?: boolean
+  localPath?: string
+  filePath?: string
+  datasourceId?: string
+  sheetName?: string
 }
 
 /**
  * 条件节点配置
  */
-export interface ConditionNodeConfig {
-  conditions: ConditionRule[]
-  branches: ConditionBranch[]
+/**
+ * 条件节点配置（ETL专用）
+ */
+export interface EtlConditionNodeConfig {
+  conditions: EtlConditionRule[]
+  branches: EtlConditionBranch[]
 }
 
 /**
- * 条件规则
+ * 条件规则（ETL专用）
  */
-export interface ConditionRule {
+export interface EtlConditionRule {
   field: string
   operator: string
   value: any
 }
 
 /**
- * 条件分支
+ * 条件分支（ETL专用）
  */
-export interface ConditionBranch {
+export interface EtlConditionBranch {
   name: string
-  condition?: ConditionRule[]
+  condition?: EtlConditionRule[]
+  // 组件使用的扩展属性
+  id?: string
+  isDefault?: boolean
 }
 
 /**
- * 并行节点配置
+ * 并行节点配置（ETL专用）
  */
-export interface ParallelNodeConfig {
-  branches: ParallelBranch[]
+export interface EtlParallelNodeConfig {
+  branches: EtlParallelBranch[]
+  // 组件使用的扩展属性
+  waitMode?: 'all' | 'any' | 'none'
 }
 
 /**
- * 并行分支
+ * 并行分支（ETL专用）
  */
-export interface ParallelBranch {
+export interface EtlParallelBranch {
   name: string
   nodes?: string[]
+  // 组件使用的扩展属性
+  id?: string
 }
 
 /**
@@ -478,24 +587,54 @@ export interface ParallelBranch {
 export interface ScriptNodeConfig {
   language: string
   script: string
+  // 组件使用的扩展属性
+  scriptType?: 'inline' | 'file'
+  scriptPath?: string
+  outputVariable?: string
 }
 
 /**
- * 子流程节点配置
+ * 子流程节点配置（ETL专用）
  */
-export interface SubflowNodeConfig {
+export interface EtlSubflowNodeConfig {
   pipelineId: string
   fieldMappings?: FieldMappingItem[]
+  // 扩展属性
+  async?: boolean
 }
 
 /**
- * 通知节点配置
+ * 通知节点配置（ETL专用）
  */
-export interface NotificationNodeConfig {
+export interface EtlNotificationNodeConfig {
   notificationType: string
   recipients: string[]
   subject?: string
   template?: string
+  // 组件使用的扩展属性
+  triggerOn?: 'success' | 'failure' | 'always'
+  emailConfig?: {
+    subject?: string
+    body?: string
+    isHtml?: boolean
+    attachments?: string[]
+    recipients?: string[]
+  }
+  webhookConfig?: {
+    url?: string
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+    headers?: Record<string, string>
+    body?: string
+  }
+  messageConfig?: {
+    recipients?: string[]
+    title?: string
+    content?: string
+  }
+  smsConfig?: {
+    recipients?: string[]
+    content?: string
+  }
 }
 
 /**

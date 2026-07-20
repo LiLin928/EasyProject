@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { TaskNodeType, type ParallelNodeConfig, type ParallelBranch } from '@/types/etl'
+import { TaskNodeType, type EtlParallelNodeConfig, type EtlParallelBranch } from '@/types/etl'
 import { nodeStyleMap } from '../utils/nodeRegistry'
 
 // Props
@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<{
   /** 节点名称 */
   name: string
   /** 节点配置 */
-  config?: ParallelNodeConfig
+  config?: EtlParallelNodeConfig
   /** 是否选中 */
   selected?: boolean
   /** 运行状态 */
@@ -76,7 +76,7 @@ const nodeStyle = computed(() => ({
 }))
 
 // 分支列表
-const branches = computed<ParallelBranch[]>(() => {
+const branches = computed<EtlParallelBranch[]>(() => {
   if (!props.config?.branches) return []
   return props.config.branches
 })

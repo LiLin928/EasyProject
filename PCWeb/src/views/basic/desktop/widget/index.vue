@@ -120,9 +120,9 @@ import type { TableColumn } from '@/components/BaseTable/index.vue'
 // 表格列配置 - 使用 BaseTable 的 props 格式
 const columns: TableColumn[] = [
   { prop: 'name', label: '组件名称', minWidth: 150 },
-  { prop: 'type', label: '组件类型', width: 100, align: 'center', slot: 'type' },
-  { prop: 'size', label: '尺寸', width: 140, align: 'center', slot: 'size' },
-  { prop: 'status', label: '状态', width: 80, align: 'center', slot: 'status' },
+  { prop: 'type', label: '组件类型', width: 100, align: 'center' },
+  { prop: 'size', label: '尺寸', width: 140, align: 'center' },
+  { prop: 'status', label: '状态', width: 80, align: 'center' },
   { prop: 'createTime', label: '创建时间', width: 180 },
 ]
 
@@ -142,8 +142,8 @@ const queryParams = reactive<QueryDesktopWidgetParams>({
 })
 
 // 获取类型标签颜色
-function getTypeTagType(type: WidgetType): string {
-  const typeMap: Record<WidgetType, string> = {
+function getTypeTagType(type: WidgetType): 'success' | 'info' | 'warning' | 'danger' | 'primary' {
+  const typeMap: Record<WidgetType, 'success' | 'info' | 'warning' | 'danger' | 'primary'> = {
     [WidgetType.Card]: 'primary',
     [WidgetType.List]: 'success',
     [WidgetType.Image]: 'warning',

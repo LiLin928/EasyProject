@@ -11,7 +11,7 @@ import type { DictOption } from '@/types/dict'
  */
 export function useDict(module: string) {
   const { currentLocale } = useLocale()
-  const dictCacheStore = useDictCacheStore()
+  const _dictCacheStore = useDictCacheStore()
   const config = getModuleConfig(module)
 
   /**
@@ -66,8 +66,8 @@ export function useDict(module: string) {
  * 从缓存获取字典标签
  */
 function getDictLabel(code: string, value: string, locale: string): string {
-  const dictCacheStore = useDictCacheStore()
-  const cacheItem = dictCacheStore.getCacheItem(code)
+  const _dictCacheStore = useDictCacheStore()
+  const cacheItem = _dictCacheStore.getCacheItem(code)
 
   if (!cacheItem) {
     // 缓存中没有，返回原值
@@ -84,8 +84,8 @@ function getDictLabel(code: string, value: string, locale: string): string {
  * 从缓存获取字典选项列表
  */
 function getDictOptions(code: string, locale: string): DictOption[] {
-  const dictCacheStore = useDictCacheStore()
-  const cacheItem = dictCacheStore.getCacheItem(code)
+  const _dictCacheStore = useDictCacheStore()
+  const cacheItem = _dictCacheStore.getCacheItem(code)
 
   if (!cacheItem) return []
 

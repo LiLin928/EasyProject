@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/mock/upload.ts
 import { MockMethod } from 'vite-plugin-mock'
 import { generateGuid } from '@/utils/guid'

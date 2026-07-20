@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import BaseTaskNode from './BaseTaskNode.vue'
-import { TaskNodeType, type NotificationNodeConfig } from '@/types/etl'
+import { TaskNodeType, type EtlNotificationNodeConfig } from '@/types/etl'
 import { nodeStyleMap } from '../utils/nodeRegistry'
 
 // Props
@@ -21,7 +21,7 @@ const props = withDefaults(defineProps<{
   /** 节点名称 */
   name: string
   /** 节点配置 */
-  config?: NotificationNodeConfig
+  config?: EtlNotificationNodeConfig
   /** 是否选中 */
   selected?: boolean
   /** 运行状态 */

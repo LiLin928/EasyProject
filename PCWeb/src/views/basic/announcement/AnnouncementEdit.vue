@@ -331,7 +331,7 @@ const loadDetail = async (id: string) => {
         uid: att.id,
         size: att.fileSize,
         status: 'success'
-      })) as UploadFile[]
+      })) as any as UploadFile[]
     } else {
       fileList.value = []
     }
@@ -566,7 +566,7 @@ const handleRemoveFile = async (file: UploadFile) => {
     }
 
     // 调用后端 API 删除文件记录
-    const fileId = file.uid as string
+    const fileId = String(file.uid)
     if (fileId && typeof fileId === 'string' && fileId.includes('-')) {
       await deleteFile(fileId)
       ElMessage.success('附件删除成功')

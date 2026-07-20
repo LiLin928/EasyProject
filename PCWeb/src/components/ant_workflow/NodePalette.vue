@@ -87,7 +87,7 @@ import { AntNodeType, nodeStyleMap } from '@/types/antWorkflow'
 const { t } = useLocale()
 
 // Props
-const props = defineProps<{
+const _props = defineProps<{
   collapsed?: boolean
 }>()
 

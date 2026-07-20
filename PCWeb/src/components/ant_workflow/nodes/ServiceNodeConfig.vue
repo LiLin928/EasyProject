@@ -145,10 +145,10 @@ watch(
       isUpdatingFromProps.value = true
       localConfig.value = {
         ...c,
-        apiConfig: { ...localConfig.value.apiConfig, ...c.apiConfig },
-        scriptConfig: { ...localConfig.value.scriptConfig, ...c.scriptConfig },
-        expressionConfig: { ...localConfig.value.expressionConfig, ...c.expressionConfig },
-        errorHandling: { ...localConfig.value.errorHandling, ...c.errorHandling }
+        apiConfig: { ...localConfig.value.apiConfig, ...c.apiConfig } as any,
+        scriptConfig: { ...localConfig.value.scriptConfig, ...c.scriptConfig } as any,
+        expressionConfig: { ...localConfig.value.expressionConfig, ...c.expressionConfig } as any,
+        errorHandling: { ...localConfig.value.errorHandling, ...c.errorHandling } as any
       }
       setTimeout(() => { isUpdatingFromProps.value = false }, 0)
     }

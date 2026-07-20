@@ -70,7 +70,7 @@
         </el-form-item>
 
         <!-- Form Body - 使用 KeyValueEditor -->
-        <el-form-item v-else-if="localConfig.apiBodyType === 'form'" prop="apiBody">
+        <el-form-item v-else-if="localConfig.apiBodyType === 'form-data' || localConfig.apiBodyType === 'x-www-form-urlencoded'" prop="apiBody">
           <KeyValueEditor
             v-model="formDataList"
             :readonly="readonly"
@@ -197,7 +197,7 @@ const localConfig = ref<ApiNodeConfig>({
   responseMapping: {
     fields: [],
   },
-})
+} as any)
 
 // 响应映射字段列表（用于 FieldMappingEditor）
 const responseMappingFields = computed<FieldMappingItem[]>({
@@ -233,10 +233,10 @@ watch(
         retryOnFailure: newConfig.retryOnFailure ?? false,
         outputVariable: newConfig.outputVariable || 'response',
         responseMapping: newConfig.responseMapping || { fields: [] },
-      }
+      } as any
 
       // 解析 form body
-      if (newConfig.apiBodyType === 'form' && newConfig.apiBody) {
+      if ((newConfig.apiBodyType === 'form-data' || newConfig.apiBodyType === 'x-www-form-urlencoded') && newConfig.apiBody) {
         try {
           const params = new URLSearchParams(newConfig.apiBody)
           formDataList.value = Array.from(params.entries()).map(([key, value]) => ({ key, value }))

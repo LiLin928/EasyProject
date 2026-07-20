@@ -9,23 +9,14 @@ import {
   CommonStatus, DatasourceStatus, ScreenPublishStatus, MenuVisibility
 } from '@/types/enums'
 import {
-  WorkflowStatus, PublishRequestStatus
-} from '@/types/workflow'
+  WorkflowStatus
+} from '@/types/antWorkflow/workflow'
 import {
   NodeType, ApproverSetType, ExamineMode, NoHanderAction
 } from '@/types/flowNode'
 import {
-  PipelineStatus
-} from '@/types/etl/pipeline'
-import {
-  ExecutionStatus, TriggerType
-} from '@/types/etl/execution'
-import {
-  ScheduleStatus, ScheduleType
-} from '@/types/etl/schedule'
-import {
-  TaskNodeType
-} from '@/types/etl/taskNode'
+  PipelineStatus, ExecutionStatus, TriggerType, ScheduleStatus, TaskNodeType
+} from '@/types/etl'
 import {
   WidgetType, DataSourceType
 } from '@/types/desktopWidget'
@@ -62,12 +53,6 @@ export const enumLabelMap: Record<string, Record<string | number, { zh: string; 
     [WorkflowStatus.PUBLISHED]: { zh: '已发布', en: 'Published' },
     [WorkflowStatus.REJECTED]: { zh: '已拒绝', en: 'Rejected' },
     [WorkflowStatus.DISABLED]: { zh: '已停用', en: 'Disabled' }
-  },
-
-  PublishRequestStatus: {
-    [PublishRequestStatus.PENDING]: { zh: '待审核', en: 'Pending' },
-    [PublishRequestStatus.APPROVED]: { zh: '已通过', en: 'Approved' },
-    [PublishRequestStatus.REJECTED]: { zh: '已拒绝', en: 'Rejected' }
   },
 
   // ========== 流程节点类型 ==========
@@ -125,7 +110,7 @@ export const enumLabelMap: Record<string, Record<string | number, { zh: string; 
   },
 
   ScheduleStatus: {
-    [ScheduleStatus.INACTIVE]: { zh: '已禁用', en: 'Inactive' },
+    [ScheduleStatus.PAUSED]: { zh: '已禁用', en: 'Paused' },
     [ScheduleStatus.ACTIVE]: { zh: '已启用', en: 'Active' }
   },
 
@@ -133,7 +118,9 @@ export const enumLabelMap: Record<string, Record<string | number, { zh: string; 
     'cron': { zh: 'Cron表达式', en: 'Cron' },
     'manual': { zh: '手动', en: 'Manual' },
     'dependency': { zh: '依赖', en: 'Dependency' },
-    'event': { zh: '事件', en: 'Event' }
+    'event': { zh: '事件', en: 'Event' },
+    'interval': { zh: '间隔', en: 'Interval' },
+    'once': { zh: '一次', en: 'Once' }
   },
 
   TaskNodeType: {
@@ -161,7 +148,8 @@ export const enumLabelMap: Record<string, Record<string | number, { zh: string; 
   DataSourceType: {
     [DataSourceType.Api]: { zh: 'API接口', en: 'API' },
     [DataSourceType.Static]: { zh: '静态配置', en: 'Static' },
-    [DataSourceType.Statistics]: { zh: '实时统计', en: 'Statistics' }
+    [DataSourceType.Sql]: { zh: 'SQL执行', en: 'SQL' },
+    [DataSourceType.Report]: { zh: '报表数据', en: 'Report' }
   }
 }
 

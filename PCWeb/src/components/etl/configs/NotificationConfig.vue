@@ -283,7 +283,7 @@
 import { ref, watch, nextTick, computed } from 'vue'
 import type { FormInstance, FormRules } from 'element-plus'
 import { useLocale } from '@/composables/useLocale'
-import type { NotificationNodeConfig } from '@/types/etl'
+import type { EtlNotificationNodeConfig } from '@/types/etl'
 import { KeyValueEditor, MonacoEditor } from './shared'
 
 const { t } = useLocale()
@@ -291,14 +291,14 @@ const { t } = useLocale()
 // Props
 const props = defineProps<{
   /** 配置数据 */
-  config: NotificationNodeConfig
+  config: EtlNotificationNodeConfig
   /** 只读模式 */
   readonly?: boolean
 }>()
 
 // Emits
 const emit = defineEmits<{
-  (e: 'update', config: NotificationNodeConfig): void
+  (e: 'update', config: EtlNotificationNodeConfig): void
 }>()
 
 // 表单引用
@@ -322,31 +322,31 @@ const showMessageRecipientInput = ref(false)
 const newMessageRecipient = ref('')
 const messageRecipientsList = ref<string[]>([])
 
-// SMS content (stored separately since NotificationNodeConfig doesn't have smsConfig)
+// SMS content (stored separately since EtlNotificationNodeConfig doesn't have smsConfig)
 const smsContent = ref('')
 
 // Webhook headers computed (for KeyValueEditor)
 const webhookHeaders = computed<Record<string, string>>({
-  get: () => localConfig.value.webhookConfig?.headers || {},
+  get: () => (localConfig.value as any).webhookConfig?.headers || {},
   set: (value) => {
-    if (localConfig.value.webhookConfig) {
-      localConfig.value.webhookConfig.headers = value
+    if ((localConfig.value as any).webhookConfig) {
+      (localConfig.value as any).webhookConfig.headers = value
     }
   },
 })
 
 // Webhook body computed (for MonacoEditor)
 const webhookBody = computed<string>({
-  get: () => localConfig.value.webhookConfig?.body || '',
+  get: () => (localConfig.value as any).webhookConfig?.body || '',
   set: (value) => {
-    if (localConfig.value.webhookConfig) {
-      localConfig.value.webhookConfig.body = value
+    if ((localConfig.value as any).webhookConfig) {
+      (localConfig.value as any).webhookConfig.body = value
     }
   },
 })
 
 // 本地配置
-const localConfig = ref<NotificationNodeConfig>({
+const localConfig = ref<EtlNotificationNodeConfig>({
   notificationType: 'email',
   triggerOn: 'always',
   emailConfig: {
@@ -366,7 +366,7 @@ const localConfig = ref<NotificationNodeConfig>({
     title: '',
     content: '',
   },
-})
+} as any)
 
 // 表单验证规则
 const formRules = computed<FormRules>(() => ({
@@ -433,12 +433,12 @@ watch(
           title: '',
           content: '',
         },
-      }
+      } as any
 
       // Initialize recipient lists
-      emailRecipientsList.value = localConfig.value.emailConfig?.recipients || []
-      smsRecipientsList.value = [] // SMS recipients would be stored separately
-      messageRecipientsList.value = localConfig.value.messageConfig?.recipients || []
+      emailRecipientsList.value = ((localConfig.value as any).emailConfig?.recipients || []) as string[]
+      smsRecipientsList.value = [] as string[] // SMS recipients would be stored separately
+      messageRecipientsList.value = ((localConfig.value as any).messageConfig?.recipients || []) as string[]
       smsContent.value = '' // SMS content would be stored separately
     }
   },
@@ -453,8 +453,10 @@ const handleNotificationTypeChange = () => {
 // Email recipient handlers
 const handleAddEmailRecipient = () => {
   if (newEmailRecipient.value) {
-    emailRecipientsList.value.push(newEmailRecipient.value)
-    localConfig.value.emailConfig!.recipients = [...emailRecipientsList.value]
+    const list = [...(emailRecipientsList.value as any)]
+    list.push(newEmailRecipient.value)
+    emailRecipientsList.value = list
+    (localConfig.value as any).emailConfig!.recipients = list
     newEmailRecipient.value = ''
     emitUpdate()
   }
@@ -462,8 +464,10 @@ const handleAddEmailRecipient = () => {
 }
 
 const handleRemoveEmailRecipient = (recipient: string) => {
-  emailRecipientsList.value = emailRecipientsList.value.filter((r) => r !== recipient)
-  localConfig.value.emailConfig!.recipients = [...emailRecipientsList.value]
+  const list = [...(emailRecipientsList.value as any)]
+  const filtered = list.filter((r: string) => r !== recipient)
+  emailRecipientsList.value = filtered
+  (localConfig.value as any).emailConfig!.recipients = filtered
   emitUpdate()
 }
 
@@ -503,8 +507,10 @@ watch(showSmsRecipientInput, (val) => {
 // Message recipient handlers
 const handleAddMessageRecipient = () => {
   if (newMessageRecipient.value) {
-    messageRecipientsList.value.push(newMessageRecipient.value)
-    localConfig.value.messageConfig!.recipients = [...messageRecipientsList.value]
+    const list = [...(messageRecipientsList.value as any)]
+    list.push(newMessageRecipient.value)
+    messageRecipientsList.value = list
+    (localConfig.value as any).messageConfig!.recipients = list
     newMessageRecipient.value = ''
     emitUpdate()
   }
@@ -512,8 +518,10 @@ const handleAddMessageRecipient = () => {
 }
 
 const handleRemoveMessageRecipient = (recipient: string) => {
-  messageRecipientsList.value = messageRecipientsList.value.filter((r) => r !== recipient)
-  localConfig.value.messageConfig!.recipients = [...messageRecipientsList.value]
+  const list = [...(messageRecipientsList.value as any)]
+  const filtered = list.filter((r: string) => r !== recipient)
+  messageRecipientsList.value = filtered
+  (localConfig.value as any).messageConfig!.recipients = filtered
   emitUpdate()
 }
 
@@ -528,22 +536,22 @@ watch(showMessageRecipientInput, (val) => {
 
 // Webhook handlers
 const handleWebhookHeadersUpdate = (value: Record<string, string> | any[]) => {
-  if (localConfig.value.webhookConfig) {
-    localConfig.value.webhookConfig.headers = value as Record<string, string>
+  if ((localConfig.value as any).webhookConfig) {
+    (localConfig.value as any).webhookConfig.headers = value as Record<string, string>
   }
   emitUpdate()
 }
 
 const handleWebhookBodyUpdate = (body: string) => {
-  if (localConfig.value.webhookConfig) {
-    localConfig.value.webhookConfig.body = body
+  if ((localConfig.value as any).webhookConfig) {
+    (localConfig.value as any).webhookConfig.body = body
   }
   emitUpdate()
 }
 
 // 发送更新
 const emitUpdate = () => {
-  emit('update', { ...localConfig.value })
+  emit('update', { ...localConfig.value } as any)
 }
 
 // 暴露验证方法

@@ -4,7 +4,7 @@
     <!-- 表格 -->
     <el-table
       ref="tableRef"
-      v-loading="loading"
+      v-loading="loading ?? false"
       :data="data"
       :border="border"
       :row-key="rowKey"

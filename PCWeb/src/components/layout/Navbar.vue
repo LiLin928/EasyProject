@@ -75,13 +75,13 @@ import {
 import { useUserStore } from '@/stores/user'
 import { useLocale } from '@/composables/useLocale'
 
-const router = useRouter()
+const _router = useRouter()
 const userStore = useUserStore()
 const { t, changeLocale } = useLocale()
 
-const collapsed = defineModel<boolean>('collapsed', { default: false })
+const _collapsed = defineModel<boolean>('collapsed', { default: false })
 
-const username = computed(() => userStore.userInfo?.nickname || userStore.userInfo?.username || '用户')
+const username = computed(() => userStore.userInfo?.realName || userStore.userInfo?.userName || '用户')
 const userAvatar = computed(() => userStore.userInfo?.avatar || '')
 
 // 切换全屏 - 添加错误处理
@@ -107,7 +107,7 @@ const handleLocale = (locale: string) => {
 const handleCommand = (command: string) => {
   switch (command) {
     case 'profile':
-      router.push('/person')
+      _router.push('/person')
       break
     case 'logout':
       handleLogout()

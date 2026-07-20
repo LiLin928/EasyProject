@@ -127,7 +127,7 @@ export function updateNodePorts(
   // 移除旧的输出端口
   const existingPorts = node.getPorts()
   existingPorts.forEach((port) => {
-    if (port.group === 'out') {
+    if (port.group === 'out' && port.id) {
       node.removePort(port.id)
     }
   })

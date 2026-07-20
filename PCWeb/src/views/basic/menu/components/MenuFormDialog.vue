@@ -144,7 +144,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch } from 'vue'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import { ElMessage, type FormInstance, type FormRules, type CascaderOption } from 'element-plus'
 import { EditPen } from '@element-plus/icons-vue'
 import { getMenuTree, getMenuDetail, createMenu, updateMenu } from '@/api/menu'
 import { useLocale } from '@/composables/useLocale'
@@ -202,10 +202,10 @@ const formRules: FormRules = {
 }
 
 // Build parent menu options (exclude current menu when editing)
-const parentMenuOptions = computed(() => {
-  if (!isEdit.value) return menuTree.value
+const parentMenuOptions = computed<CascaderOption[]>(() => {
+  if (!isEdit.value) return menuTree.value as CascaderOption[]
   // Filter out current menu to prevent circular reference
-  return filterMenuTree(menuTree.value, props.menuId!)
+  return filterMenuTree(menuTree.value, props.menuId!) as CascaderOption[]
 })
 
 const filterMenuTree = (menus: MockMenu[], excludeId: string): MockMenu[] => {

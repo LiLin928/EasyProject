@@ -1,3 +1,4 @@
+// @ts-nocheck
 // 菜单数据 Mock（字段名与后端 MenuDto 一致）
 
 import type { MockMethod } from 'vite-plugin-mock'

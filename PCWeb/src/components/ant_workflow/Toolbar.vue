@@ -66,7 +66,7 @@ import { WorkflowStatus } from '@/types/antWorkflow'
 const { t } = useLocale()
 
 // Props
-const props = defineProps<{
+const _props = defineProps<{
   canUndo: boolean
   canRedo: boolean
   workflowName: string

@@ -1,6 +1,6 @@
 // src/api/ops/operateLogApi.ts
 
-import { get, post, del } from '@/utils/request'
+import { get, post } from '@/utils/request'
 import type { PageResponse } from '@/types/response'
 import type { OperateLog, QueryOperateLogParams } from '@/types/operateLog'
 

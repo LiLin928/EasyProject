@@ -156,7 +156,7 @@ export const ExecutorType = {
 }
 
 // 周期类型枚举
-export const ScheduleType = {
+export const TaskScheduleType = {
   Daily: 0,
   Monthly: 1,
   Specific: 2,
@@ -171,7 +171,7 @@ export const LogStatus = {
 }
 
 // 触发类型枚举
-export const TriggerType = {
+export const TaskTriggerType = {
   Cron: 0,
   Manual: 1,
 }

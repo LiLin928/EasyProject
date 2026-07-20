@@ -8,7 +8,13 @@
       <el-select v-model="rule.operator" placeholder="操作符" class="operator-select">
         <el-option v-for="op in operatorOptions" :key="op.value" :label="op.label" :value="op.value" />
       </el-select>
-      <el-input v-if="showValueInput(rule.operator)" v-model="rule.value" placeholder="值" class="value-input" />
+      <el-input
+        v-if="showValueInput(rule.operator)"
+        :model-value="typeof rule.value === 'string' || typeof rule.value === 'number' ? rule.value : ''"
+        @update:model-value="(val: string | number) => rule.value = val"
+        placeholder="值"
+        class="value-input"
+      />
       <el-button type="danger" link @click="handleRemove(idx)">
         <el-icon><Delete /></el-icon>
       </el-button>

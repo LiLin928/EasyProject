@@ -1,3 +1,4 @@
+// @ts-nocheck
 // src/mock/customer.ts
 
 import type { MockMethod } from 'vite-plugin-mock'

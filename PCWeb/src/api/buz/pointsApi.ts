@@ -1,6 +1,6 @@
 // src/api/buz/pointsApi.ts
 
-import { get, post } from '@/utils/request'
+import { post } from '@/utils/request'
 import type { PointsLog, PointsLogListParams } from '@/types'
 
 /**

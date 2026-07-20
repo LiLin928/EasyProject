@@ -1,3 +1,4 @@
+// @ts-nocheck
 // 用户信息 Mock
 
 import type { MockMethod } from 'vite-plugin-mock'

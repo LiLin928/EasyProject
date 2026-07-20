@@ -104,7 +104,7 @@ export function importDagToGraph(graph: any, dagConfig: DagConfig) {
   graph.clearCells()
   dagConfig.nodes.forEach((node) => {
     // 获取节点样式配置
-    const style = getNodeStyle(node.type)
+    const style = getNodeStyle(node.type as any)
     // 创建节点并设置名称标签
     graph.addNode({
       id: node.id,

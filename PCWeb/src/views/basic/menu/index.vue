@@ -115,8 +115,8 @@ const iconComponents = Icons
 
 // 搜索表单配置
 const searchItems = computed(() => [
-  { field: 'name', label: t('menu.menuManagement.menuName'), type: 'input' },
-  { field: 'status', label: t('menu.menuManagement.status'), type: 'select', options: [
+  { field: 'name', label: t('menu.menuManagement.menuName'), type: 'input' as const },
+  { field: 'status', label: t('menu.menuManagement.status'), type: 'select' as const, options: [
     { label: t('menu.menuManagement.enabled'), value: CommonStatus.ENABLED },
     { label: t('menu.menuManagement.disabled'), value: CommonStatus.DISABLED },
   ]},

@@ -12,7 +12,7 @@
     <!-- 表格 -->
     <el-table
       ref="tableRef"
-      v-loading="loading"
+      v-loading="loading ?? false"
       :data="data"
       :border="border"
       :row-key="rowKey"
@@ -62,7 +62,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, nextTick, onUnmounted } from 'vue'
+import { ref, watch, nextTick, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { InfoFilled } from '@element-plus/icons-vue'
 import Sortable from 'sortablejs'

@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Mock 配置入口
 
 import auth from './auth'

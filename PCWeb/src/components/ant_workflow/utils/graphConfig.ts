@@ -5,7 +5,7 @@
 import { Graph, Shape } from '@antv/x6'
 import { registerAntWorkflowNodes, updateNodePorts } from './nodeRegistry'
 import { AntNodeType } from '@/types/antWorkflow'
-import type { DagNode, DagEdge, DagConfig } from '@/stores/antWorkflowStore'
+import type { DagConfig } from '@/stores/antWorkflowStore'
 
 // 在模块加载时注册节点
 registerAntWorkflowNodes()
@@ -107,7 +107,7 @@ export interface CreateGraphOptions {
  * 创建 X6 图实例
  */
 export function createGraph(options: CreateGraphOptions): Graph {
-  const { container, minimap = false, readonly = false } = options
+  const { container, minimap: _minimap = false, readonly = false } = options
 
   const graph = new Graph({
     container,
@@ -143,19 +143,6 @@ export function createGraph(options: CreateGraphOptions): Graph {
       snap: {
         radius: 20,  // 吸附半径
       },
-      // 端口验证：输出端口只能作为源，输入端口只能作为目标
-      validatePort({ type, port }) {
-        const portGroup = port?.group
-        // source 只能连接到 out 端口
-        if (type === 'source') {
-          return portGroup === 'out'
-        }
-        // target 只能连接到 in 端口
-        if (type === 'target') {
-          return portGroup === 'in'
-        }
-        return true
-      },
       createEdge() {
         // 只读模式下不添加删除工具
         const edgeTools = readonly ? [] : [
@@ -174,7 +161,7 @@ export function createGraph(options: CreateGraphOptions): Graph {
           tools: edgeTools,
         })
       },
-    },
+    } as any,
     highlighting: {
       magnetAvailable: {
         name: 'stroke',
@@ -286,10 +273,16 @@ export function loadDagToGraph(graph: Graph, dagConfig: DagConfig, readonly = fa
 
     // 为条件/并行节点创建动态输出端口
     const nodeType = nodeData.type as AntNodeType
-    if (nodeType === AntNodeType.CONDITION && nodeData.config?.conditionNodes) {
-      updateNodePorts(graph, nodeData.id, nodeData.config.conditionNodes)
-    } else if (nodeType === AntNodeType.PARALLEL && nodeData.config?.parallelNodes) {
-      updateNodePorts(graph, nodeData.id, nodeData.config.parallelNodes)
+    if (nodeType === AntNodeType.CONDITION) {
+      const config = nodeData.config as any
+      if (config?.conditionNodes) {
+        updateNodePorts(graph, nodeData.id, config.conditionNodes)
+      }
+    } else if (nodeType === AntNodeType.PARALLEL) {
+      const config = nodeData.config as any
+      if (config?.parallelNodes) {
+        updateNodePorts(graph, nodeData.id, config.parallelNodes)
+      }
     }
   })
 

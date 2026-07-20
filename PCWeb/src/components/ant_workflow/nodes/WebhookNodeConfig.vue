@@ -191,8 +191,6 @@ watch(
     if (c) {
       isUpdatingFromProps.value = true
       localConfig.value = {
-        url: '',
-        method: 'POST',
         headers: {},
         body: '',
         trigger: 'after',
@@ -200,6 +198,8 @@ watch(
         authConfig: { type: 'none' },
         retryConfig: { count: 0, interval: 1000 },
         ...c,
+        url: c.url || '',
+        method: c.method || 'POST',
       }
       setTimeout(() => { isUpdatingFromProps.value = false }, 0)
     }

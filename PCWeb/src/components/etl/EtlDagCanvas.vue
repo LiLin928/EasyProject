@@ -137,7 +137,7 @@ const initGraph = () => {
   graph.on('edge:click', ({ edge }) => {
     const dagEdge: DagEdge = {
       id: edge.id,
-      sourceNodeId: edge.getSourceCellId() || '',
+      source: "", target: "", sourceNodeId: edge.getSourceCellId() || '',
       targetNodeId: edge.getTargetCellId() || '',
       sourcePort: edge.getSourcePortId(),
       targetPort: edge.getTargetPortId(),
@@ -151,7 +151,7 @@ const initGraph = () => {
   graph.on('edge:selected', ({ edge }) => {
     const dagEdge: DagEdge = {
       id: edge.id,
-      sourceNodeId: edge.getSourceCellId() || '',
+      source: "", target: "", sourceNodeId: edge.getSourceCellId() || '',
       targetNodeId: edge.getTargetCellId() || '',
       sourcePort: edge.getSourcePortId(),
       targetPort: edge.getTargetPortId(),
@@ -323,7 +323,7 @@ defineExpose({
       const data = edge.getData() || {}
       return {
         id: edge.id,
-        sourceNodeId: edge.getSourceCellId() || '',
+        source: "", target: "", sourceNodeId: edge.getSourceCellId() || '',
         targetNodeId: edge.getTargetCellId() || '',
         sourcePort: edge.getSourcePortId(),
         targetPort: edge.getTargetPortId(),
